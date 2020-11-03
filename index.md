@@ -35,4 +35,4 @@ Estos bucles están mal programados, con la intención de cronometrar y analizar
 
 A pesar de que la aplicación no recopila ningún dato del usuario nos vemos obligados a especificar una. 
 
-Se encuentra disponible en el siguiente enlace: [Política de privacidad](/policy)
+Se encuentra disponible en el siguiente enlace: [Política de privacidad](https://davidcreator.github.io/GeekLab/policy)
