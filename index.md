@@ -30,3 +30,9 @@ Próximamente, el usuario podrá crear sus notificaciones propias para probar la
 Una de las funciones que más riesgo conlleva la integridad del dispositivo del usuario son los bucles.
 
 Estos bucles están mal programados, con la intención de cronometrar y analizar las capacidades en condiciones extremas y de bloqueo del terminal por aplicaciones externas.
+
+## Política de privacidad
+
+A pesar de que la aplicación no recopila ningún dato del usuario nos vemos obligados a especificar una. 
+
+Se encuentra disponible en el siguiente enlace: [Política de privacidad](/policy)
