@@ -17,17 +17,17 @@ El objetivo inicial de esta aplicación era poner a prueba distintos dispositivo
 
 Como ya comentaba anteriormente, en esta primera beta de la versión 2 de la aplicación encontramos dos funciones disponibles.
 
-    * Notificaciones: Podrás crear notificaciones personalizadas para probar como se vicualizaría en el sistema. A mayores, puedes pedir a la aplicación una cantidad ilimitada de notificaciones para saber como se agrupan o cual es el límite de la memoria del sistema.
-    * Activity Extress: Uno de los grandes mayores problemas de Android es la gestión en segundo plano de las aplicaciones. Con esta función puedes crear un bucle que abre distintas actividades de la aplicación. De esta forma puedes sobrecargar la RAM y ver que sucede con el sistema.
+* Notificaciones: Podrás crear notificaciones personalizadas para probar como se vicualizaría en el sistema. A mayores, puedes pedir a la aplicación una cantidad ilimitada de notificaciones para saber como se agrupan o cual es el límite de la memoria del sistema.
+* Activity Extress: Uno de los grandes mayores problemas de Android es la gestión en segundo plano de las aplicaciones. Con esta función puedes crear un bucle que abre distintas actividades de la aplicación. De esta forma puedes sobrecargar la RAM y ver que sucede con el sistema.
 
 Próximamente:
 
-    - [ ] Widget con acciones rápidas (crear notificaciones).
-    - [ ] Seguimiento temperatura del sistema.
-    - [ ] Historial notificaciones.
-    - [ ] Información del sistema.
-    - [ ] Personalización ampliada notificaciones.
-        - [ ] Colores.
-        - [ ] Imágenes.
+- [ ] Widget con acciones rápidas (crear notificaciones).
+- [ ] Seguimiento temperatura del sistema.
+- [ ] Historial notificaciones.
+- [ ] Información del sistema.
+- [ ] Personalización ampliada notificaciones.
+    - [ ] Colores.
+    - [ ] Imágenes.
 
 Para más información, accede al siguiente enlace: https://d4viddf.github.io/GeekLab/
