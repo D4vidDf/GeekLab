@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00FFFFFF"
+    android:padding="@dimen/widget_margin">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true">
+    <TextView
+        android:id="@+id/hora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/appwidget_text"
+        android:fontFamily="@font/candal"
+        android:text="@string/hh"
+        android:textColor="#ffffff"
+        android:textSize="74sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/sep"
+        android:layout_toRightOf="@id/hora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text=":"
+        android:fontFamily="@font/candal"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="33sp"/>
+    <TextView
+        android:id="@+id/mm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/sep"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/appwidget_text"
+        android:fontFamily="@font/candal"
+        android:text="@string/mm"
+        android:textColor="#ffffff"
+        android:textSize="40sp"
+        android:textStyle="bold"/>
+</RelativeLayout>
+
+
+</RelativeLayout>

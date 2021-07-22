@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Notifiaction">
+
+    <EditText
+        android:id="@+id/numero"
+        style="@android:style/Widget.Material.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="20dp"
+        android:hint="@string/numero"
+        android:inputType="number"
+        android:singleLine="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        android:importantForAutofill="no" />
+    <EditText
+        android:id="@+id/Titulo"
+        android:layout_below="@id/numero"
+        style="@android:style/Widget.Material.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="20dp"
+        android:hint="@string/tittle"
+        android:inputType="text"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        android:importantForAutofill="no" />
+    <EditText
+        android:id="@+id/mensaje"
+        android:layout_below="@id/Titulo"
+        style="@android:style/Widget.Material.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
+        android:hint="@string/mess"
+        android:inputType="text"
+        android:singleLine="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        android:importantForAutofill="no" />
+
+    <Button
+        android:id="@+id/generar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mensaje"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_background"
+        android:padding="10dp"
+        android:text="@string/generar"
+        android:textColor="@color/colorAccent" />
+</RelativeLayout>
