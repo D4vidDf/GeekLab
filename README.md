@@ -13,4 +13,4 @@ Los datos obtenidos han ayudado a diferentes usuarios a decidirse a usar un term
 
 Por ello, GeekLab recibe una aplicación donde se ofrecen herramientas para probar software o el rendimiento de hardware.
 
-Para más información, accede al siguiente enlace: https://davidcreator.github.io/GeekLab/
+Para más información, accede al siguiente enlace: https://d4viddf.github.io/GeekLab/
