@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/loop_widg"
+    android:initialLayout="@layout/loop_widg"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/preview_loop"
+    android:widgetCategory="home_screen|keyguard"></appwidget-provider>

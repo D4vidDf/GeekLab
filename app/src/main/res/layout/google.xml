@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_wid"
+    android:padding="@dimen/widget_margin"
+    android:id="@+id/google"
+    android:theme="@style/ThemeOverlay.GeekLabTest.AppWidgetContainer">
+
+        <TextView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:contentDescription="@string/appwidget_text"
+            android:text="Buscar"
+            android:textColor="?attr/appWidgetTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/asistente"
+            android:layout_below="@id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:contentDescription="@string/appwidget_text"
+            android:text="Asistente"
+            android:textColor="?attr/appWidgetTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/test"
+            android:layout_below="@id/asistente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:contentDescription="@string/appwidget_text"
+            android:text="Test"
+            android:textColor="?attr/appWidgetTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
+
+</RelativeLayout>

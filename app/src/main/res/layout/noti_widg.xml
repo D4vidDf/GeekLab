@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="110dp"
+    android:layout_margin="10dp"
+    android:id="@+id/widg">
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/img"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/bg_wid"></ImageView>
+        <ImageView
+            android:id="@+id/img3"
+            android:layout_centerInParent="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/notification"></ImageView>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:text="Notificación"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
+        android:textSize="12sp"></TextView>
+</RelativeLayout>

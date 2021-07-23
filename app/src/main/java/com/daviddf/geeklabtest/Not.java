@@ -5,14 +5,18 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
 public class Not extends Application {
     public static final String CHANNEL_1_ID = "GeekLab";
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannels();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotificationChannels() {
         NotificationChannel channel1 = new NotificationChannel(
                 CHANNEL_1_ID,

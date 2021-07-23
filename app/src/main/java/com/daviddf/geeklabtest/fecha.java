@@ -27,6 +27,7 @@ public class fecha extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.fecha);
         views.setTextViewText(R.id.fecha, formattedDate);
 
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

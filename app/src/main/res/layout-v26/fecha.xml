@@ -16,6 +16,7 @@
         android:contentDescription="@string/appwidget_text"
         android:textAllCaps="true"
         android:autoSizeMaxTextSize="30sp"
+        android:autoSizePresetSizes="50sp"
         android:fontFamily="@font/candal"
         android:text="@string/mm"
         android:textColor="#ffffff"

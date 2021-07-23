@@ -4,7 +4,7 @@
     android:initialLayout="@layout/fecha"
     android:minWidth="110dp"
     android:minHeight="40dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/preview_fecha"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="60000"
     android:widgetCategory="home_screen"></appwidget-provider>

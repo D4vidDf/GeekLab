@@ -10,14 +10,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".Temperatura">
+        <receiver android:name=".Google">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/temperatura_info" />
+                android:resource="@xml/google_info" />
+        </receiver>
+        <receiver android:name=".NotiWidg">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/noti_widg_info" />
+        </receiver>
+        <receiver android:name=".LoopWidgt">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/loop_widgt_info" />
         </receiver>
         <receiver android:name=".fecha">
             <intent-filter>
@@ -35,6 +53,7 @@
             <intent-filter>
                 <action android:name="ACTION_AUTO_UPDATE_WIDGET" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/hora_info" />
