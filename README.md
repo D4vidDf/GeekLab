@@ -22,12 +22,16 @@ Como ya comentaba anteriormente, en esta primera beta de la versión 2 de la apl
 
 **Próximamente:**
 
-- [ ] Widget con acciones rápidas (crear notificaciones).
+- [ ] Widgets:
+    - [x] Notificaciones
+    - [x] Bucle
+    - [x] Google
+    - [ ] Hora
 - [ ] Seguimiento temperatura del sistema.
 - [ ] Historial notificaciones.
 - [ ] Información del sistema.
-- [ ] Personalización ampliada notificaciones.
-    - [ ] Colores.
-    - [ ] Imágenes.
+- [ ] Personalización ampliada notificaciones:
+    - [ ] Colores
+    - [ ] Imágenes
 
 Para más información, accede al siguiente enlace: https://d4viddf.github.io/GeekLab/
