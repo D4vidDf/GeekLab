@@ -35,4 +35,5 @@
     <string name="tittle">Título</string>
     <string name="mess">Mensaje</string>
     <string name="todo">TODO</string>
+    <string name="n_notificaciones">Nº Notificaciones</string>
 </resources>

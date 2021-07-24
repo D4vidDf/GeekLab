@@ -21,6 +21,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.w3c.dom.Text;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.daviddf.geeklabtest.Not.CHANNEL_1_ID;
@@ -28,7 +32,9 @@ import static com.daviddf.geeklabtest.Not.CHANNEL_1_ID;
 public class Notifiaction extends AppCompatActivity {
     int NOTIFICACION_ID=1;
     String titulo,mensaje;
-    EditText num,tit,mes;
+
+    TextInputLayout tt, tit, mes;
+    int n=0;
     private NotificationManagerCompat notificationManager;
     private final static String CHANNEL_ID = "GeekLab";
     long no;
@@ -37,33 +43,48 @@ public class Notifiaction extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifiaction);
 
-        num = (EditText) findViewById(R.id.numero);
-        tit = (EditText) findViewById(R.id.Titulo);
-        mes = (EditText) findViewById(R.id.mensaje);
+        tit = (TextInputLayout) findViewById(R.id.Titulo);
+        mes = (TextInputLayout) findViewById(R.id.Mensaje);
+        tt = (TextInputLayout) findViewById(R.id.tt);
         Button gen = (Button) findViewById(R.id.generar);
 
         gen.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                try {
-                    if(num.getText().equals("")){
-                        no = 1;
+                if (tt.getEditText().getText().toString().isEmpty()){
+                    tt.setErrorEnabled(true);
+                    tt.setError("Añade el nº de notificaciones");
+                }
+                else {n++; tt.setErrorEnabled(false);};
+
+                if (mes.getEditText().getText().toString().isEmpty()){
+                    mes.setError("Añade un mensaje");
+                }
+                else {n++; mes.setErrorEnabled(false);};
+
+                if (tit.getEditText().getText().toString().isEmpty()){
+                    tit.setError("Añada el Título");
+                }
+                else {n++; tit.setErrorEnabled(false);}
+
+                if (tit.getEditText().getText().length() >30) n--;
+
+
+                if (n==3) {
+                    no = Long.parseLong(tt.getEditText().getText().toString());
+
+                    while (no>0){
+                        titulo = tit.getEditText().getText().toString();
+                        mensaje = mes.getEditText().getText().toString();
+                        createNotificationChannel();
+                        createNotification();
+                        NOTIFICACION_ID++;
+                        no-=1;
                     }
-                    else
-                        no = Long.parseLong(num.getText().toString());
-                }catch (Exception e){
                 }
+                n=0;
 
-
-                while (no>0){
-                    titulo = tit.getText().toString();
-                    mensaje = mes.getText().toString();
-                    createNotificationChannel();
-                    createNotification();
-                    NOTIFICACION_ID++;
-                    no-=1;
-                }
             }
         });
     }
