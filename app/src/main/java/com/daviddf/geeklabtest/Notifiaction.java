@@ -31,7 +31,7 @@ public class Notifiaction extends AppCompatActivity {
     EditText num,tit,mes;
     private NotificationManagerCompat notificationManager;
     private final static String CHANNEL_ID = "GeekLab";
-
+    long no;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,14 +46,24 @@ public class Notifiaction extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                int no = Integer.parseInt(num.getText().toString());
-                titulo = tit.getText().toString();
-                mensaje = mes.getText().toString();
-                createNotificationChannel();
-                createNotification();
-                NOTIFICACION_ID++;
+                try {
+                    if(num.getText().equals("")){
+                        no = 1;
+                    }
+                    else
+                        no = Long.parseLong(num.getText().toString());
+                }catch (Exception e){
+                }
 
 
+                while (no>0){
+                    titulo = tit.getText().toString();
+                    mensaje = mes.getText().toString();
+                    createNotificationChannel();
+                    createNotification();
+                    NOTIFICACION_ID++;
+                    no-=1;
+                }
             }
         });
     }
@@ -62,7 +72,7 @@ public class Notifiaction extends AppCompatActivity {
     private void createNotificationChannel() {
 
         CharSequence name = "Notificacion";
-        @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(notificationChannel);
     }

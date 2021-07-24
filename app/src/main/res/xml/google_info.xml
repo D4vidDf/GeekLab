@@ -4,5 +4,6 @@
     android:initialLayout="@layout/google"
     android:minWidth="180dp"
     android:minHeight="110dp"
-    android:updatePeriodMillis="86400000"
+    android:resizeMode="horizontal"
+    android:previewImage="@drawable/gogle_wid"
     android:widgetCategory="home_screen"></appwidget-provider>

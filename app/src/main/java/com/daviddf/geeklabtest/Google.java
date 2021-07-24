@@ -18,17 +18,23 @@ public class Google extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.google);
 
-        Intent Google = new Intent(Intent.ACTION_WEB_SEARCH);
+        Intent Google = new Intent(Intent.ACTION_VIEW);
+        Google.setClassName("com.google.android.googlequicksearchbox","com.google.android.apps.gsa.queryentry.QueryEntryActivity");
         Intent Assistant = new Intent(Intent.ACTION_VOICE_COMMAND);
-        Intent Test = new Intent(Intent.ACTION_CALL_BUTTON);
+        Intent Lens = new Intent(Intent.ACTION_VIEW);
+        Lens.setClassName("com.google.ar.lens","com.google.vr.apps.ornament.app.lens.LensLauncherActivity");
+        Intent Mail = new Intent(Intent.ACTION_VIEW);
+        Mail.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmailExternal");
 
         PendingIntent search = PendingIntent.getActivity(context, 0, Google, 0);
         PendingIntent assistant = PendingIntent.getActivity(context, 0, Assistant, 0);
-        PendingIntent test = PendingIntent.getActivity(context, 0, Test, 0);
+        PendingIntent lens = PendingIntent.getActivity(context, 0, Lens, 0);
+        PendingIntent mail = PendingIntent.getActivity(context, 0, Mail, 0);
 
         remoteViews.setOnClickPendingIntent(R.id.search, search);
         remoteViews.setOnClickPendingIntent(R.id.asistente, assistant);
-        remoteViews.setOnClickPendingIntent(R.id.test,test);
+        remoteViews.setOnClickPendingIntent(R.id.lens,lens);
+        remoteViews.setOnClickPendingIntent(R.id.mail, mail);
 
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
     }
