@@ -53,6 +53,7 @@ public class Notifiaction extends AppCompatActivity {
         tit = (TextInputLayout) findViewById(R.id.Titulo);
         mes = (TextInputLayout) findViewById(R.id.Mensaje);
         tt = (TextInputLayout) findViewById(R.id.tt);
+
         MaterialButton gen = (MaterialButton) findViewById(R.id.generar);
 
         gen.setOnClickListener(new View.OnClickListener() {

@@ -7,13 +7,27 @@
     tools:context=".Notifiaction"
     style="@style/Theme.MaterialComponents.DayNight.Bridge">
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/Not"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="30dp"
+        android:text="Notificaciones"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="30sp"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tt"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/Not"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="20dp"
         android:elevation="5dp"
@@ -24,17 +38,23 @@
         app:boxCornerRadiusTopStart="10dp"
         app:boxStrokeColor="@color/colorPrimary"
         app:boxStrokeErrorColor="#FF0000"
-        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidth="2dp"
         app:boxStrokeWidthFocused="2dp"
-        app:errorEnabled="true"
+        app:errorTextAppearance="@style/TextAppearance.AppCompat.Body1"
         app:helperText="Cantidad de notificaciones generadas"
+        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
         app:hintAnimationEnabled="true"
-        app:hintEnabled="true">
+        app:hintEnabled="true"
+        app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -53,19 +73,26 @@
         app:boxCornerRadiusTopStart="10dp"
         app:boxStrokeColor="@color/colorPrimary"
         app:boxStrokeErrorColor="#FF0000"
-        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidth="2dp"
         app:boxStrokeWidthFocused="2dp"
         app:counterEnabled="true"
         app:counterMaxLength="30"
         app:errorEnabled="true"
-
         app:helperText="Este título será mostrado en las notificaciones"
-        app:hintEnabled="true">
+        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true"
+        app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -84,17 +111,60 @@
         app:boxCornerRadiusTopStart="10dp"
         app:boxStrokeColor="@color/colorPrimary"
         app:boxStrokeErrorColor="#FF0000"
-        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidth="2dp"
         app:boxStrokeWidthFocused="2dp"
         app:errorEnabled="true"
         app:helperText="Cuerpo de la notificación"
-        app:hintEnabled="true">
+        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true"
+        app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Mensaje"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/opt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Imagen (Opcional)"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccionar"
+            android:id="@+id/img_se"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="50dp"
+            app:cornerRadius="10dp"
+            android:textColor="@color/colorAccent"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="130dp"
+            android:layout_below="@id/img_se"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/generar"
