@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.button.MaterialButton;
+
 public class Consentimiento extends AppCompatActivity {
 
 
@@ -15,7 +17,7 @@ public class Consentimiento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consentimiento);
 
-        Button btn = (Button)findViewById(R.id.aceptar);
+        MaterialButton btn = (MaterialButton) findViewById(R.id.aceptar);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -96,14 +96,19 @@
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/generar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Mensaje"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_background"
-        android:padding="10dp"
+        android:layout_marginBottom="30dp"
+        android:elevation="5dp"
         android:text="@string/generar"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        app:cornerRadius="10dp" />
+
+
 </RelativeLayout>

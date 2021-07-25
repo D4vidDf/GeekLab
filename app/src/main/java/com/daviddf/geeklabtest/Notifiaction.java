@@ -12,6 +12,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.w3c.dom.Text;
@@ -32,6 +35,8 @@ import static com.daviddf.geeklabtest.Not.CHANNEL_1_ID;
 public class Notifiaction extends AppCompatActivity {
     int NOTIFICACION_ID=1;
     String titulo,mensaje;
+    Bitmap imagen;
+    Boolean imagen_selected=false;
 
     TextInputLayout tt, tit, mes;
     int n=0;
@@ -43,10 +48,12 @@ public class Notifiaction extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifiaction);
 
+        imagen = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.gmail);
+
         tit = (TextInputLayout) findViewById(R.id.Titulo);
         mes = (TextInputLayout) findViewById(R.id.Mensaje);
         tt = (TextInputLayout) findViewById(R.id.tt);
-        Button gen = (Button) findViewById(R.id.generar);
+        MaterialButton gen = (MaterialButton) findViewById(R.id.generar);
 
         gen.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -54,17 +61,17 @@ public class Notifiaction extends AppCompatActivity {
             public void onClick(View view) {
                 if (tt.getEditText().getText().toString().isEmpty()){
                     tt.setErrorEnabled(true);
-                    tt.setError("Añade el nº de notificaciones");
+                    tt.setError("Error: Introduzca el nº de Notificaciones");
                 }
                 else {n++; tt.setErrorEnabled(false);};
 
                 if (mes.getEditText().getText().toString().isEmpty()){
-                    mes.setError("Añade un mensaje");
+                    mes.setError("Error: Añada el cuerpo de la Notificación");
                 }
                 else {n++; mes.setErrorEnabled(false);};
 
                 if (tit.getEditText().getText().toString().isEmpty()){
-                    tit.setError("Añada el Título");
+                    tit.setError("Error: Añada el título de la Notificación");
                 }
                 else {n++; tit.setErrorEnabled(false);}
 
@@ -105,10 +112,12 @@ public class Notifiaction extends AppCompatActivity {
         builder.setSmallIcon(R.drawable.not);
         builder.setContentTitle(titulo);
         builder.setContentText(mensaje);
-        builder.setColor(Color.argb(100,29,191,242));
+        builder.setColor(Color.rgb(29,191,242));
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
         builder.setVibrate(new long[]{80, 1000, 1000, 1000, 1000});
         builder.setDefaults(Notification.DEFAULT_SOUND);
+        if (imagen_selected){builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(imagen));}
+
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
         notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());

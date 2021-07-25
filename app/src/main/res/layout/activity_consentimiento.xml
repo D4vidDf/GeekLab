@@ -58,20 +58,17 @@
         </RelativeLayout>
     </ScrollView>
 
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/aceptar"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/button_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:elevation="5dp"
         android:text="@string/aceptar"
-        android:textAllCaps="true"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold" />
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        app:cornerRadius="10dp" />
 </RelativeLayout>
