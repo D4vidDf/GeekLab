@@ -129,13 +129,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/Mensaje"
+        android:id="@+id/lin"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="12dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/opt"
@@ -155,16 +157,16 @@
             app:cornerRadius="10dp"
             android:textColor="@color/colorAccent"
             />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="130dp"
-            android:layout_below="@id/img_se"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:id="@+id/img"
+        android:layout_height="140dp"
+        android:layout_below="@id/lin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/generar"
@@ -179,6 +181,5 @@
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
         app:cornerRadius="10dp" />
-
 
 </RelativeLayout>

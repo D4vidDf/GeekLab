@@ -1,5 +1,7 @@
 package com.daviddf.geeklabtest;
 
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -11,32 +13,40 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.w3c.dom.Text;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.daviddf.geeklabtest.Not.CHANNEL_1_ID;
 
 public class Notifiaction extends AppCompatActivity {
-    int NOTIFICACION_ID=1;
+    int NOTIFICACION_ID=1, SELECTED_PHOTO=1;
     String titulo,mensaje;
     Bitmap imagen;
     Boolean imagen_selected=false;
+    Uri uri;
+    ImageView imageView;
 
     TextInputLayout tt, tit, mes;
     int n=0;
@@ -48,11 +58,24 @@ public class Notifiaction extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifiaction);
 
-        imagen = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.gmail);
-
         tit = (TextInputLayout) findViewById(R.id.Titulo);
         mes = (TextInputLayout) findViewById(R.id.Mensaje);
         tt = (TextInputLayout) findViewById(R.id.tt);
+
+        MaterialButton choose = findViewById(R.id.img_se);
+        imageView = findViewById(R.id.img);
+
+        choose.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intentimg =new Intent(Intent.ACTION_PICK);
+                intentimg.setType("image/*");
+                startActivityForResult(intentimg,SELECTED_PHOTO);
+            }
+        });
+
+
 
         MaterialButton gen = (MaterialButton) findViewById(R.id.generar);
 
@@ -96,11 +119,37 @@ public class Notifiaction extends AppCompatActivity {
             }
         });
     }
+    @Override
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == SELECTED_PHOTO && data !=null && data.getData() !=null){
+
+            uri = data.getData();
+            try {
+
+                imagen = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+                imageView.setImageBitmap(imagen);
+                imagen_selected = true;
+
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotificationChannel() {
 
-        CharSequence name = "Notificacion";
+        CharSequence name = "GeekLab";
         NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(notificationChannel);
@@ -117,7 +166,10 @@ public class Notifiaction extends AppCompatActivity {
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
         builder.setVibrate(new long[]{80, 1000, 1000, 1000, 1000});
         builder.setDefaults(Notification.DEFAULT_SOUND);
-        if (imagen_selected){builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(imagen));}
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(mensaje));
+        if (imagen_selected){
+            builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(imagen).setBigContentTitle(titulo).setSummaryText(mensaje));
+        }
 
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
