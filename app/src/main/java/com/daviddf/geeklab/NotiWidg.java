@@ -1,25 +1,14 @@
-package com.daviddf.geeklabtest;
+package com.daviddf.geeklab;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.widget.RemoteViews;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static androidx.core.content.ContextCompat.startActivities;
 
 /**

@@ -1,19 +1,15 @@
-package com.daviddf.geeklabtest;
+package com.daviddf.geeklab;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import static com.daviddf.geeklabtest.Not.CHANNEL_1_ID;
 public class MainActivity extends AppCompatActivity {
     private NotificationManagerCompat notificationManagerCompat;
-    private final int SPLASH_DISPLAY_LENGTH = 3000;
+    private final int SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
     protected void onCreate(Bundle AppCombatActivity) {

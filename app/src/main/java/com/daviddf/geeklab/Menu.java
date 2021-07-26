@@ -1,8 +1,9 @@
-package com.daviddf.geeklabtest;
+package com.daviddf.geeklab;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,6 +33,31 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+        LinearLayout inf = (LinearLayout)findViewById(R.id.info);
+
+        inf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String urlInfo = "https://d4viddf.github.io/GeekLab/";
+
+                Intent info = new Intent(Intent.ACTION_VIEW);
+                info.setData(Uri.parse(urlInfo));
+                startActivity(info);
+            }
+        });
+
+        LinearLayout git = (LinearLayout)findViewById(R.id.github);
+
+        git.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String urlGit = "https://github.com/D4vidDf/GeekLab";
+
+                Intent Git = new Intent(Intent.ACTION_VIEW);
+                Git.setData(Uri.parse(urlGit));
+                startActivity(Git);
+            }
+        });
 
     }
 }

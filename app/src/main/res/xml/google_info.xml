@@ -2,7 +2,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialKeyguardLayout="@layout/google"
     android:initialLayout="@layout/google"
-    android:minWidth="180dp"
+    android:minWidth="250dp"
     android:minHeight="110dp"
     android:resizeMode="horizontal"
     android:previewImage="@drawable/gogle_wid"

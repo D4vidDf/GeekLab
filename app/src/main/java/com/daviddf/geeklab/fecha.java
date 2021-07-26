@@ -1,4 +1,4 @@
-package com.daviddf.geeklabtest;
+package com.daviddf.geeklab;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;

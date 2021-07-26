@@ -1,4 +1,4 @@
-package com.daviddf.geeklabtest;
+package com.daviddf.geeklab;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.widget.RemoteViews;
 
 /**
@@ -16,6 +15,7 @@ public class Google extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        @SuppressLint("RemoteViewLayout")
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.google);
 
         Intent Google = new Intent(Intent.ACTION_VIEW);

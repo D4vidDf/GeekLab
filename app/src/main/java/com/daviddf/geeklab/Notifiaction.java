@@ -1,44 +1,29 @@
-package com.daviddf.geeklabtest;
+package com.daviddf.geeklab;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.w3c.dom.Text;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.daviddf.geeklabtest.Not.CHANNEL_1_ID;
 
 public class Notifiaction extends AppCompatActivity {
     int NOTIFICACION_ID=1, SELECTED_PHOTO=1;
@@ -87,19 +72,23 @@ public class Notifiaction extends AppCompatActivity {
                     tt.setErrorEnabled(true);
                     tt.setError("Error: Introduzca el nº de Notificaciones");
                 }
-                else {n++; tt.setErrorEnabled(false);};
+                else {n++; tt.setErrorEnabled(false);}
 
                 if (mes.getEditText().getText().toString().isEmpty()){
+                    mes.setErrorEnabled(true);
                     mes.setError("Error: Añada el cuerpo de la Notificación");
                 }
-                else {n++; mes.setErrorEnabled(false);};
+                else {n++; mes.setErrorEnabled(false);}
 
                 if (tit.getEditText().getText().toString().isEmpty()){
+                    tit.setErrorEnabled(true);
                     tit.setError("Error: Añada el título de la Notificación");
                 }
+                else if (tit.getEditText().getText().length()>30){
+                    tit.setErrorEnabled(true);
+                    tit.setError("Error: La longitud debe ser inferior a 30 caracteres");
+                }
                 else {n++; tit.setErrorEnabled(false);}
-
-                if (tit.getEditText().getText().length() >30) n--;
 
 
                 if (n==3) {
@@ -134,9 +123,7 @@ public class Notifiaction extends AppCompatActivity {
                 imageView.setImageBitmap(imagen);
                 imagen_selected = true;
 
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (IOException e){
                 e.printStackTrace();
             }
 

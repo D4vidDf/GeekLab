@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.daviddf.geeklabtest">
+    package="com.daviddf.geeklab">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".Google">
+        <receiver android:name="com.daviddf.geeklab.Google">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -19,7 +19,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/google_info" />
         </receiver>
-        <receiver android:name=".NotiWidg">
+        <receiver android:name="com.daviddf.geeklab.NotiWidg">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -28,7 +28,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/noti_widg_info" />
         </receiver>
-        <receiver android:name=".LoopWidgt">
+        <receiver android:name="com.daviddf.geeklab.LoopWidgt">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -37,7 +37,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/loop_widgt_info" />
         </receiver>
-        <receiver android:name=".fecha">
+        <receiver android:name="com.daviddf.geeklab.fecha">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -46,7 +46,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/fecha_info" />
         </receiver>
-        <receiver android:name=".Hora">
+        <receiver android:name="com.daviddf.geeklab.Hora">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -60,25 +60,25 @@
         </receiver>
 
         <activity
-            android:name=".Countdown"
+            android:name="com.daviddf.geeklab.Countdown"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Loop2"
+            android:name="com.daviddf.geeklab.Loop2"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Loop"
+            android:name="com.daviddf.geeklab.Loop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Notifiaction"
+            android:name="com.daviddf.geeklab.Notifiaction"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Menu"
+            android:name="com.daviddf.geeklab.Menu"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Consentimiento"
+            android:name="com.daviddf.geeklab.Consentimiento"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.daviddf.geeklab.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

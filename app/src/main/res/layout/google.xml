@@ -1,9 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_google"
     android:padding="@dimen/widget_margin"
     android:id="@+id/google"
+    android:gravity="center"
     android:theme="@style/ThemeOverlay.GeekLabTest.AppWidgetContainer">
 
         <RelativeLayout
@@ -31,31 +33,32 @@
                     android:text="Buscar..."
                     android:textColor="#959595"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    />
 
         </RelativeLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="3"
-                    android:gravity="center"
                     android:layout_below="@id/search">
                         <RelativeLayout
                             android:id="@+id/lens"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_google_button_3"
-                            android:elevation="5dp"
+                            android:elevation="10dp"
                             android:layout_margin="5dp"
                             android:layout_weight="1">
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:layout_margin="10dp">
                                         <ImageView
                                             android:id="@+id/len_logo"
                                             android:layout_width="match_parent"
@@ -72,7 +75,8 @@
                                             android:textColor="#959595"
                                             android:textSize="12sp"
                                             android:textStyle="bold"
-                                            android:layout_marginTop="10dp"/>
+                                            android:layout_marginTop="10dp"
+                                            android:gravity="center_horizontal"/>
                                 </LinearLayout>
 
 
@@ -80,16 +84,17 @@
                         <RelativeLayout
                             android:id="@+id/asistente"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_google_button_3"
-                            android:elevation="5dp"
+                            android:elevation="10dp"
+                            android:layout_margin="5dp"
                             android:layout_weight="1">
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:layout_margin="10dp">
                                         <ImageView
 
                                             android:id="@+id/ass_logo"
@@ -107,7 +112,8 @@
                                             android:textColor="#959595"
                                             android:textSize="12sp"
                                             android:textStyle="bold"
-                                            android:layout_marginTop="10dp"/>
+                                            android:layout_marginTop="10dp"
+                                            android:gravity="center_horizontal"/>
                                 </LinearLayout>
 
                         </RelativeLayout>
@@ -115,7 +121,7 @@
                         <RelativeLayout
                             android:id="@+id/mail"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:background="@drawable/bg_google_button_3"
                             android:elevation="5dp"
@@ -123,6 +129,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_margin="10dp"
                                     android:layout_centerInParent="true"
                                     android:orientation="vertical">
                                         <ImageView
@@ -142,7 +149,8 @@
                                             android:textColor="#959595"
                                             android:textSize="12sp"
                                             android:textStyle="bold"
-                                            android:layout_marginTop="10dp"/>
+                                            android:layout_marginTop="10dp"
+                                            android:gravity="center_horizontal"/>
                                 </LinearLayout>
 
                         </RelativeLayout>

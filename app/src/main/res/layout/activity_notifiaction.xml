@@ -77,7 +77,6 @@
         app:boxStrokeWidthFocused="2dp"
         app:counterEnabled="true"
         app:counterMaxLength="30"
-        app:errorEnabled="true"
         app:helperText="Este título será mostrado en las notificaciones"
         app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
         app:hintAnimationEnabled="true"
@@ -116,7 +115,6 @@
         app:errorEnabled="true"
         app:helperText="Cuerpo de la notificación"
         app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:hintAnimationEnabled="true"
         app:hintEnabled="true"
         app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
 
