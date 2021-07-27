@@ -167,7 +167,7 @@ public class Menu extends AppCompatActivity {
         lp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Menu.this, Countdown.class));
+                startActivity(new Intent(Menu.this, Consentimiento.class));
             }
         });
 

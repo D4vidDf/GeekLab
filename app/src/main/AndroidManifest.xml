@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.daviddf.geeklab">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -10,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name="com.daviddf.geeklab.Google">
+        <activity android:name=".FeedExperiments"></activity>
+
+        <receiver android:name=".Google">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -19,7 +23,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/google_info" />
         </receiver>
-        <receiver android:name="com.daviddf.geeklab.NotiWidg">
+        <receiver android:name=".NotiWidg">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -28,7 +32,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/noti_widg_info" />
         </receiver>
-        <receiver android:name="com.daviddf.geeklab.LoopWidgt">
+        <receiver android:name=".LoopWidgt">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -37,7 +41,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/loop_widgt_info" />
         </receiver>
-        <receiver android:name="com.daviddf.geeklab.fecha">
+        <receiver android:name=".fecha">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -46,7 +50,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/fecha_info" />
         </receiver>
-        <receiver android:name="com.daviddf.geeklab.Hora">
+        <receiver android:name=".Hora">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -60,25 +64,25 @@
         </receiver>
 
         <activity
-            android:name="com.daviddf.geeklab.Countdown"
+            android:name=".Countdown"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.daviddf.geeklab.Loop2"
+            android:name=".Loop2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.daviddf.geeklab.Loop"
+            android:name=".Loop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.daviddf.geeklab.Notifiaction"
+            android:name=".Notifiaction"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.daviddf.geeklab.Menu"
+            android:name=".Menu"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.daviddf.geeklab.Consentimiento"
+            android:name=".Consentimiento"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.daviddf.geeklab.MainActivity"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

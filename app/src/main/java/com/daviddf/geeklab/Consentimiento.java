@@ -21,7 +21,7 @@ public class Consentimiento extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Consentimiento.this, Menu.class));
+                startActivity(new Intent(Consentimiento.this, Countdown.class));
             }
         });
     }
