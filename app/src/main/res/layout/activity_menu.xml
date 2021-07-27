@@ -9,157 +9,417 @@
 
     <TextView
         android:id="@+id/texto"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
         android:fontFamily="@font/camphorpro_bold"
-        android:layout_marginTop="15dp"
         android:text="Utilidades"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="40dp"
-        android:textSize="30sp"/>
-
-    <LinearLayout
-        android:layout_below="@id/texto"
+        android:gravity="center"
+        />
+    <ScrollView
+        style="@android:style/Widget.Material.Light.ScrollView"
         android:layout_width="match_parent"
-        android:padding="24dp"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_menu"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout
-            android:layout_weight="0"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        android:scrollIndicators="right"
+        android:scrollbarSize="5dp"
+        android:scrollbarStyle="insideInset"
+        android:verticalScrollbarPosition="right"
+        android:layout_below="@id/texto">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/not"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Notificaciones"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/notification"
+                app:iconGravity="end"
+                app:iconSize="30dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/developer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/not"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Opciones Desarrollador"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/ic_code"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/band"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/developer"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Selector Bandas"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/signal"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/hdr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/band"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Mejora IA HDR"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/hdr"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/velo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hdr"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Mejorar velocidad conexión"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/speed"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/accounts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/velo"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Multicuenta"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/account"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/usage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/accounts"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Datos de uso"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/data"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rendimiento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/usage"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="Modo rendimiento"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/memory"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/qcolor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rendimiento"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/space_menu"
+                android:layout_marginRight="50dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:text="QColor"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/color"
+                app:iconGravity="end"
+                app:iconSize="30dp"
+                android:textColor="#ffffff"
+                app:iconTint="#ffffff"/>
+
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/qcolor"
+                android:background="@drawable/bg_menu"
                 android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_marginRight="30dp"
-                android:layout_height="wrap_content">
+                android:padding="24dp"
+                app:layout_constraintBottom_toBottomOf="parent">
+
                 <LinearLayout
-                    android:id="@+id/notification"
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_notification">
-                    <ImageView
-                        android:src="@drawable/notification"
-                        android:layout_margin="15dp"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"/>
+                    android:layout_gravity="center"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="30dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/notification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_notification"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_margin="15dp"
+                                android:src="@drawable/notification" />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:text="Notificaciones"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/loop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_refresh"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_margin="15dp"
+                                android:src="@drawable/refresh" />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:text="Loop"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Notificaciones"
-                    android:layout_marginTop="15dp"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_marginLeft="30dp"
-                android:layout_height="wrap_content">
+
                 <LinearLayout
-                    android:id="@+id/loop"
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_refresh"
-                    android:gravity="center_vertical|center_horizontal">
-                    <ImageView
-                        android:src="@drawable/refresh"
-                        android:layout_margin="15dp"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"/>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="30dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_info"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/in"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_margin="15dp"
+                                android:src="@drawable/info" />
+
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:text="Información"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/github"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_github"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_margin="15dp"
+                                android:src="@drawable/github" />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:text="GitHub"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Loop"
-                    android:layout_marginTop="15dp"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
             </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_marginTop="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_marginRight="30dp"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/info"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_info"
-                    android:gravity="center_vertical|center_horizontal">
-                    <ImageView
-                        android:src="@drawable/info"
-                        android:layout_margin="15dp"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:id="@+id/in"/>
+        </RelativeLayout>
 
 
-                </LinearLayout>
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Información"
-                    android:layout_marginTop="15dp"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/github"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_github"
-                    android:gravity="center_vertical|center_horizontal">
-                    <ImageView
-                        android:src="@drawable/github"
-                        android:layout_margin="15dp"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"/>
+    </ScrollView>
 
-                </LinearLayout>
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="GitHub"
-                    android:layout_marginTop="15dp"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
 </RelativeLayout>
