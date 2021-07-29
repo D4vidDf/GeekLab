@@ -34,4 +34,4 @@ Estos bucles están mal programados, con la intención de cronometrar y analizar
 
 ## Política de privacidad
 
-La actual Política de privacidad se encuentra disponible [aquí](https://davidcreator.github.io/GeekLab/policy)
+La actual Política de privacidad se encuentra disponible [aquí](https://d4viddf.github.io/GeekLab/policy)
