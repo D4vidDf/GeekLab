@@ -1,35 +1,46 @@
-package com.daviddf.geeklab;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.daviddf.geeklab.ui.utilities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.daviddf.geeklab.Consentimiento;
+import com.daviddf.geeklab.Menu;
+import com.daviddf.geeklab.Notifiaction;
+import com.daviddf.geeklab.R;
+import com.daviddf.geeklab.databinding.FragmentUtilitiesBinding;
 import com.google.android.material.button.MaterialButton;
 
-public class Menu extends AppCompatActivity {
+public class DashboardFragment extends Fragment {
 
     MaterialButton noti, dev, band, ia_hdr, speed, account, data, performance, qcolor;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+    private FragmentUtilitiesBinding binding;
 
-        noti = (MaterialButton) findViewById(R.id.not);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+
+        binding = FragmentUtilitiesBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+        noti = (MaterialButton) root.findViewById(R.id.not);
 
         noti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent( Menu.this, Notifiaction.class));
+                startActivity(new Intent( getActivity(), Notifiaction.class));
             }
         });
 
-        dev = (MaterialButton) findViewById(R.id.developer);
+        dev = (MaterialButton) root.findViewById(R.id.developer);
 
         dev.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +51,7 @@ public class Menu extends AppCompatActivity {
             }
         });
 
-        band = (MaterialButton) findViewById(R.id.band);
+        band = (MaterialButton) root.findViewById(R.id.band);
 
         band.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,13 +61,13 @@ public class Menu extends AppCompatActivity {
                     Band.setClassName("com.android.settings", "com.android.settings.MiuiBandMode");
                     startActivity(Band);
                 } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(getActivity(), "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
         });
 
-        ia_hdr = (MaterialButton) findViewById(R.id.hdr);
+        ia_hdr = (MaterialButton) root.findViewById(R.id.hdr);
 
         ia_hdr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,13 +77,13 @@ public class Menu extends AppCompatActivity {
                     Hdr.setClassName("com.android.settings", "com.android.settings.display.ScreenEnhanceEngineS2hActivity");
                     startActivity(Hdr);
                 } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(getActivity(), "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
         });
 
-        speed = (MaterialButton) findViewById(R.id.velo);
+        speed = (MaterialButton) root.findViewById(R.id.velo);
 
         speed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,13 +93,13 @@ public class Menu extends AppCompatActivity {
                     Speed.setClassName("com.android.settings", "com.android.settings.wifi.linkturbo.WifiLinkTurboSettings");
                     startActivity(Speed);
                 }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(getActivity(),"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
         });
 
-        account = (MaterialButton) findViewById(R.id.accounts);
+        account = (MaterialButton) root.findViewById(R.id.accounts);
 
         account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,29 +109,29 @@ public class Menu extends AppCompatActivity {
                     Account.setClassName("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
                     startActivity(Account);
                 }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(getActivity(),"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
         });
 
-        data = (MaterialButton) findViewById(R.id.usage);
+        data = (MaterialButton) root.findViewById(R.id.usage);
 
         data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                Intent Data = new Intent(Intent.ACTION_VIEW);
-                Data.setClassName("com.xiaomi.misettings","com.xiaomi.misettings.usagestats.UsageStatsMainActivity");
-                startActivity(Data);
+                    Intent Data = new Intent(Intent.ACTION_VIEW);
+                    Data.setClassName("com.xiaomi.misettings","com.xiaomi.misettings.usagestats.UsageStatsMainActivity");
+                    startActivity(Data);
                 }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(getActivity(),"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
         });
 
-        performance = (MaterialButton) findViewById(R.id.rendimiento);
+        performance = (MaterialButton) root.findViewById(R.id.rendimiento);
 
         performance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,14 +141,14 @@ public class Menu extends AppCompatActivity {
                     Performance.setClassName("com.qualcomm.qti.performancemode","com.qualcomm.qti.performancemode.PerformanceModeActivity");
                     startActivity(Performance);
                 } catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(getActivity(),"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
                     errorToast.show();
                 }
 
             }
         });
 
-        qcolor = (MaterialButton) findViewById(R.id.qcolor);
+        qcolor = (MaterialButton) root.findViewById(R.id.qcolor);
 
         qcolor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,23 +158,29 @@ public class Menu extends AppCompatActivity {
                     Performance.setClassName("com.qualcomm.qti.qcolor", "com.qualcomm.qti.qcolor.QColorActivity");
                     startActivity(Performance);
                 } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(getActivity(), "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
         });
 
 
-        MaterialButton lp = (MaterialButton) findViewById(R.id.loop);
+        MaterialButton lp = (MaterialButton) root.findViewById(R.id.loop);
 
         lp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Menu.this, Consentimiento.class));
+                startActivity(new Intent(getActivity(), Consentimiento.class));
             }
         });
 
 
+        return root;
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

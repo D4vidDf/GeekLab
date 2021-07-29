@@ -2,6 +2,7 @@ package com.daviddf.geeklab;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.ColorSpace;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.squareup.picasso.Picasso;
 
@@ -21,6 +23,7 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
 
     Context context;
     ArrayList<Experiments> experimentsArrayList;
+    MaterialButton Tag;
 
     public Myadapter(Context context, ArrayList<Experiments> experimentsArrayList) {
         this.context = context;
@@ -41,6 +44,7 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
 
         Experiments experiments = experimentsArrayList.get(position);
         holder.Titulo.setText(experiments.Titulo);
+        holder.Tag.setText(experiments.Tag);
         Picasso.get().load(experiments.Imagen).placeholder(R.mipmap.ic_launcher).into(holder.Portada);
 
         holder.Portada.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +56,18 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
             }
         });
 
+        if (holder.Tag.getText().equals("Experimentos")){
+            holder.Tag.setBackgroundColor(0xff0384fc);
+        }
+
+        if (holder.Tag.getText().equals("Noticias")){
+            holder.Tag.setBackgroundColor(0xff7703fc);
+        }
+
+        if (holder.Tag.getText().equals("Artículo")){
+            holder.Tag.setBackgroundColor(0xffde4f23);
+        }
+
     }
 
     @Override
@@ -62,10 +78,12 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         MaterialTextView Titulo;
+        MaterialButton Tag;
         ImageView Portada;
 
         public MyViewHolder(@NonNull  View itemView) {
             super(itemView);
+            Tag = itemView.findViewById(R.id.tag);
             Titulo = itemView.findViewById(R.id.titulo);
             Portada = itemView.findViewById(R.id.portada);
 

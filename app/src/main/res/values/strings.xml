@@ -2,9 +2,9 @@
     <string name="app_name">GeekLab</string>
     <string name="xiaomi_logo">Xiaomi logo</string>
     <string name="aviso">AVISO</string>
-    <string name="mensaje1">Esta aplicación ha sido diseñada con el único objetivo de poner a prueba las capacidades de un teléfono móvil. Un uso indebido de la aplicación puede ocasionar problemas a corto o largo plazo.</string>
+    <string name="mensaje1">Está a punto de acceder a una función altmente peligrosa de la aplicación. Esta función ha sido diseñada para poner a prueba la gestión de Memoria RAM en los teléfonos móviles.</string>
     <string name="aceptar">Aceptar</string>
-    <string name="mensaje2">En caso de no poder salir de la aplicación fuerce un reinicio del dispositivo móvil.</string>
+    <string name="mensaje2">Tenga en cuenta que un uso indebido de dicha función puede conllevar problemas a corto o largo plazo. No nos hacemos responsables de un uso indebido.</string>
     <string name="loop">Loop</string>
     <string name="l_o_o_p">L O O P</string>
     <string name="loop_">LOOP</string>
@@ -15,4 +15,21 @@
     <string name="tittle">Título</string>
     <string name="mess">Mensaje</string>
     <string name="n_notificaciones">Nº Notificaciones</string>
+    <string name="hdr_enhance">Mejora IA HDR</string>
+    <string name="band_selector">Selector Bandas</string>
+    <string name="notification">Notificaciones</string>
+    <string name="developer_options">Opciones Desarrollador</string>
+    <string name="improve_speed_connection">Mejorar velocidad conexión</string>
+    <string name="multiaccount">Multicuenta</string>
+    <string name="data_usage">Datos de uso</string>
+    <string name="performance_mode">Modo rendimiento</string>
+    <string name="qcolor">QColor</string>
+    <string name="memory_loop">Sobrecarga de memoria RAM (Loop)</string>
+    <string name="menu">Funciones</string>
+    <string name="title_activity_bottom_navigation">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="news">Noticias</string>
+    <string name="settings">ajustes</string>
 </resources>

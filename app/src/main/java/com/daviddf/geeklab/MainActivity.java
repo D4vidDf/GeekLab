@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent mainIntent = new Intent(MainActivity.this, Menu.class);
+                Intent mainIntent = new Intent(MainActivity.this, BottomNavigation.class);
                 MainActivity.this.startActivity(mainIntent);
                 MainActivity.this.finish();
             }
