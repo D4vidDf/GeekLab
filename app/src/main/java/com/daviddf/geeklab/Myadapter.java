@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -70,7 +71,6 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
                 context.startActivity(url);*/
 
                 CustomTabsIntent.Builder customtab = new CustomTabsIntent.Builder();
-
                 openCustomTabs(activity,customtab.build(), Uri.parse(experiments.Url));
 
             }
@@ -117,7 +117,12 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
         if(packageName != null){
 
             customTabsIntent.intent.setPackage(packageName);
-            customTabsIntent.launchUrl(activity,uri);
+            try {
+                customTabsIntent.launchUrl(activity, uri);
+            } catch (Exception e){
+                Toast errorToast = Toast.makeText(activity, R.string.error_navigation_chorme, Toast.LENGTH_LONG);
+                errorToast.show();
+            }
 
         } else {
 

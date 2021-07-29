@@ -46,4 +46,11 @@
     <string name="error_body">Error: Add Notification Body</string>
     <string name="error_title">Error: Add Notification Title</string>
     <string name="error_title_length">Error: Length must be less than 30 characters</string>
+    <string name="error_function_not_available">This function is not available on your terminal</string>
+    <string name="error_navigation_chorme">Error: The browser is not responding</string>
+    <string name="github">GitHub</string>
+    <string name="twitter">Twitter</string>
+    <string name="modo_oscuro">Dark Mode</string>
+    <string name="activado">Enabled</string>
+    <string name="desactivado">Disabled</string>
 </resources>

@@ -50,7 +50,7 @@ public class Menu extends AppCompatActivity {
                     Band.setClassName("com.android.settings", "com.android.settings.MiuiBandMode");
                     startActivity(Band);
                 } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -66,7 +66,7 @@ public class Menu extends AppCompatActivity {
                     Hdr.setClassName("com.android.settings", "com.android.settings.display.ScreenEnhanceEngineS2hActivity");
                     startActivity(Hdr);
                 } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -82,7 +82,7 @@ public class Menu extends AppCompatActivity {
                     Speed.setClassName("com.android.settings", "com.android.settings.wifi.linkturbo.WifiLinkTurboSettings");
                     startActivity(Speed);
                 }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -98,7 +98,7 @@ public class Menu extends AppCompatActivity {
                     Account.setClassName("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
                     startActivity(Account);
                 }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -114,7 +114,7 @@ public class Menu extends AppCompatActivity {
                 Data.setClassName("com.xiaomi.misettings","com.xiaomi.misettings.usagestats.UsageStatsMainActivity");
                 startActivity(Data);
                 }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -130,7 +130,7 @@ public class Menu extends AppCompatActivity {
                     Performance.setClassName("com.qualcomm.qti.performancemode","com.qualcomm.qti.performancemode.PerformanceModeActivity");
                     startActivity(Performance);
                 } catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
 
@@ -147,7 +147,7 @@ public class Menu extends AppCompatActivity {
                     Performance.setClassName("com.qualcomm.qti.qcolor", "com.qualcomm.qti.qcolor.QColorActivity");
                     startActivity(Performance);
                 } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }

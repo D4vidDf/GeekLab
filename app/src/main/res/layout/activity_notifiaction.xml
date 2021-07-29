@@ -25,6 +25,8 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="bold"
                 android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:layout_centerHorizontal="true"
                 android:textSize="30sp"/>
 
             <com.google.android.material.textfield.TextInputLayout

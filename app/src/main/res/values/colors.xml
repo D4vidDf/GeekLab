@@ -3,10 +3,11 @@
     <color name="colorPrimary">#2B68CA</color>
     <color name="colorPrimaryDark">#2B68CA</color>
     <color name="colorAccent">#FFFF</color>
+    <color name="colorDark">#214175</color>
 
     <color name="light_blue_50">#FFE1F5FE</color>
     <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
-    <string name="white">#ffffff</string>
+    <string name="white" translatable="false">#ffffff</string>
 </resources>

@@ -31,7 +31,7 @@
     <string name="title_dashboard" translatable="false">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="news">Noticias</string>
-    <string name="settings">ajustes</string>
+    <string name="settings">Ajustes</string>
     <string name="experimento">Experimento</string>
     <string name="imagen_portada">Imagen portada</string>
     <string name="semitransparencia_portada">Semitransparencia portada</string>
@@ -62,4 +62,11 @@
     <string name="error_body">Error: Añada el cuerpo de la Notificación</string>
     <string name="error_title">Error: Añada el título de la Notificación</string>
     <string name="error_title_length">Error: La longitud debe ser inferior a 30 caracteres</string>
+    <string name="error_navigation_chorme">Error: El navegador no responde</string>
+    <string name="error_function_not_available">Esta función no está disponible en su terminal</string>
+    <string name="github">GitHub</string>
+    <string name="twitter">Twitter</string>
+    <string name="modo_oscuro">Modo oscuro</string>
+    <string name="activado">Activado</string>
+    <string name="desactivado">Desactivado</string>
 </resources>
