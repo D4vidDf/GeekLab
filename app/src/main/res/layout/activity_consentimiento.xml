@@ -69,8 +69,21 @@
     </ScrollView>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/close"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:text="@string/salir"
+        android:layout_above="@id/aceptar"
+        app:strokeColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:cornerRadius="12dp" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/aceptar"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="160dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
@@ -80,5 +93,5 @@
         android:text="@string/aceptar"
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
-        app:cornerRadius="10dp" />
+        app:cornerRadius="12dp" />
 </RelativeLayout>

@@ -5,4 +5,4 @@
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:previewImage="@drawable/preview_notification"
-    android:widgetCategory="home_screen|keyguard"></appwidget-provider>
+    android:widgetCategory="home_screen|keyguard" />

@@ -7,4 +7,4 @@
     android:previewImage="@drawable/preview_fecha"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="60000"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen" />

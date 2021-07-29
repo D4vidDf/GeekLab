@@ -17,11 +17,19 @@ public class Consentimiento extends AppCompatActivity {
         setContentView(R.layout.activity_consentimiento);
 
         MaterialButton btn = (MaterialButton) findViewById(R.id.aceptar);
+        MaterialButton close = (MaterialButton) findViewById(R.id.close);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Consentimiento.this, Countdown.class));
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

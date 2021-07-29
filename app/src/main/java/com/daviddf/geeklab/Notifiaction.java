@@ -70,23 +70,23 @@ public class Notifiaction extends AppCompatActivity {
             public void onClick(View view) {
                 if (tt.getEditText().getText().toString().isEmpty()){
                     tt.setErrorEnabled(true);
-                    tt.setError("Error: Introduzca el nº de Notificaciones");
+                    tt.setError(getString(R.string.error_number));
                 }
                 else {n++; tt.setErrorEnabled(false);}
 
                 if (mes.getEditText().getText().toString().isEmpty()){
                     mes.setErrorEnabled(true);
-                    mes.setError("Error: Añada el cuerpo de la Notificación");
+                    mes.setError(getString(R.string.error_body));
                 }
                 else {n++; mes.setErrorEnabled(false);}
 
                 if (tit.getEditText().getText().toString().isEmpty()){
                     tit.setErrorEnabled(true);
-                    tit.setError("Error: Añada el título de la Notificación");
+                    tit.setError(getString(R.string.error_title));
                 }
                 else if (tit.getEditText().getText().length()>30){
                     tit.setErrorEnabled(true);
-                    tit.setError("Error: La longitud debe ser inferior a 30 caracteres");
+                    tit.setError(getString(R.string.error_title_length));
                 }
                 else {n++; tit.setErrorEnabled(false);}
 

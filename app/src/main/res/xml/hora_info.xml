@@ -5,4 +5,4 @@
     android:minWidth="110dp"
     android:minHeight="40dp"
     android:previewImage="@drawable/preview_hour"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen" />

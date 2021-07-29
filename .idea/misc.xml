@@ -3,12 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout-v26/fecha.xml" value="0.11548913043478261" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_bottom_navigation.xml" value="0.1" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_consentimiento.xml" value="0.25" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_countdown.xml" value="0.14719202898550723" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_loop.xml" value="0.14719202898550723" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_loop2.xml" value="0.14719202898550723" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_main.xml" value="0.14719202898550723" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_menu.xml" value="0.11548913043478261" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_notifiaction.xml" value="0.11548913043478261" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fecha.xml" value="0.11548913043478261" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_feed.xml" value="0.1" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_notifications.xml" value="0.14719202898550723" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_utilities.xml" value="0.11548913043478261" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/google.xml" value="0.37010159651669083" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/hora.xml" value="0.14719202898550723" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/item.xml" value="0.33" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/loop_widg.xml" value="0.11548913043478261" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/noti_widg.xml" value="0.11548913043478261" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

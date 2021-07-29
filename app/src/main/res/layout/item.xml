@@ -13,32 +13,39 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_height="38dp"
             android:id="@+id/tag"
-            android:backgroundTint="@color/colorAccent"
-            android:layout_marginRight="4dp"
-            android:text="Experimento"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:backgroundTint="@color/colorPrimary"
             android:elevation="12dp"
-            android:textColor="#ffffff"
-            app:cornerRadius="12dp"
-            android:textSize="12sp"
+            android:text="@string/experimento"
             android:textAllCaps="true"
-            android:textStyle="bold" />
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp"
+            tools:ignore="RelativeOverlap,TextContrastCheck,TouchTargetSizeCheck" />
+
         <ImageView
+            android:id="@+id/portada"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:id="@+id/portada"
+            android:contentDescription="@string/imagen_portada"
             android:scaleType="centerCrop"
-            ></ImageView>
+            tools:ignore="ImageContrastCheck" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="220dp"
+            android:contentDescription="@string/semitransparencia_portada"
             android:elevation="10dp"
-            android:src="@drawable/bg_item" />
+            android:src="@drawable/bg_item"
+            tools:ignore="ImageContrastCheck" />
+
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:id="@+id/titulo"
@@ -51,7 +58,7 @@
             android:layout_margin="10dp"
             android:textSize="20sp"
             android:maxLines="2"
-            android:paddingBottom="5dp"></com.google.android.material.textview.MaterialTextView>
+            android:paddingBottom="5dp" />
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

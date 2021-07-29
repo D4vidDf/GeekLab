@@ -7,164 +7,173 @@
     tools:context=".Notifiaction"
     style="@style/Theme.MaterialComponents.DayNight.Bridge">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/Not"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="30dp"
-        android:text="Notificaciones"
-        android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="30sp"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tt"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Not"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="20dp"
-        android:elevation="5dp"
-        android:hint="@string/n_notificaciones"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:boxStrokeColor="@color/colorPrimary"
-        app:boxStrokeErrorColor="#FF0000"
-        app:boxStrokeWidth="2dp"
-        app:boxStrokeWidthFocused="2dp"
-        app:errorTextAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:helperText="Cantidad de notificaciones generadas"
-        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:hintAnimationEnabled="true"
-        app:hintEnabled="true"
-        app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColorHint="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/Titulo"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tt"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="20dp"
-        android:hint="@string/tittle"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:boxStrokeColor="@color/colorPrimary"
-        app:boxStrokeErrorColor="#FF0000"
-        app:boxStrokeWidth="2dp"
-        app:boxStrokeWidthFocused="2dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="30"
-        app:helperText="Este título será mostrado en las notificaciones"
-        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:hintAnimationEnabled="true"
-        app:hintEnabled="true"
-        app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_height="match_parent"
         >
-
-        <com.google.android.material.textfield.TextInputEditText
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColorHint="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/Not"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/notificaciones"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="30sp"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/Mensaje"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Titulo"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="20dp"
-        android:hint="@string/mess"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:boxStrokeColor="@color/colorPrimary"
-        app:boxStrokeErrorColor="#FF0000"
-        app:boxStrokeWidth="2dp"
-        app:boxStrokeWidthFocused="2dp"
-        app:errorEnabled="true"
-        app:helperText="Cuerpo de la notificación"
-        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:hintEnabled="true"
-        app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tt"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Not"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="20dp"
+                android:elevation="5dp"
+                android:hint="@string/n_notificaciones"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/colorPrimary"
+                app:boxStrokeErrorColor="#FF0000"
+                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:errorTextAppearance="@style/TextAppearance.AppCompat.Body1"
+                app:helperText="@string/number_helper"
+                app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColorHint="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="#000000"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Mensaje"
-        android:id="@+id/lin"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:layout_marginTop="12dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Titulo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tt"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="20dp"
+                android:hint="@string/tittle"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/colorPrimary"
+                app:boxStrokeErrorColor="#FF0000"
+                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
+                app:helperText="@string/title_helper"
+                app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/opt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="Imagen (Opcional)"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="#000000"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seleccionar"
-            android:id="@+id/img_se"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="50dp"
-            app:cornerRadius="10dp"
-            android:textColor="@color/colorAccent"
-            />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Mensaje"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Titulo"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="20dp"
+                android:hint="@string/mess"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/colorPrimary"
+                app:boxStrokeErrorColor="#FF0000"
+                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:errorEnabled="true"
+                app:helperText="@string/body_helper"
+                app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Body2"
+                app:hintEnabled="true"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Body1">
 
-    </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="#000000"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:id="@+id/img"
-        android:layout_height="140dp"
-        android:layout_below="@id/lin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Mensaje"
+                android:id="@+id/lin"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/opt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/imagen_opcional"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/seleccionar"
+                    android:id="@+id/img_se"
+                    android:layout_marginStart="50dp"
+                    app:cornerRadius="10dp"
+                    android:textColor="@color/colorAccent"
+                    />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:id="@+id/img"
+                android:layout_height="140dp"
+                android:layout_below="@id/lin"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="100dp"
+                android:contentDescription="@string/imagen_notificacion" />
+        </RelativeLayout>
+    </ScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/generar"
@@ -178,6 +187,6 @@
         android:text="@string/generar"
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
-        app:cornerRadius="10dp" />
+        app:cornerRadius="10dp"/>
 
 </RelativeLayout>

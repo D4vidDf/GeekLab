@@ -16,14 +16,16 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/bg_wid"/>
+            android:src="@drawable/bg_wid"
+            android:contentDescription="@string/loop_fono" />
 
         <ImageView
             android:id="@+id/img3"
             android:layout_centerInParent="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/loop"></ImageView>
+            android:src="@drawable/loop"
+            android:contentDescription="@string/loop_logo" />
 
     </RelativeLayout>
 
