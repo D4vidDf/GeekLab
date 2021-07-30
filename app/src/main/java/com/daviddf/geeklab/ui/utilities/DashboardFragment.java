@@ -45,9 +45,15 @@ public class DashboardFragment extends Fragment {
         dev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Dev = new Intent(Intent.ACTION_VIEW);
-                Dev.setClassName("com.android.settings","com.android.settings.Settings$DevelopmentSettingsDashboardActivity");
-                startActivity(Dev);
+                try {
+                    Intent Dev = new Intent(Intent.ACTION_VIEW);
+                    Dev.setClassName("com.android.settings","com.android.settings.Settings$DevelopmentSettingsDashboardActivity");
+                    startActivity(Dev);
+                } catch (Exception e){
+                    Toast errorToast = Toast.makeText(getActivity(), "Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    errorToast.show();
+                }
+
             }
         });
 
