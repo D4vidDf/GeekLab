@@ -166,14 +166,15 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_width="wrap_content"
                 android:id="@+id/img"
+                android:layout_width="wrap_content"
                 android:layout_height="140dp"
                 android:layout_below="@id/lin"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="100dp"
-                android:contentDescription="@string/imagen_notificacion" />
+                android:contentDescription="@string/imagen_notificacion"
+                android:src="@drawable/bg_placeholder" />
         </RelativeLayout>
     </ScrollView>
 

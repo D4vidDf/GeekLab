@@ -36,7 +36,7 @@
             android:layout_height="220dp"
             android:contentDescription="@string/imagen_portada"
             android:scaleType="centerCrop"
-            tools:ignore="ImageContrastCheck" />
+            android:src="@drawable/preset"/>
 
         <ImageView
             android:layout_width="match_parent"

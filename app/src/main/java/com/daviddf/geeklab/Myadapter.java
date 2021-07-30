@@ -60,7 +60,7 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
         Experiments experiments = experimentsArrayList.get(position);
         holder.Titulo.setText(experiments.Titulo);
         holder.Tag.setText(experiments.Tag);
-        Picasso.get().load(experiments.Imagen).placeholder(R.mipmap.ic_launcher).into(holder.Portada);
+        Picasso.get().load(experiments.Imagen).placeholder(R.drawable.preset).into(holder.Portada);
 
         holder.Portada.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceType")
