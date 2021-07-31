@@ -50,16 +50,15 @@ public class Notifiaction extends AppCompatActivity {
         MaterialButton choose = findViewById(R.id.img_se);
         imageView = findViewById(R.id.img);
 
-        choose.setOnClickListener(new View.OnClickListener(){
+        choose.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intentimg =new Intent(Intent.ACTION_PICK);
+                Intent intentimg = new Intent(Intent.ACTION_PICK);
                 intentimg.setType("image/*");
-                startActivityForResult(intentimg,SELECTED_PHOTO);
+                startActivityForResult(intentimg, SELECTED_PHOTO);
             }
         });
-
 
 
         MaterialButton gen = (MaterialButton) findViewById(R.id.generar);
@@ -68,45 +67,54 @@ public class Notifiaction extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                if (tt.getEditText().getText().toString().isEmpty()){
+                if (tt.getEditText().getText().toString().isEmpty()) {
                     tt.setErrorEnabled(true);
                     tt.setError(getString(R.string.error_number));
+                } else {
+                    n++;
+                    tt.setErrorEnabled(false);
                 }
-                else {n++; tt.setErrorEnabled(false);}
 
-                if (mes.getEditText().getText().toString().isEmpty()){
+                if (mes.getEditText().getText().toString().isEmpty()) {
                     mes.setErrorEnabled(true);
                     mes.setError(getString(R.string.error_body));
+                } else {
+                    n++;
+                    mes.setErrorEnabled(false);
                 }
-                else {n++; mes.setErrorEnabled(false);}
 
-                if (tit.getEditText().getText().toString().isEmpty()){
+                if (tit.getEditText().getText().toString().isEmpty()) {
                     tit.setErrorEnabled(true);
                     tit.setError(getString(R.string.error_title));
-                }
-                else if (tit.getEditText().getText().length()>30){
+                } else if (tit.getEditText().getText().length() > 30) {
                     tit.setErrorEnabled(true);
                     tit.setError(getString(R.string.error_title_length));
+                } else {
+                    n++;
+                    tit.setErrorEnabled(false);
                 }
-                else {n++; tit.setErrorEnabled(false);}
 
 
-                if (n==3) {
+                if (n == 3) {
                     no = Long.parseLong(tt.getEditText().getText().toString());
 
-                    while (no>0){
+                    while (no > 0) {
                         titulo = tit.getEditText().getText().toString();
                         mensaje = mes.getEditText().getText().toString();
                         createNotificationChannel();
                         createNotification();
                         NOTIFICACION_ID++;
-                        no-=1;
+                        no -= 1;
                     }
                 }
-                n=0;
+                n = 0;
 
             }
         });
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
     }
     @Override
 

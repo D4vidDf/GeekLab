@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.daviddf.geeklab">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INSTALL_SHORTCUT" />
 
     <application
         android:allowBackup="true"
@@ -14,9 +16,22 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".BottomNavigation"
-            android:label="@string/title_activity_bottom_navigation"></activity>
+            android:label="@string/title_activity_bottom_navigation"
+            tools:ignore="IntentFilterExportedReceiver">
+            <tools:validation testUrl="https://d4viddf.github.io/geeklab/notification" />
+            <tools:validation testUrl="https://d4viddf.github.io/geeklab" />
 
-        <receiver android:name=".Google">
+            <intent-filter>
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".Google"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -25,7 +40,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/google_info" />
         </receiver>
-        <receiver android:name=".NotiWidg">
+        <receiver android:name=".NotiWidg"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -34,7 +50,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/noti_widg_info" />
         </receiver>
-        <receiver android:name=".LoopWidgt">
+        <receiver android:name=".LoopWidgt"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -43,7 +60,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/loop_widgt_info" />
         </receiver>
-        <receiver android:name=".fecha">
+        <receiver android:name=".fecha"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -52,7 +70,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/fecha_info" />
         </receiver>
-        <receiver android:name=".Hora">
+        <receiver android:name=".Hora"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -67,36 +86,87 @@
 
         <activity
             android:name=".Countdown"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".Loop2"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".Loop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".Notifiaction"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
+            <intent-filter android:order="2">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="d4viddf.github.io"
+                    android:pathPattern="/geeklab/notification" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Menu"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
+            <tools:validation testUrl="https://d4viddf.github.io/geeklab/functions" />
+            <intent-filter android:order="0">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="d4viddf.github.io"
+                    android:pathPattern="/geeklab/functions" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Consentimiento"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
+            <tools:validation testUrl="https://d4viddf.github.io/geeklab/loop" />
+            <intent-filter android:order="3">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="d4viddf.github.io"
+                    android:pathPattern="/geeklab/loop" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/actions" />
     </application>
 
 </manifest>

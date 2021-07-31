@@ -25,7 +25,7 @@ public class Menu extends AppCompatActivity {
         noti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent( Menu.this, Notifiaction.class));
+                startActivity(new Intent(Menu.this, Notifiaction.class));
             }
         });
 
@@ -35,7 +35,7 @@ public class Menu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent Dev = new Intent(Intent.ACTION_VIEW);
-                Dev.setClassName("com.android.settings","com.android.settings.Settings$DevelopmentSettingsDashboardActivity");
+                Dev.setClassName("com.android.settings", "com.android.settings.Settings$DevelopmentSettingsDashboardActivity");
                 startActivity(Dev);
             }
         });
@@ -81,8 +81,8 @@ public class Menu extends AppCompatActivity {
                     Intent Speed = new Intent(Intent.ACTION_VIEW);
                     Speed.setClassName("com.android.settings", "com.android.settings.wifi.linkturbo.WifiLinkTurboSettings");
                     startActivity(Speed);
-                }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
+                } catch (RuntimeException e) {
+                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -97,8 +97,8 @@ public class Menu extends AppCompatActivity {
                     Intent Account = new Intent(Intent.ACTION_VIEW);
                     Account.setClassName("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
                     startActivity(Account);
-                }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
+                } catch (RuntimeException e) {
+                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -110,11 +110,11 @@ public class Menu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                Intent Data = new Intent(Intent.ACTION_VIEW);
-                Data.setClassName("com.xiaomi.misettings","com.xiaomi.misettings.usagestats.UsageStatsMainActivity");
-                startActivity(Data);
-                }catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
+                    Intent Data = new Intent(Intent.ACTION_VIEW);
+                    Data.setClassName("com.xiaomi.misettings", "com.xiaomi.misettings.usagestats.UsageStatsMainActivity");
+                    startActivity(Data);
+                } catch (RuntimeException e) {
+                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
             }
@@ -127,10 +127,10 @@ public class Menu extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     Intent Performance = new Intent(Intent.ACTION_VIEW);
-                    Performance.setClassName("com.qualcomm.qti.performancemode","com.qualcomm.qti.performancemode.PerformanceModeActivity");
+                    Performance.setClassName("com.qualcomm.qti.performancemode", "com.qualcomm.qti.performancemode.PerformanceModeActivity");
                     startActivity(Performance);
-                } catch (RuntimeException e){
-                    Toast errorToast = Toast.makeText(Menu.this,R.string.error_function_not_available, Toast.LENGTH_LONG);
+                } catch (RuntimeException e) {
+                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
                     errorToast.show();
                 }
 
@@ -164,6 +164,9 @@ public class Menu extends AppCompatActivity {
         });
 
 
-
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
     }
 }

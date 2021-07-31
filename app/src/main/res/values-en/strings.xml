@@ -53,4 +53,6 @@
     <string name="modo_oscuro">Dark Mode</string>
     <string name="activado">Enabled</string>
     <string name="desactivado">Disabled</string>
+    <string name="shortcut_short_label" >Notifications</string>
+    <string name="shortcut_long_label" >Open notification creator</string>
 </resources>

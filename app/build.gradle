@@ -9,8 +9,8 @@ android {
         applicationId "com.daviddf.geeklabtest"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 12
-        versionName "2.0.1-c"
+        versionCode 14
+        versionName "2.0.2-a"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
