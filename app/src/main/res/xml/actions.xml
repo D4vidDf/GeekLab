@@ -2,6 +2,6 @@
 <actions>
     <action intentName="actions.intent.OPEN_APP_FEATURE">
 
-        <fulfillment urlTemplate="https://d4viddf.github.io/geeklab/functions"/>
+        <fulfillment urlTemplate="https://geeklab.d4viddf.com/functions"/>
     </action>
 </actions>

@@ -18,8 +18,7 @@
             android:name=".BottomNavigation"
             android:label="@string/title_activity_bottom_navigation"
             tools:ignore="IntentFilterExportedReceiver">
-            <tools:validation testUrl="https://d4viddf.github.io/geeklab/notification" />
-            <tools:validation testUrl="https://d4viddf.github.io/geeklab" />
+            <tools:validation testUrl="https://geeklab.d4viddf.com/index" />
 
             <intent-filter>
 
@@ -28,9 +27,32 @@
 
 
             </intent-filter>
+            <intent-filter android:order="0">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/index" />
+            </intent-filter>
+            <intent-filter android:order="1">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/functions" />
+            </intent-filter>
         </activity>
 
-        <receiver android:name=".Google"
+        <receiver
+            android:name=".Google"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -40,7 +62,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/google_info" />
         </receiver>
-        <receiver android:name=".NotiWidg"
+        <receiver
+            android:name=".NotiWidg"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -50,7 +73,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/noti_widg_info" />
         </receiver>
-        <receiver android:name=".LoopWidgt"
+        <receiver
+            android:name=".LoopWidgt"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -60,7 +84,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/loop_widgt_info" />
         </receiver>
-        <receiver android:name=".fecha"
+        <receiver
+            android:name=".fecha"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -70,7 +95,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/fecha_info" />
         </receiver>
-        <receiver android:name=".Hora"
+        <receiver
+            android:name=".Hora"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -100,7 +126,8 @@
             android:name=".Notifiaction"
             android:screenOrientation="portrait"
             tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
-            <intent-filter android:order="2">
+            <tools:validation testUrl="https://geeklab.d4viddf.com/notification" />
+            <intent-filter android:order="2" android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -108,32 +135,22 @@
 
                 <data
                     android:scheme="https"
-                    android:host="d4viddf.github.io"
-                    android:pathPattern="/geeklab/notification" />
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/notification" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Menu"
             android:screenOrientation="portrait"
             tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
-            <tools:validation testUrl="https://d4viddf.github.io/geeklab/functions" />
-            <intent-filter android:order="0">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="https"
-                    android:host="d4viddf.github.io"
-                    android:pathPattern="/geeklab/functions" />
-            </intent-filter>
+            <tools:validation testUrl="https://geeklab.d4viddf.com/functions" />
         </activity>
         <activity
             android:name=".Consentimiento"
             android:screenOrientation="portrait"
             tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
-            <tools:validation testUrl="https://d4viddf.github.io/geeklab/loop" />
+            <tools:validation testUrl="https://geeklab.d4viddf.com/loop" />
+
             <intent-filter android:order="3">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -142,8 +159,8 @@
 
                 <data
                     android:scheme="https"
-                    android:host="d4viddf.github.io"
-                    android:pathPattern="/geeklab/loop" />
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/loop" />
             </intent-filter>
         </activity>
         <activity
