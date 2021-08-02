@@ -1,0 +1,10 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.daviddf.geeklabtest",
+      "sha256_cert_fingerprints":
+      ["93:80:AC:65:BA:28:FE:19:7F:79:A5:8C:3F:7C:F2:62:54:E3:E4:E8:D7:10:59:78:97:68:6D:B3:4C:AA:33:E5"]
+    }
+  }]
+  
