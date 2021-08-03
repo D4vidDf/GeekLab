@@ -54,21 +54,24 @@ public class SettingsFragment extends Fragment {
 
 
 
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+        if (dark.isChecked() && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            text.setText(R.string.activado);
             dark.setChecked(true);
-            text.setText(R.string.activado);
-        }
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
-            dark.setChecked(false);
-            text.setText(R.string.desactivado);
-
-        }
-        if (dark.isChecked()) {
-            text.setText(R.string.activado);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
-        else {
+        if (dark.isChecked() && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
             text.setText(R.string.desactivado);
+            dark.setChecked(false);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        if (!dark.isChecked() && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            text.setText(R.string.activado);
+            dark.setChecked(true);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        if (!dark.isChecked() && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
+            text.setText(R.string.desactivado);
+            dark.setChecked(false);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 

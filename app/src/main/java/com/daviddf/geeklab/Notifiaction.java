@@ -1,5 +1,9 @@
 package com.daviddf.geeklab;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +36,8 @@ public class Notifiaction extends AppCompatActivity {
     Boolean imagen_selected=false;
     Uri uri;
     ImageView imageView;
+    ActivityResultLauncher<Intent> activityResultLauncher;
+    public static final int PICK_IMAGE = 1;
 
     TextInputLayout tt, tit, mes;
     int n=0;
@@ -50,15 +56,36 @@ public class Notifiaction extends AppCompatActivity {
         MaterialButton choose = findViewById(R.id.img_se);
         imageView = findViewById(R.id.img);
 
-        choose.setOnClickListener(new View.OnClickListener() {
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+
+                if (result.getResultCode() == RESULT_OK){
+                    uri = result.getData().getData();
+                    try {
+
+                        imagen = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+                        imageView.setImageBitmap(imagen);
+                        imagen_selected = true;
+
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+
+        choose.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                Intent intentimg = new Intent(Intent.ACTION_PICK);
+                Intent intentimg =new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intentimg.setType("image/*");
-                startActivityForResult(intentimg, SELECTED_PHOTO);
+                activityResultLauncher.launch(intentimg);
             }
         });
+
 
 
         MaterialButton gen = (MaterialButton) findViewById(R.id.generar);
@@ -67,78 +94,47 @@ public class Notifiaction extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                if (tt.getEditText().getText().toString().isEmpty()) {
+                if (tt.getEditText().getText().toString().isEmpty()){
                     tt.setErrorEnabled(true);
                     tt.setError(getString(R.string.error_number));
-                } else {
-                    n++;
-                    tt.setErrorEnabled(false);
                 }
+                else {n++; tt.setErrorEnabled(false);}
 
-                if (mes.getEditText().getText().toString().isEmpty()) {
+                if (mes.getEditText().getText().toString().isEmpty()){
                     mes.setErrorEnabled(true);
                     mes.setError(getString(R.string.error_body));
-                } else {
-                    n++;
-                    mes.setErrorEnabled(false);
                 }
+                else {n++; mes.setErrorEnabled(false);}
 
-                if (tit.getEditText().getText().toString().isEmpty()) {
+                if (tit.getEditText().getText().toString().isEmpty()){
                     tit.setErrorEnabled(true);
                     tit.setError(getString(R.string.error_title));
-                } else if (tit.getEditText().getText().length() > 30) {
+                }
+                else if (tit.getEditText().getText().length()>30){
                     tit.setErrorEnabled(true);
                     tit.setError(getString(R.string.error_title_length));
-                } else {
-                    n++;
-                    tit.setErrorEnabled(false);
                 }
+                else {n++; tit.setErrorEnabled(false);}
 
 
-                if (n == 3) {
+                if (n==3) {
                     no = Long.parseLong(tt.getEditText().getText().toString());
 
-                    while (no > 0) {
+                    while (no>0){
                         titulo = tit.getEditText().getText().toString();
                         mensaje = mes.getEditText().getText().toString();
                         createNotificationChannel();
                         createNotification();
                         NOTIFICACION_ID++;
-                        no -= 1;
+                        no-=1;
                     }
                 }
-                n = 0;
+                n=0;
 
             }
         });
-        // ATTENTION: This was auto-generated to handle app links.
-        Intent appLinkIntent = getIntent();
-        String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();
     }
-    @Override
 
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == SELECTED_PHOTO && data !=null && data.getData() !=null){
-
-            uri = data.getData();
-            try {
-
-                imagen = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-                imageView.setImageBitmap(imagen);
-                imagen_selected = true;
-
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-
-
-        }
-
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
