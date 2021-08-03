@@ -9,10 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.daviddf.geeklab.Consentimiento;
-import com.daviddf.geeklab.Menu;
 import com.daviddf.geeklab.Notifiaction;
 import com.daviddf.geeklab.R;
 import com.daviddf.geeklab.databinding.FragmentUtilitiesBinding;
@@ -20,7 +18,7 @@ import com.google.android.material.button.MaterialButton;
 
 public class DashboardFragment extends Fragment {
 
-    MaterialButton noti, dev, band, ia_hdr, speed, account, data, performance, qcolor;
+    MaterialButton noti, dev, band, ia_hdr, speed, account, data, performance, qcolor,monitor;
 
     private FragmentUtilitiesBinding binding;
 
@@ -177,6 +175,23 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), Consentimiento.class));
+            }
+        });
+
+        monitor = (MaterialButton) root.findViewById(R.id.fp_monitor);
+
+        monitor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent Performance = new Intent(Intent.ACTION_VIEW);
+                    Performance.setClassName("com.miui.powerkeeper","com.miui.powerkeeper.ui.framerate.PowerToolsConfigActivity");
+                    startActivity(Performance);
+                } catch (RuntimeException e){
+                    Toast errorToast = Toast.makeText(getActivity(),"Esta función no está disponible en su terminal", Toast.LENGTH_LONG);
+                    errorToast.show();
+                }
+
             }
         });
 

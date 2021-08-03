@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +33,8 @@ public class NewsFragment extends Fragment {
     ArrayList<Experiments> experimentsArrayList;
     Myadapter myadapter;
     FirebaseFirestore db;
+    ImageView errimg;
+    TextView errortext;
 
     private FragmentFeedBinding binding;
 
@@ -44,6 +48,9 @@ public class NewsFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        errimg = (ImageView)root.findViewById(R.id.img_error);
+        errortext = (TextView) root.findViewById(R.id.error_txt);
 
         db = FirebaseFirestore.getInstance();
         experimentsArrayList = new ArrayList<Experiments>();
@@ -62,6 +69,10 @@ public class NewsFragment extends Fragment {
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
                         if(e != null) {
+
+                            errimg.setVisibility(View.GONE);
+                            errortext.setVisibility(View.GONE);
+
                             Log.e("Error al conectar:",e.getMessage());
                             return;
                         }
@@ -75,6 +86,9 @@ public class NewsFragment extends Fragment {
                             }
 
                             myadapter.notifyDataSetChanged();
+
+                            errimg.setVisibility(View.GONE);
+                            errortext.setVisibility(View.GONE);
                         }
 
                     }

@@ -9,8 +9,6 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationManagerCompat;
 
-import static androidx.core.content.ContextCompat.startActivities;
-
 /**
  * Implementation of App Widget functionality.
  */

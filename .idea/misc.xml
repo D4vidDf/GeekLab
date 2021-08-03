@@ -7,6 +7,7 @@
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/drawable-nodpi/bg_google_button_3.xml" value="0.1" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/drawable/bg_item.xml" value="0.1" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/drawable/bg_placeholder.xml" value="0.1" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/drawable/speed.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout-v26/fecha.xml" value="0.11548913043478261" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_bottom_navigation.xml" value="0.1" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_consentimiento.xml" value="0.25" />
@@ -17,7 +18,7 @@
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_menu.xml" value="0.11548913043478261" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/activity_notifiaction.xml" value="0.11548913043478261" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fecha.xml" value="0.11548913043478261" />
-        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_feed.xml" value="0.1" />
+        <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_feed.xml" value="0.2604166666666667" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_notifications.xml" value="0.14719202898550723" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
         <entry key="..\:/Users/david/Documents/GeekLab/Git/app/src/main/res/layout/fragment_utilities.xml" value="0.11548913043478261" />
