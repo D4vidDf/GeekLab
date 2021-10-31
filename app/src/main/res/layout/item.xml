@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Material3.CardView.Elevated"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tag"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="8dp"
+                android:elevation="12dp"
+                android:text="@string/experimento"
+                android:textAllCaps="true"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:ignore="RelativeOverlap,TextContrastCheck,TouchTargetSizeCheck" />
+
+            <ImageView
+                android:id="@+id/portada"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:contentDescription="@string/imagen_portada"
+                android:scaleType="centerCrop"
+                android:src="@drawable/preset" />
+
+        </RelativeLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:id="@+id/titulo"
+            android:layout_height="wrap_content"
+            android:elevation="12dp"
+            android:text="@string/tittle"
+            android:textStyle="bold"
+            android:layout_margin="10dp"
+            android:paddingBottom="5dp"
+            android:textSize="18sp"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            />
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

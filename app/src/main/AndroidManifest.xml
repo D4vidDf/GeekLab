@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.daviddf.geeklab">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:appCategory="productivity"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:windowSoftInputMode="adjustPan"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="o">
+        <activity
+            android:name=".AndroidDSU"
+
+            android:exported="true" />
+        <activity
+            android:name=".BottomNavigation"
+            android:exported="false"
+            android:forceDarkAllowed="false"
+            tools:ignore="IntentFilterExportedReceiver"
+            tools:targetApi="q">
+            <tools:validation testUrl="https://geeklab.d4viddf.com/index" />
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter android:order="0">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/index"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter android:order="1">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/functions"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".Google"
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/google_info" />
+        </receiver>
+        <receiver
+            android:name=".NotiWidg"
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/noti_widg_info" />
+        </receiver>
+        <receiver
+            android:name=".LoopWidgt"
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/loop_widgt_info" />
+        </receiver>
+        <receiver
+            android:name=".fecha"
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/fecha_info" />
+        </receiver>
+        <receiver
+            android:name=".Hora"
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ACTION_AUTO_UPDATE_WIDGET" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/hora_info" />
+        </receiver>
+
+        <activity
+            android:name=".Countdown"
+            android:exported="true"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".Loop2"
+            android:exported="false"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".Loop"
+            android:exported="false"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".Notifiaction"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
+            <tools:validation testUrl="https://geeklab.d4viddf.com/notification" />
+
+            <intent-filter
+                android:autoVerify="true"
+                android:order="2">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/notification"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Menu"
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
+            <tools:validation testUrl="https://geeklab.d4viddf.com/functions" />
+        </activity>
+        <activity
+            android:name=".Consentimiento"
+            android:exported="true"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
+            <tools:validation testUrl="https://geeklab.d4viddf.com/loop" />
+
+            <intent-filter android:order="3">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="geeklab.d4viddf.com"
+                    android:pathPattern="/loop"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="uiMode"
+            android:forceDarkAllowed="false"
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/actions" />
+    </application>
+
+</manifest>

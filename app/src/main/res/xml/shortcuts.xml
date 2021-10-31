@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This is a sample shortcuts.xml -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <capability android:name="actions.intent.OPEN_APP_FEATURE">
+        <intent
+            android:targetPackage="com.daviddf.geeklabtest"
+            android:targetClass="com.daviddf.geeklab.Notifiaction">
+            <parameter
+                android:name="feature"
+                android:key="featureParam"/>
+        </intent>
+    </capability>
+    <!-- Short and long labels must be @string resource. -->
+    <shortcut
+        android:shortcutId="ID_ONE"
+        android:shortcutShortLabel="@string/shortcut_short_label"
+        android:shortcutLongLabel="@string/shortcut_long_label">
+        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
+            <parameter-binding
+                android:value="featureParam"
+                android:key="feature"/>
+        </capability-binding>
+    </shortcut>
+</shortcuts>

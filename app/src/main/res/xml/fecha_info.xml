@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/fecha"
+    android:initialLayout="@layout/fecha"
+    android:minWidth="110dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/preview_fecha"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="60000"
+    android:widgetCategory="home_screen" />

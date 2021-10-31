@@ -1,0 +1,160 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_google"
+    android:padding="@dimen/widget_margin"
+    android:id="@+id/google"
+    android:gravity="center"
+    android:theme="@style/Widget.Material3.CardView.Outlined">
+
+        <RelativeLayout
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_google_button"
+            android:elevation="5dp">
+
+                <ImageView
+                    android:id="@+id/g_logo"
+                    android:layout_width="25dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/google_logo"
+                    android:contentDescription="@string/google_logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/g_logo"
+                    android:fontFamily="@font/camphorpro_medium"
+                    android:text="@string/buscar"
+                    android:textColor="#959595"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    />
+
+        </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_below="@id/search"
+                    android:baselineAligned="false">
+                        <RelativeLayout
+                            android:id="@+id/lens"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_google_button_3"
+                            android:elevation="10dp"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1">
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:orientation="vertical"
+                                    android:layout_margin="10dp">
+                                        <ImageView
+                                            android:id="@+id/len_logo"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="25dp"
+                                            android:src="@drawable/google_lens"
+                                            android:contentDescription="@string/lens_logo" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAlignment="center"
+                                            android:layout_below="@id/len_logo"
+                                            android:fontFamily="@font/camphorpro_medium"
+                                            android:text="Lens"
+                                            android:textColor="#959595"
+                                            android:textSize="12sp"
+                                            android:textStyle="bold"
+                                            android:layout_marginTop="10dp"
+                                            android:gravity="center_horizontal"/>
+                                </LinearLayout>
+
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/asistente"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_google_button_3"
+                            android:elevation="10dp"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:orientation="vertical"
+                                    android:layout_margin="10dp">
+                                        <ImageView
+
+                                            android:id="@+id/ass_logo"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="25dp"
+                                            android:src="@drawable/voice"
+                                            android:contentDescription="@string/microfono_logo" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAlignment="center"
+                                            android:fontFamily="@font/camphorpro_medium"
+                                            android:text="@string/asistente"
+                                            android:textColor="#959595"
+                                            android:textSize="12sp"
+                                            android:textStyle="bold"
+                                            android:layout_marginTop="10dp"
+                                            android:gravity="center_horizontal"/>
+                                </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/mail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/bg_google_button_3"
+                            android:elevation="5dp"
+                            android:layout_weight="1">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="10dp"
+                                    android:layout_centerInParent="true"
+                                    android:orientation="vertical">
+                                        <ImageView
+
+                                            android:id="@+id/mail_logo"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="25dp"
+                                            android:src="@drawable/gmail"
+                                            android:contentDescription="@string/gmail_logo" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAlignment="center"
+                                            android:fontFamily="@font/camphorpro_medium"
+                                            android:text="@string/correo"
+                                            android:textColor="#959595"
+                                            android:textSize="12sp"
+                                            android:textStyle="bold"
+                                            android:layout_marginTop="10dp"
+                                            android:gravity="center_horizontal"/>
+                                </LinearLayout>
+
+                        </RelativeLayout>
+
+                </LinearLayout>
+
+</RelativeLayout>
