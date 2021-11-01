@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".ui.utilities.DashboardFragment"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    tools:context=".ui.utilities.DashboardFragment">
 
     <TextView
         android:id="@+id/texto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         android:fontFamily="@font/camphorpro_medium"
         android:gravity="center"
         android:text="@string/menu"
-        android:layout_marginBottom="10dp"
-        android:textStyle="bold"
-        android:textSize="30sp"
         android:textAppearance="@style/MaterialAlertDialog.Material3.Body.Text" />
-
     <ScrollView
         style="@android:style/Widget.Material.Light.ScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:scrollIndicators="right"
+        android:scrollbarSize="5dp"
+        android:layout_marginTop="60dp"
+        android:verticalScrollbarPosition="right"
+        app:layout_constraintTop_toBottomOf="@id/texto" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/not"
                 style="@style/Widget.Material3.Button.Icon"
+                android:id="@+id/not"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="30dp"
+                android:layout_marginTop="@dimen/space_menu"
                 android:layout_marginRight="30dp"
                 android:elevation="5dp"
                 android:padding="10dp"
@@ -53,7 +56,6 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/developer"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/not"
@@ -72,11 +74,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_code"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/band"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/developer"
@@ -95,11 +97,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/signal"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/hdr"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/band"
@@ -118,11 +120,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/hdr"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/velo"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/hdr"
@@ -141,11 +143,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/speed"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/accounts"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/velo"
@@ -164,18 +166,17 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/account"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/usage"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/accounts"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="@dimen/space_menu"
                 android:layout_marginRight="30dp"
-                android:elevation="5dp"
                 android:padding="10dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="10dp"
@@ -187,11 +188,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/data"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/rendimiento"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/usage"
@@ -210,11 +211,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/memory"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/qcolor"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rendimiento"
@@ -233,11 +234,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/color"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fp_monitor"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/qcolor"
@@ -256,11 +257,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_baseline_60fps_select_24"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/loop"
-                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fp_monitor"
@@ -268,7 +269,6 @@
                 android:layout_marginTop="@dimen/space_menu"
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="@dimen/space_menu"
-                android:elevation="5dp"
                 android:padding="10dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="10dp"
@@ -280,10 +280,11 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/loop"
                 app:iconGravity="end"
-                app:iconSize="30dp" />
+                app:iconSize="30dp"
+                style="@style/Widget.Material3.Button.Icon"/>
 
         </RelativeLayout>
 
 
     </ScrollView>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

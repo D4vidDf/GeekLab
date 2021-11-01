@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.daviddf.geeklab.Consentimiento;
@@ -28,6 +31,18 @@ public class DashboardFragment extends Fragment {
 
         binding = FragmentUtilitiesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures());
+            // Apply the insets as padding to the view. Here we're setting all of the
+            // dimensions, but apply as appropriate to your layout. You could also
+            // update the views margin if more appropriate.
+            root.setPadding(0,insets.top,0,0);
+
+            // Return CONSUMED if we don't want the window insets to keep being passed
+            // down to descendant views.
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         noti = (MaterialButton) root.findViewById(R.id.not);
 
