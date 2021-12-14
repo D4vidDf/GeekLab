@@ -3,9 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bg_placeholder.xml" value="1.30625" />
+        <entry key="app/src/main/res/drawable/color.xml" value="1.30625" />
+        <entry key="app/src/main/res/drawable/data.xml" value="1.30625" />
+        <entry key="app/src/main/res/drawable/hdr.xml" value="1.30625" />
         <entry key="app/src/main/res/drawable/ic_android_12.xml" value="0.1703125" />
+        <entry key="app/src/main/res/drawable/ic_baseline_60fps_select_24.xml" value="1.30625" />
+        <entry key="app/src/main/res/drawable/ic_code.xml" value="1.30625" />
+        <entry key="app/src/main/res/drawable/ic_round_add_24.xml" value="1.30625" />
+        <entry key="app/src/main/res/drawable/ic_round_web_24.xml" value="1.30625" />
         <entry key="app/src/main/res/layout-land/fragment_utilities.xml" value="0.12610229276895943" />
+        <entry key="app/src/main/res/layout-v26/activity_list_item.xml" value="0.21603260869565216" />
+        <entry key="app/src/main/res/layout-v26/all_activities_child_item.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout-v26/all_activities_group_item.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout-v26/dialog_edit_activity.xml" value="0.1875" />
         <entry key="app/src/main/res/layout-v26/fecha.xml" value="0.1953125" />
+        <entry key="app/src/main/res/layout-v26/fragment_all_list.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout-v26/icon_picker.xml" value="0.1875" />
         <entry key="app/src/main/res/layout/activity_android_dsu.xml" value="0.47690938492212104" />
         <entry key="app/src/main/res/layout/activity_bottom_navigation.xml" value="0.13728470111448834" />
         <entry key="app/src/main/res/layout/activity_consentimiento.xml" value="0.1671875" />
@@ -24,6 +38,15 @@
         <entry key="app/src/main/res/layout/item.xml" value="0.625" />
         <entry key="app/src/main/res/layout/loop_widg.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/noti_widg.xml" value="0.16770833333333332" />
+        <entry key="geeklabwear/src/main/res/drawable-nodpi/gradient.xml" value="1.30625" />
+        <entry key="geeklabwear/src/main/res/layout/activity_list_item.xml" value="0.4375" />
+        <entry key="geeklabwear/src/main/res/layout/activity_main.xml" value="0.7713815789473685" />
+        <entry key="geeklabwear/src/main/res/layout/all_activities_child_item.xml" value="0.4375" />
+        <entry key="geeklabwear/src/main/res/layout/all_activities_group_item.xml" value="0.4375" />
+        <entry key="geeklabwear/src/main/res/layout/dialog_edit_activity.xml" value="0.4375" />
+        <entry key="geeklabwear/src/main/res/layout/fragment_all_list.xml" value="0.4375" />
+        <entry key="geeklabwear/src/main/res/layout/icon_picker.xml" value="0.4375" />
+        <entry key="geeklabwear/src/main/res/layout/item.xml" value="1.0" />
       </map>
     </option>
   </component>
