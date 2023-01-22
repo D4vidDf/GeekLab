@@ -13,8 +13,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
-import com.daviddf.geeklab.Consentimiento;
-import com.daviddf.geeklab.Notifiaction;
+import com.daviddf.geeklab.loop.Consentimiento;
+import com.daviddf.geeklab.notification.Notifiaction;
 import com.daviddf.geeklab.R;
 import com.daviddf.geeklab.databinding.FragmentUtilitiesBinding;
 import com.google.android.material.button.MaterialButton;

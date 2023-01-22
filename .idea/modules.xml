@@ -4,7 +4,13 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GeekLab_Test.iml" filepath="$PROJECT_DIR$/.idea/modules/GeekLab_Test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GeekLab_Test.app.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.iml" filepath="$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.main.iml" filepath="$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/geeklabwear/GeekLab_Test.geeklabwear.unitTest.iml" />
     </modules>
   </component>
 </project>

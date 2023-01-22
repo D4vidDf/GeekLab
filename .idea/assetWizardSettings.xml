@@ -67,7 +67,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/geeklab_icon.jpg" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -78,7 +78,21 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="imagePath" value="/private/var/folders/zn/6td40ynn7tq1pmzz2pr8p_q80000gn/T/ic_android_black_24dp.xml" />
+                                                <entry key="color" value="0058ff" />
+                                                <entry key="imagePath" value="/private/var/folders/zn/6td40ynn7tq1pmzz2pr8p_q80000gn/T/baseline_architecture_24.xml" />
+                                                <entry key="scalingPercent" value="80" />
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="foregroundClipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="file:$USER_HOME$/Library/Android/sdk/icons/material/materialicons/architecture/baseline_architecture_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -90,7 +104,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/geeklab_icon.png" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads" />
                                                 <entry key="scalingPercent" value="67" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
@@ -124,7 +138,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundColor" value="2094e2" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="foregroundAssetType" value="CLIP_ART" />
                                     </map>
                                   </option>
                                 </PersistentState>

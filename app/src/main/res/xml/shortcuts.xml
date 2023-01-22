@@ -4,7 +4,7 @@
     <capability android:name="actions.intent.OPEN_APP_FEATURE">
         <intent
             android:targetPackage="com.daviddf.geeklabtest"
-            android:targetClass="com.daviddf.geeklab.Notifiaction">
+            android:targetClass="com.daviddf.geeklab.notification.Notifiaction">
             <parameter
                 android:name="feature"
                 android:key="featureParam"/>

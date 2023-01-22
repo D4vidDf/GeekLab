@@ -13,11 +13,10 @@
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:windowSoftInputMode="adjustPan"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="o">
+        tools:targetApi="r">
         <activity
             android:name=".AndroidDSU"
 
@@ -27,7 +26,7 @@
             android:exported="false"
             android:forceDarkAllowed="false"
             tools:ignore="IntentFilterExportedReceiver"
-            tools:targetApi="q">
+            tools:targetApi="r">
             <tools:validation testUrl="https://geeklab.d4viddf.com/index" />
 
             <intent-filter>
@@ -59,7 +58,7 @@
         </activity>
 
         <receiver
-            android:name=".Google"
+            android:name=".widgets.Google"
             android:exported="false"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
@@ -71,7 +70,7 @@
                 android:resource="@xml/google_info" />
         </receiver>
         <receiver
-            android:name=".NotiWidg"
+            android:name=".widgets.NotiWidg"
             android:exported="false"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
@@ -83,7 +82,7 @@
                 android:resource="@xml/noti_widg_info" />
         </receiver>
         <receiver
-            android:name=".LoopWidgt"
+            android:name=".widgets.LoopWidgt"
             android:exported="false"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
@@ -95,7 +94,7 @@
                 android:resource="@xml/loop_widgt_info" />
         </receiver>
         <receiver
-            android:name=".fecha"
+            android:name=".widgets.fecha"
             android:exported="false"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
@@ -107,7 +106,7 @@
                 android:resource="@xml/fecha_info" />
         </receiver>
         <receiver
-            android:name=".Hora"
+            android:name=".widgets.Hora"
             android:exported="false"
             tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
@@ -123,11 +122,11 @@
         </receiver>
 
         <activity
-            android:name=".Countdown"
+            android:name=".loop.Countdown"
             android:exported="true"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Loop2"
+            android:name=".loop.Loop2"
             android:exported="false"
             tools:ignore="LockedOrientationActivity" />
         <activity
@@ -135,7 +134,7 @@
             android:exported="false"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Notifiaction"
+            android:name=".notification.Notifiaction"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <tools:validation testUrl="https://geeklab.d4viddf.com/notification" />
@@ -161,7 +160,7 @@
             <tools:validation testUrl="https://geeklab.d4viddf.com/functions" />
         </activity>
         <activity
-            android:name=".Consentimiento"
+            android:name=".loop.Consentimiento"
             android:exported="true"
             tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
             <tools:validation testUrl="https://geeklab.d4viddf.com/loop" />
