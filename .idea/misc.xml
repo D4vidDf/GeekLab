@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/ic_android_12.xml" value="0.1703125" />
         <entry key="app/src/main/res/drawable/ic_baseline_60fps_select_24.xml" value="1.30625" />
         <entry key="app/src/main/res/drawable/ic_code.xml" value="1.30625" />
+        <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.191" />
         <entry key="app/src/main/res/drawable/ic_round_add_24.xml" value="1.30625" />
         <entry key="app/src/main/res/drawable/ic_round_web_24.xml" value="1.30625" />
         <entry key="app/src/main/res/layout-land/fragment_utilities.xml" value="0.12610229276895943" />
@@ -38,6 +39,10 @@
         <entry key="app/src/main/res/layout/item.xml" value="0.625" />
         <entry key="app/src/main/res/layout/loop_widg.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/noti_widg.xml" value="0.16770833333333332" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.191" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.243" />
+        <entry key="app/src/main/res/mipmap-mdpi/ic_launcher_round.xml" value="0.243" />
+        <entry key="app/src/main/res/mipmap/ic_launcher.xml" value="0.243" />
         <entry key="geeklabwear/src/main/res/drawable-nodpi/gradient.xml" value="1.30625" />
         <entry key="geeklabwear/src/main/res/layout/activity_list_item.xml" value="0.4375" />
         <entry key="geeklabwear/src/main/res/layout/activity_main.xml" value="0.7713815789473685" />
@@ -47,6 +52,7 @@
         <entry key="geeklabwear/src/main/res/layout/fragment_all_list.xml" value="0.4375" />
         <entry key="geeklabwear/src/main/res/layout/icon_picker.xml" value="0.4375" />
         <entry key="geeklabwear/src/main/res/layout/item.xml" value="1.0" />
+        <entry key="geeklabwear/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.191" />
       </map>
     </option>
   </component>

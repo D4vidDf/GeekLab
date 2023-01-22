@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.daviddf.geeklab.loop.Consentimiento;
+import com.daviddf.geeklab.notification.Notifiaction;
 import com.google.android.material.button.MaterialButton;
 
 public class Menu extends AppCompatActivity {
