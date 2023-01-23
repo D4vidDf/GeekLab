@@ -3,19 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_news">
+    app:startDestination="@id/navigation_dashboard">
 
     <fragment
         android:id="@+id/navigation_news"
         android:name="com.daviddf.geeklab.ui.feed.NewsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed">
+        <deepLink
+            android:id="@+id/deepLink2"
+            android:autoVerify="true"
+            app:uri="https://geeklab.d4viddf.com/news" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.daviddf.geeklab.ui.utilities.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_utilities" />
+        tools:layout="@layout/fragment_utilities">
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="https://geeklab.d4viddf.com/functions" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_settings"

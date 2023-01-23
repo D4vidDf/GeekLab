@@ -165,19 +165,31 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/img"
-                android:layout_width="300dp"
-                android:layout_height="140dp"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_below="@id/lin"
+                app:cardMaxElevation="10dp"
+                style="@style/Widget.Material3.CardView.Filled"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="100dp"
-                android:contentDescription="@string/imagen_notificacion"
-                android:cropToPadding="true"
-                android:src="@drawable/bg_placeholder"
+                app:cardElevation="10dp"
 
-                />
+                android:layout_width="300dp"
+                android:layout_height="140dp"
+                >
+                <ImageView
+                    android:id="@+id/img"
+
+                    android:layout_width="300dp"
+                    android:layout_height="140dp"
+                    android:layout_below="@id/lin"
+                    android:contentDescription="@string/imagen_notificacion"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 

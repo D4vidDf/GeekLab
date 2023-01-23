@@ -1,8 +1,11 @@
 package com.daviddf.geeklab.notification;
 
+import static android.content.pm.PackageManager.PERMISSION_DENIED;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,19 +13,21 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
-
 import com.daviddf.geeklab.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -81,14 +86,40 @@ public class Notifiaction extends AppCompatActivity {
 
             }
         });
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        try {
+                            imagen = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+                            imageView.setImageBitmap(imagen);
+                            imagen_selected = true;
+                        } catch (IOException e) {
+                            imageView.setImageBitmap(null);
+                            imagen_selected = false;
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        imageView.setImageBitmap(null);
+                        imagen_selected = false;
+                    }
+                });
 
         choose.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                Intent intentimg =new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intentimg.setType("image/*");
-                activityResultLauncher.launch(intentimg);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+                    ActivityResultContracts.PickVisualMedia.VisualMediaType mediaType = (ActivityResultContracts.PickVisualMedia.VisualMediaType) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
+
+                    pickMedia.launch(new PickVisualMediaRequest.Builder().setMediaType(mediaType).build());}
+                else {
+                        Intent intentimg =new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intentimg.setType("image/*");
+                        activityResultLauncher.launch(intentimg);
+                }
             }
         });
 
@@ -100,6 +131,15 @@ public class Notifiaction extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+
+                if (ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.POST_NOTIFICATIONS") == PERMISSION_DENIED) {
+                    shouldShowRequestPermissionRationale("android.permission.POST_NOTIFICATIONS");
+                    requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, NOTIFICACION_ID);
+                }}
+
                 if (tt.getEditText().getText().toString().isEmpty()){
                     tt.setErrorEnabled(true);
                     tt.setError(getString(R.string.error_number));
