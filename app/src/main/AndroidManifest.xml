@@ -23,7 +23,7 @@
 
             android:exported="true" />
         <activity
-            android:name=".BottomNavigation"
+            android:name=".navigation.AppNavigation"
             android:exported="false"
             android:forceDarkAllowed="false"
             tools:ignore="IntentFilterExportedReceiver"

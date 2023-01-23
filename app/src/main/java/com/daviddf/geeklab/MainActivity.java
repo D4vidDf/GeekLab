@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.WindowCompat;
 
+import com.daviddf.geeklab.navigation.AppNavigation;
+
 public class MainActivity extends AppCompatActivity {
     private NotificationManagerCompat notificationManagerCompat;
 
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
-        Intent mainIntent = new Intent(MainActivity.this, BottomNavigation.class);
+        Intent mainIntent = new Intent(MainActivity.this, AppNavigation.class);
         MainActivity.this.startActivity(mainIntent);
         MainActivity.this.finish();
 
