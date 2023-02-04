@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -22,7 +23,7 @@
 
             android:exported="true" />
         <activity
-            android:name=".BottomNavigation"
+            android:name=".navigation.AppNavigation"
             android:exported="false"
             android:forceDarkAllowed="false"
             tools:ignore="IntentFilterExportedReceiver"
