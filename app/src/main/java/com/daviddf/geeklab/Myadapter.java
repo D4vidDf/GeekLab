@@ -55,7 +55,6 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull Myadapter.MyViewHolder holder, int position) {
 
         Experiments experiments = experimentsArrayList.get(position);
-        holder.Titulo.setText(experiments.Titulo);
         holder.Tag.setText(experiments.Tag);
         Picasso.get().load(experiments.Imagen).placeholder(R.drawable.preset).into(holder.Portada);
 
@@ -84,14 +83,12 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        MaterialTextView Titulo;
         MaterialButton Tag;
         ImageView Portada;
 
         public MyViewHolder(@NonNull  View itemView) {
             super(itemView);
             Tag = itemView.findViewById(R.id.tag);
-            Titulo = itemView.findViewById(R.id.titulo);
             Portada = itemView.findViewById(R.id.portada);
 
         }

@@ -2,30 +2,31 @@ package com.daviddf.geeklab;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
-
-import com.daviddf.geeklab.navigation.AppNavigation;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 public class MainActivity extends AppCompatActivity {
-    private NotificationManagerCompat notificationManagerCompat;
 
     @Override
     protected void onCreate(Bundle AppCombatActivity) {
         super.onCreate(AppCombatActivity);
-
-        View view = new View(this);
-        view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
-        Intent mainIntent = new Intent(MainActivity.this, AppNavigation.class);
+        WindowInsetsControllerCompat windowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+        if (windowInsetsController == null) {
+            return;
+        }
+
+        windowInsetsController.setAppearanceLightNavigationBars(true);
+        Intent mainIntent = new Intent(MainActivity.this, HomeActivity.class);
         MainActivity.this.startActivity(mainIntent);
         MainActivity.this.finish();
 
     }
+
+
 }
