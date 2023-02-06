@@ -19,6 +19,9 @@
         android:windowSoftInputMode="adjustPan"
         tools:targetApi="r">
         <activity
+            android:name=".Feed"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
