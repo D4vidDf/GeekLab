@@ -17,7 +17,7 @@
             app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineLarge"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_round_arrow_back_ios_24"
-            app:title="@string/notificaciones" />
+            app:title="@string/feed" />
     </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView

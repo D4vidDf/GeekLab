@@ -14,14 +14,14 @@
 
             <TextView
                 android:id="@+id/welcome_message"
+                style="@style/TextAppearance.AppCompat.Display1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/comfortaa_bold"
-                android:text="Bienvenido"
-                style="@style/TextAppearance.AppCompat.Display1" />
+                android:text="@string/welcome" />
 
             <ImageView
                 android:id="@+id/imageButton"
@@ -32,7 +32,7 @@
 
         </LinearLayout>
 <GridLayout
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/header"
     android:layout_marginStart="20dp"
@@ -49,7 +49,7 @@
 
         <LinearLayout
             android:id="@+id/header_tool"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header"
             android:orientation="horizontal">
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/comfortaa_bold"
-                android:text="Herramientas"
+                android:text="@string/tools"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <com.google.android.material.button.MaterialButton
@@ -68,178 +68,199 @@
                 style="@style/Widget.Material3.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ver todo" />
+                android:text="@string/seeAll" />
 
         </LinearLayout>
 
         <ScrollView
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
             <GridLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:columnCount="1"
+                android:columnCount="2"
                 android:alignmentMode="alignBounds"
                 >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/notification"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/notification"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                    android:layout_gravity="fill">
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/notification_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            fontSize:cardBackgroundColor="#9DFFF9"
+                            fontSize:cardCornerRadius="20dp"
+                            tools:ignore="MissingConstraints">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/notification_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    fontSize:cardBackgroundColor="#9DFFF9"
-                    fontSize:cardCornerRadius="20dp"
-                    tools:ignore="MissingConstraints">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_gravity="center"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_round_notifications_none_24"
+                                fontSize:tint="#1A5170" />
+                        </androidx.cardview.widget.CardView>
 
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_round_notifications_none_24"
-                        fontSize:tint="#1A5170" />
-                </androidx.cardview.widget.CardView>
+                        <TextView
+                            style="@style/TextAppearance.Material3.TitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/comfortaa_bold"
+                            android:text="Notificaiones"
+                            fontSize:layout_constraintEnd_toEndOf="parent"
+                            fontSize:layout_constraintStart_toStartOf="parent"
+                            fontSize:layout_constraintTop_toBottomOf="@+id/notification_card"
+                            tools:ignore="MissingConstraints" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/comfortaa_bold"
-                    android:text="Notificaiones"
-                    fontSize:layout_constraintEnd_toEndOf="parent"
-                    fontSize:layout_constraintStart_toStartOf="parent"
-                    fontSize:layout_constraintTop_toBottomOf="@+id/notification_card"
-                    tools:ignore="MissingConstraints" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/battery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/battery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/battery_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            fontSize:cardBackgroundColor="#9DFFD0"
+                            fontSize:cardCornerRadius="20dp"
+                            tools:ignore="MissingConstraints">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/battery_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    fontSize:cardBackgroundColor="#9DFFD0"
-                    fontSize:cardCornerRadius="20dp"
-                    tools:ignore="MissingConstraints">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_gravity="center"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_round_battery_full_24"
+                                fontSize:tint="#1A7041" />
+                        </androidx.cardview.widget.CardView>
 
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_round_battery_full_24"
-                        fontSize:tint="#1A7041" />
-                </androidx.cardview.widget.CardView>
+                        <TextView
+                            style="@style/TextAppearance.Material3.TitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/comfortaa_bold"
+                            android:text="Batería"
+                            fontSize:layout_constraintEnd_toEndOf="parent"
+                            fontSize:layout_constraintStart_toStartOf="parent"
+                            fontSize:layout_constraintTop_toBottomOf="@+id/battery_card"
+                            tools:ignore="MissingConstraints" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/comfortaa_bold"
-                    android:text="Batería"
-                    fontSize:layout_constraintEnd_toEndOf="parent"
-                    fontSize:layout_constraintStart_toStartOf="parent"
-                    fontSize:layout_constraintTop_toBottomOf="@+id/battery_card"
-                    tools:ignore="MissingConstraints" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/system"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/system"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/system_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            fontSize:cardBackgroundColor="#D49DFF"
+                            fontSize:cardCornerRadius="20dp"
+                            tools:ignore="MissingConstraints">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/system_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    fontSize:cardBackgroundColor="#D49DFF"
-                    fontSize:cardCornerRadius="20dp"
-                    tools:ignore="MissingConstraints">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_gravity="center"
 
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_outline_info_24"
+                                fontSize:tint="#4A1A70" />
+                        </androidx.cardview.widget.CardView>
 
-                        android:padding="10dp"
-                        android:src="@drawable/ic_outline_info_24"
-                        fontSize:tint="#4A1A70" />
-                </androidx.cardview.widget.CardView>
+                        <TextView
+                            style="@style/TextAppearance.Material3.TitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/comfortaa_bold"
+                            android:text="Sistema"
+                            fontSize:layout_constraintEnd_toEndOf="parent"
+                            fontSize:layout_constraintStart_toStartOf="parent"
+                            fontSize:layout_constraintTop_toBottomOf="@+id/system_card"
+                            tools:ignore="MissingConstraints" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/comfortaa_bold"
-                    android:text="Sistema"
-                    fontSize:layout_constraintEnd_toEndOf="parent"
-                    fontSize:layout_constraintStart_toStartOf="parent"
-                    fontSize:layout_constraintTop_toBottomOf="@+id/system_card"
-                    tools:ignore="MissingConstraints" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_columnWeight="1"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/apps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/apps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/apps_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            fontSize:cardBackgroundColor="#FDFF9D"
+                            fontSize:cardCornerRadius="20dp"
+                            tools:ignore="MissingConstraints">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/apps_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    fontSize:cardBackgroundColor="#FDFF9D"
-                    fontSize:cardCornerRadius="20dp"
-                    tools:ignore="MissingConstraints">
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_gravity="center"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_outline_apps_24"
+                                fontSize:tint="#64701A" />
+                        </androidx.cardview.widget.CardView>
 
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_outline_apps_24"
-                        fontSize:tint="#64701A" />
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/comfortaa_bold"
-                    android:text="Aplicaciones"
-                    fontSize:layout_constraintEnd_toEndOf="parent"
-                    fontSize:layout_constraintStart_toStartOf="parent"
-                    fontSize:layout_constraintTop_toBottomOf="@+id/apps_card"
-                    tools:ignore="MissingConstraints" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+                        <TextView
+                            style="@style/TextAppearance.Material3.TitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/comfortaa_bold"
+                            android:text="Aplicaciones"
+                            fontSize:layout_constraintEnd_toEndOf="parent"
+                            fontSize:layout_constraintStart_toStartOf="parent"
+                            fontSize:layout_constraintTop_toBottomOf="@+id/apps_card"
+                            tools:ignore="MissingConstraints" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
         </GridLayout>
         </ScrollView>
 
@@ -268,7 +289,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/comfortaa_bold"
-                android:text="Destacado"
+                android:text="@string/featured"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <com.google.android.material.button.MaterialButton
@@ -276,7 +297,7 @@
                 style="@style/Widget.Material3.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ver todo" />
+                android:text="@string/seeAll" />
 
         </LinearLayout>
 

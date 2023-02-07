@@ -9,7 +9,7 @@
     <string name="tittle">Title</string>
     <string name="mess">Message</string>
     <string name="n_notificaciones">No. of Notifications</string>
-    <string name="loop_fono">Loop Bacground</string>
+    <string name="loop_fono">Loop Background</string>
     <string name="notificaci_n_logo">Notificaction logo</string>
     <string name="notificaci_n">Notificaction</string>
     <string name="title_functions">Functions</string>
@@ -57,4 +57,10 @@
     <string name="shortcut_long_label" >Open notification creator</string>
     <string name="error_noticias">Error getting news. Try again later.</string>
     <string name="framerate_monitor">Framerate monitor</string>
+    <string name="feed">News</string>
+    <string name="welcome">Welcome</string>
+    <string name="tools">Tools</string>
+    <string name="seeAll">see all</string>
+    <string name="featured">Featured</string>
+    <string name="instalar">Download</string>
 </resources>

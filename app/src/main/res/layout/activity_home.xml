@@ -19,14 +19,14 @@
 
             <TextView
                 android:id="@+id/welcome_message"
+                style="@style/TextAppearance.AppCompat.Display1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/comfortaa_bold"
-                android:text="Bienvenido"
-                style="@style/TextAppearance.AppCompat.Display1" />
+                android:text="@string/welcome" />
 
             <ImageView
                 android:id="@+id/imageButton"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/comfortaa_bold"
-                android:text="Herramientas"
+                android:text="@string/tools"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <com.google.android.material.button.MaterialButton
@@ -61,7 +61,7 @@
                 style="@style/Widget.Material3.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ver todo" />
+                android:text="@string/seeAll" />
 
         </LinearLayout>
 
@@ -254,7 +254,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/comfortaa_bold"
-                android:text="Destacado"
+                android:text="@string/featured"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <com.google.android.material.button.MaterialButton
@@ -262,7 +262,7 @@
                 style="@style/Widget.Material3.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ver todo" />
+                android:text="@string/seeAll" />
 
         </LinearLayout>
 

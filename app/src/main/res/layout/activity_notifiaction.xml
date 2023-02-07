@@ -14,7 +14,6 @@
             android:id="@+id/topAppBar"
             style="@style/Widget.Material3.AppBarLayout"
             android:layout_width="match_parent"
-            app:titleCentered="true"
             app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineLarge"
             android:textAlignment="center"
             android:layout_height="?attr/actionBarSize"

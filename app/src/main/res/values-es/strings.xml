@@ -57,4 +57,10 @@
     <string name="shortcut_long_label" >Abrir creador notificaciones</string>
     <string name="error_noticias">Error con la obtención de noticias. Inténtalo de nuevo más tarde.</string>
     <string name="framerate_monitor">Framerate monitor</string>
+    <string name="feed">Novedades</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="tools">Herramientas</string>
+    <string name="seeAll">ver todo</string>
+    <string name="featured">Destacado</string>
+    <string name="instalar">Descargar</string>
 </resources>
