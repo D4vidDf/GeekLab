@@ -64,72 +64,25 @@ public class AppNavigation extends AppCompatActivity {
     }
 
     private void computeWindowSizeClasses() {
-        WindowMetrics metrics = WindowMetricsCalculator.getOrCreate()
-                .computeCurrentWindowMetrics(this);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom_navigation);
 
-        float widthDp = metrics.getBounds().width() /
-                getResources().getDisplayMetrics().density;
-        WindowSizeClass widthWindowSizeClass;
+        int visibilityFlags = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 
-        if (widthDp < 600f) {
-            BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
-
-            navView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom_navigation);
-
-            NavigationUI.setupWithNavController((BottomNavigationView) binding.bottomNavView, navController);
-        } else if (widthDp < 840f) {
-            NavigationRailView navView = findViewById(R.id.nav_rail_view);
-
-            navView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom_navigation);
-
-            NavigationUI.setupWithNavController((NavigationRailView) binding.navRailView, navController);
-        } else {
-            NavigationView navView = findViewById(R.id.nav_view);
-
-            navView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom_navigation);
-
-            NavigationUI.setupWithNavController((NavigationView) binding.navView, navController);
+        if (binding.bottomNavView != null) {
+            binding.bottomNavView.setSystemUiVisibility(visibilityFlags);
+            NavigationUI.setupWithNavController(binding.bottomNavView, navController);
         }
-        float heightDp = metrics.getBounds().height() /
-                getResources().getDisplayMetrics().density;
-        WindowSizeClass heightWindowSizeClass;
 
-        if (heightDp < 480f) {
-            BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
+        if (binding.navRailView != null) {
+            binding.navRailView.setSystemUiVisibility(visibilityFlags);
+            NavigationUI.setupWithNavController(binding.navRailView, navController);
+        }
 
-            navView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom_navigation);
-
-            NavigationUI.setupWithNavController((BottomNavigationView) binding.bottomNavView, navController);
-        } else if (heightDp < 900f) {
-            NavigationView navView = findViewById(R.id.nav_view);
-
-            navView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom_navigation);
-
-            NavigationUI.setupWithNavController((NavigationView) binding.navView, navController);
-        } else {
-            NavigationView navView = findViewById(R.id.nav_view);
-
-            navView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom_navigation);
-
-            NavigationUI.setupWithNavController((NavigationView) binding.navView, navController);
+        if (binding.navView != null) {
+            binding.navView.setSystemUiVisibility(visibilityFlags);
+            NavigationUI.setupWithNavController(binding.navView, navController);
         }
     }
 
