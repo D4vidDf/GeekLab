@@ -2,13 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 33
-    buildToolsVersion "30.0.3"
+    namespace 'com.daviddf.geeklab'
+    compileSdk 35
+    buildToolsVersion "35.0.0"
 
     defaultConfig {
         applicationId "com.daviddf.geeklabtest"
         minSdk 24
-        targetSdk 33
+        targetSdk 35
         versionCode 18
         versionName "2.2.0-a"
 
