@@ -1,13 +1,17 @@
 package com.daviddf.geeklab
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.remember
-import com.daviddf.geeklab.notification.Notifiaction
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.daviddf.geeklab.ui.apps.AppsScreen
+import com.daviddf.geeklab.ui.battery.BatteryScreen
 import com.daviddf.geeklab.ui.home.HomeScreen
+import com.daviddf.geeklab.ui.info.InfoScreen
+import com.daviddf.geeklab.ui.notification.NotificationScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,20 +20,39 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         
         setContent {
-            val onNotificationClick = remember { 
-                { startActivity(Intent(this, Notifiaction::class.java)) } 
-            }
-            val onBatteryClick = remember { { /* TODO */ } }
-            val onInfoClick = remember { { /* TODO */ } }
-            val onAppsClick = remember { { /* TODO */ } }
-
             GeekLabTheme {
-                HomeScreen(
-                    onNotificationClick = onNotificationClick,
-                    onBatteryClick = onBatteryClick,
-                    onInfoClick = onInfoClick,
-                    onAppsClick = onAppsClick
-                )
+                val navController = rememberNavController()
+                
+                NavHost(navController = navController, startDestination = "home") {
+                    composable("home") {
+                        HomeScreen(
+                            onNotificationClick = { navController.navigate("notifications") },
+                            onBatteryClick = { navController.navigate("battery") },
+                            onInfoClick = { navController.navigate("info") },
+                            onAppsClick = { navController.navigate("apps") }
+                        )
+                    }
+                    
+                    composable("battery") {
+                        BatteryScreen(
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("notifications") {
+                        NotificationScreen(
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("info") {
+                        InfoScreen(onBackClick = { navController.popBackStack() })
+                    }
+
+                    composable("apps") {
+                        AppsScreen(onBackClick = { navController.popBackStack() })
+                    }
+                }
             }
         }
     }

@@ -21,5 +21,18 @@ val TextBateria = Color(0xFF004D21)
 val TextInformacion = Color(0xFF4D004D)
 val TextAplicaciones = Color(0xFF4D4D00)
 
+// Battery Health Colors
+val CardBateriaGood = Color(0xFFA5FFC9)
+val TextBateriaGood = Color(0xFF004D21)
+
+val CardBateriaUnknown = Color(0xFFFFFFA5)
+val TextBateriaUnknown = Color(0xFF4D4D00)
+
+val CardBateriaWarning = Color(0xFFFFD4A5)
+val TextBateriaWarning = Color(0xFF4D2100)
+
+val CardBateriaCritical = Color(0xFFFFA5A5)
+val TextBateriaCritical = Color(0xFF4D0000)
+
 val BackgroundDark = Color(0xFF0B1220)
 val BackgroundLight = Color(0xFFF8F9FA)

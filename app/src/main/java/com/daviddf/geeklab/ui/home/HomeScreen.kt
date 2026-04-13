@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,11 +64,12 @@ fun HomeScreen(
     onAppsClick: () -> Unit
 ) {
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Bienvenido",
+                        text = stringResource(R.string.welcome),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.ExtraBold
                     )
@@ -88,7 +92,8 @@ fun HomeScreen(
                 )
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -99,14 +104,14 @@ fun HomeScreen(
         ) {
             item {
                 Column {
-                    SectionHeader(title = "Favoritos", onSeeAllClick = {})
+                    SectionHeader(title = stringResource(R.string.favorites), onSeeAllClick = {})
                     
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         FavoriteCard(
                             modifier = Modifier.weight(1f),
-                            title = "Notificaciones",
+                            title = stringResource(R.string.notificaciones),
                             icon = Icons.Rounded.Notifications,
                             containerColor = CardNotificaciones,
                             contentColor = TextNotificaciones,
@@ -115,7 +120,7 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.width(16.dp))
                         FavoriteCard(
                             modifier = Modifier.weight(1f),
-                            title = "Batería",
+                            title = stringResource(R.string.battery_title),
                             icon = Icons.Rounded.BatteryFull,
                             containerColor = CardBateria,
                             contentColor = TextBateria,
@@ -128,7 +133,7 @@ fun HomeScreen(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         FavoriteCard(
                             modifier = Modifier.weight(1f),
-                            title = "Información",
+                            title = stringResource(R.string.info_title),
                             icon = Icons.Rounded.Info,
                             containerColor = CardInformacion,
                             contentColor = TextInformacion,
@@ -137,7 +142,7 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.width(16.dp))
                         FavoriteCard(
                             modifier = Modifier.weight(1f),
-                            title = "Aplicaciones",
+                            title = stringResource(R.string.apps_title),
                             icon = Icons.Rounded.GridView,
                             containerColor = CardAplicaciones,
                             contentColor = TextAplicaciones,
@@ -149,19 +154,19 @@ fun HomeScreen(
 
             item {
                 Column {
-                    SectionHeader(title = "Destacado", onSeeAllClick = {})
+                    SectionHeader(title = stringResource(R.string.featured), onSeeAllClick = {})
                     
                     Spacer(modifier = Modifier.height(16.dp))
 
                     FeaturedCard(
-                        title = "Nueva aplicación y funciones",
+                        title = stringResource(R.string.featured_apps_title),
                         imageRes = R.drawable.preview_loop
                     )
                     
                     Spacer(modifier = Modifier.height(16.dp))
 
                     FeaturedCard(
-                        title = "Android y el diseño de aplicaciones",
+                        title = stringResource(R.string.featured_design_title),
                         imageRes = R.drawable.preview_notification
                     )
                     
@@ -186,7 +191,7 @@ fun SectionHeader(title: String, onSeeAllClick: () -> Unit) {
             fontWeight = FontWeight.SemiBold
         )
         Text(
-            text = "ver todo",
+            text = stringResource(R.string.see_all),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
             modifier = Modifier.clickable { onSeeAllClick() }
@@ -221,7 +226,7 @@ fun FeaturedCard(title: String, imageRes: Int) {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
-                    text = "GeekLab",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.labelMedium,
                     color = Color.White.copy(alpha = 0.7f),
                     fontWeight = FontWeight.Bold
