@@ -1,229 +1,200 @@
-package com.daviddf.geeklab.notification;
+package com.daviddf.geeklab.notification
 
-import static android.content.pm.PackageManager.PERMISSION_DENIED;
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_DENIED
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.MediaStore
+import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import com.daviddf.geeklab.R
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputLayout
+import java.io.IOException
+import java.util.concurrent.atomic.AtomicInteger
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
+class Notifiaction : AppCompatActivity() {
+    private var NOTIFICACION_ID = 1
+    private var titulo: String? = null
+    private var mensaje: String? = null
+    private var imagen: Bitmap? = null
+    private var imagen_selected = false
+    private var uri: Uri? = null
+    private lateinit var imageView: ImageView
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var appbar: MaterialToolbar
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.PickVisualMediaRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.WindowCompat;
-import com.daviddf.geeklab.R;
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputLayout;
+    private lateinit var tt: TextInputLayout
+    private lateinit var tit: TextInputLayout
+    private lateinit var mes: TextInputLayout
+    private var n = 0
+    private var no: Long = 0
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-public class Notifiaction extends AppCompatActivity {
-    int NOTIFICACION_ID=1, SELECTED_PHOTO=1;
-    String titulo,mensaje;
-    Bitmap imagen;
-    Boolean imagen_selected=false;
-    Uri uri;
-    ImageView imageView;
-    ActivityResultLauncher<Intent> activityResultLauncher;
-    MaterialToolbar appbar;
-    public static final int PICK_IMAGE = 1;
-
-    TextInputLayout tt, tit, mes;
-    int n=0;
-    private NotificationManagerCompat notificationManager;
-    private final static String CHANNEL_ID = "GeekLab";
-    long no;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notifiaction);
-
-
-        tit = (TextInputLayout) findViewById(R.id.Titulo);
-        mes = (TextInputLayout) findViewById(R.id.Mensaje);
-        tt = (TextInputLayout) findViewById(R.id.tt);
-
-        appbar = (MaterialToolbar) findViewById(R.id.topAppBar);
-
-        MaterialButton choose = findViewById(R.id.img_se);
-        imageView = findViewById(R.id.img);
-
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-
-                if (result.getResultCode() == RESULT_OK){
-                    uri = result.getData().getData();
-                    try {
-
-                        imagen = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-                        imageView.setImageBitmap(imagen);
-                        imagen_selected = true;
-
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });
-        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                    // Callback is invoked after the user selects a media item or closes the
-                    // photo picker.
-                    if (uri != null) {
-                        try {
-                            imagen = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-                            imageView.setImageBitmap(imagen);
-                            imagen_selected = true;
-                        } catch (IOException e) {
-                            imageView.setImageBitmap(null);
-                            imagen_selected = false;
-                            e.printStackTrace();
-                        }
-
-                    } else {
-                        imageView.setImageBitmap(null);
-                        imagen_selected = false;
-                    }
-                });
-
-        choose.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
-                    ActivityResultContracts.PickVisualMedia.VisualMediaType mediaType = (ActivityResultContracts.PickVisualMedia.VisualMediaType) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
-
-                    pickMedia.launch(new PickVisualMediaRequest.Builder().setMediaType(mediaType).build());}
-                else {
-                        Intent intentimg =new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intentimg.setType("image/*");
-                        activityResultLauncher.launch(intentimg);
-                }
-            }
-        });
-
-
-
-        MaterialButton gen = (MaterialButton) findViewById(R.id.generar);
-
-        gen.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
-
-                if (ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.POST_NOTIFICATIONS") == PERMISSION_DENIED) {
-                    shouldShowRequestPermissionRationale("android.permission.POST_NOTIFICATIONS");
-                    requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, NOTIFICACION_ID);
-                }}
-
-                if (tt.getEditText().getText().toString().isEmpty()){
-                    tt.setErrorEnabled(true);
-                    tt.setError(getString(R.string.error_number));
-                }
-                else {n++; tt.setErrorEnabled(false);}
-
-                if (mes.getEditText().getText().toString().isEmpty()){
-                    mes.setErrorEnabled(true);
-                    mes.setError(getString(R.string.error_body));
-                }
-                else {n++; mes.setErrorEnabled(false);}
-
-                if (tit.getEditText().getText().toString().isEmpty()){
-                    tit.setErrorEnabled(true);
-                    tit.setError(getString(R.string.error_title));
-                }
-                else if (tit.getEditText().getText().length()>30){
-                    tit.setErrorEnabled(true);
-                    tit.setError(getString(R.string.error_title_length));
-                }
-                else {n++; tit.setErrorEnabled(false);}
-
-
-                if (n==3) {
-                    no = Long.parseLong(tt.getEditText().getText().toString());
-
-                    while (no>0){
-                        titulo = tit.getEditText().getText().toString();
-                        mensaje = mes.getEditText().getText().toString();
-                        createNotificationChannel();
-                        createNotification();
-                        NOTIFICACION_ID++;
-                        no-=1;
-                    }
-                }
-                n=0;
-
-            }
-        });
-        appbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+    companion object {
+        private const val CHANNEL_ID = "GeekLab"
+        private val c = AtomicInteger(0)
+        fun getID(): Int = c.incrementAndGet()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_notifiaction)
 
+        tit = findViewById(R.id.Titulo)
+        mes = findViewById(R.id.Mensaje)
+        tt = findViewById(R.id.tt)
+        appbar = findViewById(R.id.topAppBar)
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createNotificationChannel() {
+        val choose = findViewById<MaterialButton>(R.id.img_se)
+        imageView = findViewById(R.id.img)
 
-        CharSequence name = "GeekLab";
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.createNotificationChannel(notificationChannel);
-    }
-
-    private void createNotification() {
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
-        builder.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
-        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
-        builder.setContentTitle(titulo);
-        builder.setContentText(mensaje);
-        builder.setColor(Color.rgb(255,255,255));
-        builder.setPriority(NotificationCompat.PRIORITY_MAX);
-        builder.setVibrate(new long[]{80, 1000, 1000, 1000, 1000});
-        builder.setDefaults(Notification.DEFAULT_SOUND);
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(mensaje));
-        if (imagen_selected){
-            builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(imagen).setBigContentTitle(titulo).setSummaryText(mensaje));
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                uri = result.data?.data
+                try {
+                    imagen = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                    imageView.setImageBitmap(imagen)
+                    imagen_selected = true
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
         }
 
+        pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { selectedUri ->
+            if (selectedUri != null) {
+                uri = selectedUri
+                try {
+                    imagen = MediaStore.Images.Media.getBitmap(contentResolver, selectedUri)
+                    imageView.setImageBitmap(imagen)
+                    imagen_selected = true
+                } catch (e: IOException) {
+                    imageView.setImageBitmap(null)
+                    imagen_selected = false
+                    e.printStackTrace()
+                }
+            } else {
+                imageView.setImageBitmap(null)
+                imagen_selected = false
+            }
+        }
 
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
-        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
+        choose.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            } else {
+                val intentimg = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+                    type = "image/*"
+                }
+                activityResultLauncher.launch(intentimg)
+            }
+        }
 
+        val gen = findViewById<MaterialButton>(R.id.generar)
+
+        gen.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(applicationContext, "android.permission.POST_NOTIFICATIONS") == PERMISSION_DENIED) {
+                    requestPermissions(arrayOf("android.permission.POST_NOTIFICATIONS"), NOTIFICACION_ID)
+                }
+            }
+
+            val numStr = tt.editText?.text.toString()
+            if (numStr.isEmpty()) {
+                tt.isErrorEnabled = true
+                tt.error = getString(R.string.error_number)
+            } else {
+                n++
+                tt.isErrorEnabled = false
+            }
+
+            val mesStr = mes.editText?.text.toString()
+            if (mesStr.isEmpty()) {
+                mes.isErrorEnabled = true
+                mes.error = getString(R.string.error_body)
+            } else {
+                n++
+                mes.isErrorEnabled = false
+            }
+
+            val titStr = tit.editText?.text.toString()
+            if (titStr.isEmpty()) {
+                tit.isErrorEnabled = true
+                tit.error = getString(R.string.error_title)
+            } else if (titStr.length > 30) {
+                tit.isErrorEnabled = true
+                tit.error = getString(R.string.error_title_length)
+            } else {
+                n++
+                tit.isErrorEnabled = false
+            }
+
+            if (n == 3) {
+                no = numStr.toLong()
+                while (no > 0) {
+                    titulo = titStr
+                    mensaje = mesStr
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        createNotificationChannel()
+                    }
+                    createNotification()
+                    NOTIFICACION_ID++
+                    no -= 1
+                }
+            }
+            n = 0
+        }
+
+        appbar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
-    public static class NotificationID{
-        private final static AtomicInteger c = new AtomicInteger(0);
-        public static int getID(){
-            return c.incrementAndGet();
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel() {
+        val name: CharSequence = "GeekLab"
+        val notificationChannel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT)
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    private fun createNotification() {
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID).apply {
+            setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
+            setSmallIcon(R.drawable.ic_launcher_foreground)
+            setContentTitle(titulo)
+            setContentText(mensaje)
+            color = Color.rgb(255, 255, 255)
+            priority = NotificationCompat.PRIORITY_MAX
+            setVibrate(longArrayOf(80, 1000, 1000, 1000, 1000))
+            setDefaults(Notification.DEFAULT_SOUND)
+            setStyle(NotificationCompat.BigTextStyle().bigText(mensaje))
+            if (imagen_selected) {
+                setStyle(NotificationCompat.BigPictureStyle().bigPicture(imagen).setBigContentTitle(titulo).setSummaryText(mensaje))
+            }
+        }
+
+        val notificationManagerCompat = NotificationManagerCompat.from(applicationContext)
+        try {
+            notificationManagerCompat.notify(NOTIFICACION_ID, builder.build())
+        } catch (e: SecurityException) {
+            e.printStackTrace()
         }
     }
 }

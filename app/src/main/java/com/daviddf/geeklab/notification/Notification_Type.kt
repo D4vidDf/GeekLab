@@ -1,5 +1,5 @@
-package com.daviddf.geeklab.notification;
+package com.daviddf.geeklab.notification
 
-public enum Notification_Type {
+enum class Notification_Type {
     small, large, image
 }

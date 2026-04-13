@@ -1,43 +1,50 @@
-package com.daviddf.geeklab.widgets;
+package com.daviddf.geeklab.widgets
 
-import android.annotation.SuppressLint;
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.RemoteViews;
-
-import com.daviddf.geeklab.R;
+import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.Context
+import android.content.Intent
+import android.widget.RemoteViews
+import com.daviddf.geeklab.R
 
 /**
  * Implementation of App Widget functionality.
  */
-public class Google extends AppWidgetProvider {
+class Google : AppWidgetProvider() {
 
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        @SuppressLint("RemoteViewLayout")
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.google);
+    @SuppressLint("RemoteViewLayout")
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        val remoteViews = RemoteViews(context.packageName, R.layout.google)
 
-        Intent Google = new Intent(Intent.ACTION_VIEW);
-        Google.setClassName("com.google.android.googlequicksearchbox","com.google.android.apps.gsa.queryentry.QueryEntryActivity");
-        Intent Assistant = new Intent(Intent.ACTION_VOICE_COMMAND);
-        Intent Lens = new Intent(Intent.ACTION_VIEW);
-        Lens.setClassName("com.google.ar.lens","com.google.vr.apps.ornament.app.lens.LensLauncherActivity");
-        Intent Mail = new Intent(Intent.ACTION_VIEW);
-        Mail.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmailExternal");
+        val intentGoogle = Intent(Intent.ACTION_VIEW).apply {
+            setClassName("com.google.android.googlequicksearchbox", "com.google.android.apps.gsa.queryentry.QueryEntryActivity")
+        }
+        val intentAssistant = Intent(Intent.ACTION_VOICE_COMMAND)
+        val intentLens = Intent(Intent.ACTION_VIEW).apply {
+            setClassName("com.google.ar.lens", "com.google.vr.apps.ornament.app.lens.LensLauncherActivity")
+        }
+        val intentMail = Intent(Intent.ACTION_VIEW).apply {
+            setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmailExternal")
+        }
 
-        PendingIntent search = PendingIntent.getActivity(context, 0, Google, 0);
-        PendingIntent assistant = PendingIntent.getActivity(context, 0, Assistant, 0);
-        PendingIntent lens = PendingIntent.getActivity(context, 0, Lens, 0);
-        PendingIntent mail = PendingIntent.getActivity(context, 0, Mail, 0);
+        val flags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
 
-        remoteViews.setOnClickPendingIntent(R.id.search, search);
-        remoteViews.setOnClickPendingIntent(R.id.asistente, assistant);
-        remoteViews.setOnClickPendingIntent(R.id.lens,lens);
-        remoteViews.setOnClickPendingIntent(R.id.mail, mail);
+        val search = PendingIntent.getActivity(context, 0, intentGoogle, flags)
+        val assistant = PendingIntent.getActivity(context, 0, intentAssistant, flags)
+        val lens = PendingIntent.getActivity(context, 0, intentLens, flags)
+        val mail = PendingIntent.getActivity(context, 0, intentMail, flags)
 
-        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
+        remoteViews.setOnClickPendingIntent(R.id.search, search)
+        remoteViews.setOnClickPendingIntent(R.id.asistente, assistant)
+        remoteViews.setOnClickPendingIntent(R.id.lens, lens)
+        remoteViews.setOnClickPendingIntent(R.id.mail, mail)
+
+        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
     }
 }

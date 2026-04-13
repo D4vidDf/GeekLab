@@ -1,55 +1,47 @@
-package com.daviddf.geeklab.widgets;
+package com.daviddf.geeklab.widgets
 
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.widget.RemoteViews;
-
-import com.daviddf.geeklab.R;
-
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.Context
+import android.widget.RemoteViews
+import com.daviddf.geeklab.R
+import java.text.DateFormat
+import java.util.Calendar
 
 /**
  * Implementation of App Widget functionality.
  */
-public class fecha extends AppWidgetProvider {
+class fecha : AppWidgetProvider() {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
-
-        Date currentTime = Calendar.getInstance().getTime();
-
-        String formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
-
-
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.fecha);
-        views.setTextViewText(R.id.fecha, formattedDate);
-
-
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         // There may be multiple widgets active, so update all of them
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+        for (appWidgetId in appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
-    @Override
-    public void onEnabled(Context context) {
+    override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
     }
 
-    @Override
-    public void onDisabled(Context context) {
+    override fun onDisabled(context: Context) {
         // Enter relevant functionality for when the last widget is disabled
     }
-}
 
+    companion object {
+        fun updateAppWidget(
+            context: Context, appWidgetManager: AppWidgetManager,
+            appWidgetId: Int
+        ) {
+            val currentTime = Calendar.getInstance().time
+            val formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime)
+
+            // Construct the RemoteViews object
+            val views = RemoteViews(context.packageName, R.layout.fecha)
+            views.setTextViewText(R.id.fecha, formattedDate)
+
+            // Instruct the widget manager to update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+    }
+}

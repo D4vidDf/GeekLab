@@ -1,34 +1,37 @@
-package com.daviddf.geeklab.widgets;
+package com.daviddf.geeklab.widgets
 
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.RemoteViews;
-
-import androidx.core.app.NotificationManagerCompat;
-
-import com.daviddf.geeklab.R;
-import com.daviddf.geeklab.notification.Notifiaction;
+import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.widget.RemoteViews
+import com.daviddf.geeklab.R
+import com.daviddf.geeklab.notification.Notifiaction
 
 /**
  * Implementation of App Widget functionality.
  */
-public class NotiWidg extends AppWidgetProvider {
-    int NOTIFICACION_ID=1;
+class NotiWidg : AppWidgetProvider() {
 
-    private NotificationManagerCompat notificationManager;
-    private final static String CHANNEL_ID = "Widget";
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        val remoteViews = RemoteViews(context.packageName, R.layout.noti_widg)
+        val configIntent = Intent(context, Notifiaction::class.java)
 
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.noti_widg);
-        Intent configIntent = new Intent(context, Notifiaction.class);
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
 
-        PendingIntent configPendingIntent = PendingIntent.getActivity(context, 0, configIntent, 0);
+        val configPendingIntent = PendingIntent.getActivity(context, 0, configIntent, flags)
 
-        remoteViews.setOnClickPendingIntent(R.id.widg, configPendingIntent);
-        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
+        remoteViews.setOnClickPendingIntent(R.id.widg, configPendingIntent)
+        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "Widget"
     }
 }

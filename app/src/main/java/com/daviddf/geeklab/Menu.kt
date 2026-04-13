@@ -1,173 +1,134 @@
-package com.daviddf.geeklab;
+package com.daviddf.geeklab
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.daviddf.geeklab.loop.Consentimiento
+import com.daviddf.geeklab.notification.Notifiaction
+import com.google.android.material.button.MaterialButton
 
-import androidx.appcompat.app.AppCompatActivity;
+class Menu : AppCompatActivity() {
 
-import com.daviddf.geeklab.loop.Consentimiento;
-import com.daviddf.geeklab.notification.Notifiaction;
-import com.google.android.material.button.MaterialButton;
+    private lateinit var noti: MaterialButton
+    private lateinit var dev: MaterialButton
+    private lateinit var band: MaterialButton
+    private lateinit var iaHdr: MaterialButton
+    private lateinit var speed: MaterialButton
+    private lateinit var account: MaterialButton
+    private lateinit var data: MaterialButton
+    private lateinit var performance: MaterialButton
+    private lateinit var qcolor: MaterialButton
 
-public class Menu extends AppCompatActivity {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_menu)
 
-    MaterialButton noti, dev, band, ia_hdr, speed, account, data, performance, qcolor;
+        noti = findViewById(R.id.not)
+        noti.setOnClickListener {
+            startActivity(Intent(this, Notifiaction::class.java))
+        }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
-
-        noti = (MaterialButton) findViewById(R.id.not);
-
-        noti.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Menu.this, Notifiaction.class));
+        dev = findViewById(R.id.developer)
+        dev.setOnClickListener {
+            val intentDev = Intent(Intent.ACTION_VIEW).apply {
+                setClassName("com.android.settings", "com.android.settings.Settings\$DevelopmentSettingsDashboardActivity")
             }
-        });
+            startActivity(intentDev)
+        }
 
-        dev = (MaterialButton) findViewById(R.id.developer);
-
-        dev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent Dev = new Intent(Intent.ACTION_VIEW);
-                Dev.setClassName("com.android.settings", "com.android.settings.Settings$DevelopmentSettingsDashboardActivity");
-                startActivity(Dev);
-            }
-        });
-
-        band = (MaterialButton) findViewById(R.id.band);
-
-        band.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent Band = new Intent(Intent.ACTION_VIEW);
-                    Band.setClassName("com.android.settings", "com.android.settings.MiuiBandMode");
-                    startActivity(Band);
-                } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
-                    errorToast.show();
+        band = findViewById(R.id.band)
+        band.setOnClickListener {
+            try {
+                val intentBand = Intent(Intent.ACTION_VIEW).apply {
+                    setClassName("com.android.settings", "com.android.settings.MiuiBandMode")
                 }
+                startActivity(intentBand)
+            } catch (e: RuntimeException) {
+                Toast.makeText(this, R.string.error_function_not_available, Toast.LENGTH_LONG).show()
             }
-        });
+        }
 
-        ia_hdr = (MaterialButton) findViewById(R.id.hdr);
-
-        ia_hdr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent Hdr = new Intent(Intent.ACTION_VIEW);
-                    Hdr.setClassName("com.android.settings", "com.android.settings.display.ScreenEnhanceEngineS2hActivity");
-                    startActivity(Hdr);
-                } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
-                    errorToast.show();
+        iaHdr = findViewById(R.id.hdr)
+        iaHdr.setOnClickListener {
+            try {
+                val intentHdr = Intent(Intent.ACTION_VIEW).apply {
+                    setClassName("com.android.settings", "com.android.settings.display.ScreenEnhanceEngineS2hActivity")
                 }
+                startActivity(intentHdr)
+            } catch (e: RuntimeException) {
+                Toast.makeText(this, R.string.error_function_not_available, Toast.LENGTH_LONG).show()
             }
-        });
+        }
 
-        speed = (MaterialButton) findViewById(R.id.velo);
-
-        speed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent Speed = new Intent(Intent.ACTION_VIEW);
-                    Speed.setClassName("com.android.settings", "com.android.settings.wifi.linkturbo.WifiLinkTurboSettings");
-                    startActivity(Speed);
-                } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
-                    errorToast.show();
+        speed = findViewById(R.id.velo)
+        speed.setOnClickListener {
+            try {
+                val intentSpeed = Intent(Intent.ACTION_VIEW).apply {
+                    setClassName("com.android.settings", "com.android.settings.wifi.linkturbo.WifiLinkTurboSettings")
                 }
+                startActivity(intentSpeed)
+            } catch (e: RuntimeException) {
+                Toast.makeText(this, R.string.error_function_not_available, Toast.LENGTH_LONG).show()
             }
-        });
+        }
 
-        account = (MaterialButton) findViewById(R.id.accounts);
-
-        account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent Account = new Intent(Intent.ACTION_VIEW);
-                    Account.setClassName("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
-                    startActivity(Account);
-                } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
-                    errorToast.show();
+        account = findViewById(R.id.accounts)
+        account.setOnClickListener {
+            try {
+                val intentAccount = Intent(Intent.ACTION_VIEW).apply {
+                    setClassName("com.android.settings", "com.android.settings.Settings\$UserSettingsActivity")
                 }
+                startActivity(intentAccount)
+            } catch (e: RuntimeException) {
+                Toast.makeText(this, R.string.error_function_not_available, Toast.LENGTH_LONG).show()
             }
-        });
+        }
 
-        data = (MaterialButton) findViewById(R.id.usage);
-
-        data.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent Data = new Intent(Intent.ACTION_VIEW);
-                    Data.setClassName("com.xiaomi.misettings", "com.xiaomi.misettings.usagestats.UsageStatsMainActivity");
-                    startActivity(Data);
-                } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
-                    errorToast.show();
+        data = findViewById(R.id.usage)
+        data.setOnClickListener {
+            try {
+                val intentData = Intent(Intent.ACTION_VIEW).apply {
+                    setClassName("com.xiaomi.misettings", "com.xiaomi.misettings.usagestats.UsageStatsMainActivity")
                 }
+                startActivity(intentData)
+            } catch (e: RuntimeException) {
+                Toast.makeText(this, R.string.error_function_not_available, Toast.LENGTH_LONG).show()
             }
-        });
+        }
 
-        performance = (MaterialButton) findViewById(R.id.rendimiento);
-
-        performance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent Performance = new Intent(Intent.ACTION_VIEW);
-                    Performance.setClassName("com.qualcomm.qti.performancemode", "com.qualcomm.qti.performancemode.PerformanceModeActivity");
-                    startActivity(Performance);
-                } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
-                    errorToast.show();
+        performance = findViewById(R.id.rendimiento)
+        performance.setOnClickListener {
+            try {
+                val intentPerformance = Intent(Intent.ACTION_VIEW).apply {
+                    setClassName("com.qualcomm.qti.performancemode", "com.qualcomm.qti.performancemode.PerformanceModeActivity")
                 }
-
+                startActivity(intentPerformance)
+            } catch (e: RuntimeException) {
+                Toast.makeText(this, R.string.error_function_not_available, Toast.LENGTH_LONG).show()
             }
-        });
+        }
 
-        qcolor = (MaterialButton) findViewById(R.id.qcolor);
-
-        qcolor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent Performance = new Intent(Intent.ACTION_VIEW);
-                    Performance.setClassName("com.qualcomm.qti.qcolor", "com.qualcomm.qti.qcolor.QColorActivity");
-                    startActivity(Performance);
-                } catch (RuntimeException e) {
-                    Toast errorToast = Toast.makeText(Menu.this, R.string.error_function_not_available, Toast.LENGTH_LONG);
-                    errorToast.show();
+        qcolor = findViewById(R.id.qcolor)
+        qcolor.setOnClickListener {
+            try {
+                val intentQcolor = Intent(Intent.ACTION_VIEW).apply {
+                    setClassName("com.qualcomm.qti.qcolor", "com.qualcomm.qti.qcolor.QColorActivity")
                 }
+                startActivity(intentQcolor)
+            } catch (e: RuntimeException) {
+                Toast.makeText(this, R.string.error_function_not_available, Toast.LENGTH_LONG).show()
             }
-        });
+        }
 
+        val lp = findViewById<MaterialButton>(R.id.loop)
+        lp.setOnClickListener {
+            startActivity(Intent(this, Consentimiento::class.java))
+        }
 
-        MaterialButton lp = (MaterialButton) findViewById(R.id.loop);
-
-        lp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Menu.this, Consentimiento.class));
-            }
-        });
-
-
-        // ATTENTION: This was auto-generated to handle app links.
-        Intent appLinkIntent = getIntent();
-        String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();
+        // Handle app links
+        val appLinkIntent = intent
+        val appLinkAction = appLinkIntent.action
+        val appLinkData = appLinkIntent.data
     }
 }

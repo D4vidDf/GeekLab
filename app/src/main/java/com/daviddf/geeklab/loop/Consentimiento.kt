@@ -1,42 +1,31 @@
-package com.daviddf.geeklab.loop;
+package com.daviddf.geeklab.loop
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.daviddf.geeklab.R
+import com.google.android.material.button.MaterialButton
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
+class Consentimiento : AppCompatActivity() {
 
-import com.daviddf.geeklab.R;
-import com.google.android.material.button.MaterialButton;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_consentimiento)
 
-public class Consentimiento extends AppCompatActivity {
+        val btn = findViewById<MaterialButton>(R.id.aceptar)
+        val close = findViewById<MaterialButton>(R.id.close)
 
+        btn.setOnClickListener {
+            startActivity(Intent(this, Countdown::class.java))
+        }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_consentimiento);
+        close.setOnClickListener {
+            finish()
+        }
 
-        MaterialButton btn = (MaterialButton) findViewById(R.id.aceptar);
-        MaterialButton close = (MaterialButton) findViewById(R.id.close);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Consentimiento.this, Countdown.class));
-            }
-        });
-
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        // ATTENTION: This was auto-generated to handle app links.
-        Intent appLinkIntent = getIntent();
-        String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();
+        // Handle app links
+        val appLinkIntent = intent
+        val appLinkAction = appLinkIntent.action
+        val appLinkData = appLinkIntent.data
     }
 }

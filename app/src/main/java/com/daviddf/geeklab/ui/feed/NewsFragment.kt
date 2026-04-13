@@ -1,120 +1,89 @@
-package com.daviddf.geeklab.ui.feed;
+package com.daviddf.geeklab.ui.feed
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.daviddf.geeklab.Experiments
+import com.daviddf.geeklab.Myadapter
+import com.daviddf.geeklab.R
+import com.daviddf.geeklab.databinding.FragmentFeedBinding
+import com.google.firebase.firestore.*
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class NewsFragment : Fragment() {
 
-import com.daviddf.geeklab.Experiments;
-import com.daviddf.geeklab.Myadapter;
-import com.daviddf.geeklab.R;
-import com.daviddf.geeklab.databinding.FragmentFeedBinding;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+    private var recyclerView: RecyclerView? = null
+    private var experimentsArrayList = ArrayList<Experiments>()
+    private var myadapter: Myadapter? = null
+    private var db: FirebaseFirestore? = null
+    private var errimg: ImageView? = null
+    private var errortext: TextView? = null
 
-import java.util.ArrayList;
+    private var _binding: FragmentFeedBinding? = null
+    private val binding get() = _binding!!
 
-public class NewsFragment extends Fragment {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        val root = binding.root
 
-    RecyclerView recyclerView;
-    ArrayList<Experiments> experimentsArrayList;
-    Myadapter myadapter;
-    FirebaseFirestore db;
-    ImageView errimg;
-    TextView errortext;
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            root.setPadding(0, insets.top, 0, 0)
+            WindowInsetsCompat.CONSUMED
+        }
 
-    private FragmentFeedBinding binding;
+        recyclerView = root.findViewById(R.id.recycler)
+        recyclerView?.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(activity)
+        }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+        errimg = root.findViewById(R.id.img_error)
+        errortext = root.findViewById(R.id.error_txt)
 
+        db = FirebaseFirestore.getInstance()
+        myadapter = Myadapter(requireActivity(), experimentsArrayList)
+        recyclerView?.adapter = myadapter
 
-        binding = FragmentFeedBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures());
-            // Apply the insets as padding to the view. Here we're setting all of the
-            // dimensions, but apply as appropriate to your layout. You could also
-            // update the views margin if more appropriate.
-            root.setPadding(0,insets.top,0,0);
-
-            // Return CONSUMED if we don't want the window insets to keep being passed
-            // down to descendant views.
-            return WindowInsetsCompat.CONSUMED;
-        });
-
-
-        recyclerView = root.findViewById(R.id.recycler);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        errimg = (ImageView)root.findViewById(R.id.img_error);
-        errortext = (TextView) root.findViewById(R.id.error_txt);
-
-        db = FirebaseFirestore.getInstance();
-        experimentsArrayList = new ArrayList<Experiments>();
-        myadapter = new Myadapter(getActivity(),experimentsArrayList);
-
-        recyclerView.setAdapter(myadapter);
-
-        EventChangeListner();
-        return root;
+        eventChangeListener()
+        return root
     }
 
-    private void EventChangeListner() {
-        db.collection("experiments").orderBy("Fecha", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+    private fun eventChangeListener() {
+        db?.collection("experiments")?.orderBy("Fecha", Query.Direction.DESCENDING)
+            ?.addSnapshotListener { queryDocumentSnapshots, e ->
+                if (e != null) {
+                    errimg?.visibility = View.GONE
+                    errortext?.visibility = View.GONE
+                    Log.e("Error al conectar:", e.message ?: "")
+                    return@addSnapshotListener
+                }
 
-                        if(e != null) {
-
-                            errimg.setVisibility(View.GONE);
-                            errortext.setVisibility(View.GONE);
-
-                            Log.e("Error al conectar:",e.getMessage());
-                            return;
-                        }
-
-                        for (DocumentChange dc: queryDocumentSnapshots.getDocumentChanges()){
-
-                            if (dc.getType() == DocumentChange.Type.ADDED){
-
-                                experimentsArrayList.add(dc.getDocument().toObject(Experiments.class));
-
-                            }
-
-                            myadapter.notifyDataSetChanged();
-
-                            errimg.setVisibility(View.GONE);
-                            errortext.setVisibility(View.GONE);
-                        }
-
+                queryDocumentSnapshots?.documentChanges?.forEach { dc ->
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        experimentsArrayList.add(dc.document.toObject(Experiments::class.java))
                     }
-                });
+                }
+                myadapter?.notifyDataSetChanged()
+                errimg?.visibility = View.GONE
+                errortext?.visibility = View.GONE
+            }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -1,78 +1,57 @@
-package com.daviddf.geeklab.widgets;
+package com.daviddf.geeklab.widgets
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.content.Intent;
-import android.os.SystemClock;
-import android.widget.RemoteViews;
-
-import androidx.annotation.NonNull;
-
-import com.daviddf.geeklab.R;
-
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.Context
+import android.content.Intent
+import android.widget.RemoteViews
+import com.daviddf.geeklab.R
+import java.text.DateFormat
+import java.util.Calendar
 
 /**
  * Implementation of App Widget functionality.
  */
-public class Hora extends AppWidgetProvider {
-    public static String ACTION_AUTO_UPDATE_WIDGET = "ACTION_AUTO_UPDATE_WIDGET";
+class Hora : AppWidgetProvider() {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
-        Date currentTime = Calendar.getInstance().getTime();
-
-        String formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(currentTime);
-
-
-        CharSequence widgetText = context.getString(R.string.hh);
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.hora);
-
-
-        String hora = DateFormat.getTimeInstance(DateFormat.SHORT).format(currentTime);
-        String[] splithora = hora.split(":");
-
-        // Instruct the widget manager to update the widget
-        views.setTextViewText(R.id.hora, splithora[0]);
-        views.setTextViewText(R.id.mm, splithora[1]);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         // There may be multiple widgets active, so update all of them
-
-
-        for (int appWidgetId : appWidgetIds) {
-
-            updateAppWidget(context, appWidgetManager, appWidgetId);
-        }
-
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-        super.onEnabled(context);
-
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-        super.onDisabled(context);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
+        for (appWidgetId in appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+    }
 
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+    }
+
+    companion object {
+        const val ACTION_AUTO_UPDATE_WIDGET = "ACTION_AUTO_UPDATE_WIDGET"
+
+        fun updateAppWidget(
+            context: Context, appWidgetManager: AppWidgetManager,
+            appWidgetId: Int
+        ) {
+            val currentTime = Calendar.getInstance().time
+            val views = RemoteViews(context.packageName, R.layout.hora)
+
+            val hora = DateFormat.getTimeInstance(DateFormat.SHORT).format(currentTime)
+            val splithora = hora.split(":".toRegex()).toTypedArray()
+
+            // Instruct the widget manager to update the widget
+            if (splithora.size >= 2) {
+                views.setTextViewText(R.id.hora, splithora[0])
+                views.setTextViewText(R.id.mm, splithora[1])
+            }
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+    }
+}

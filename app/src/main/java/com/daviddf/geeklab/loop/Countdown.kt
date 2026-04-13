@@ -1,41 +1,32 @@
-package com.daviddf.geeklab.loop;
+package com.daviddf.geeklab.loop
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.daviddf.geeklab.Loop
+import com.daviddf.geeklab.R
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.widget.TextView;
+class Countdown : AppCompatActivity() {
+    private val SPLASH_DISPLAY_LENGTH = 1000
+    var num = 5
 
-import com.daviddf.geeklab.Loop;
-import com.daviddf.geeklab.R;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_countdown)
+        val count = findViewById<TextView>(R.id.countdown)
 
-public class Countdown extends AppCompatActivity {
-    private final int SPLASH_DISPLAY_LENGTH = 1000;
-    int num= 5;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_countdown);
-        TextView count = (TextView)findViewById(R.id.countdown);
+        object : CountDownTimer(11000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                count.text = (millisUntilFinished / 1000).toString()
+            }
 
-            new CountDownTimer(11000,1000){
-
-
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    count.setText(""+millisUntilFinished/1000);
-                }
-
-                @Override
-                public void onFinish() {
-                    Intent mainIntent = new Intent(Countdown.this, Loop.class);
-                    Countdown.this.startActivity(mainIntent);
-                    Countdown.this.finish();
-
-                }
-            }.start();
-
-
+            override fun onFinish() {
+                val mainIntent = Intent(this@Countdown, Loop::class.java)
+                startActivity(mainIntent)
+                finish()
+            }
+        }.start()
     }
 }

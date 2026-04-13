@@ -1,32 +1,34 @@
-package com.daviddf.geeklab.notification;
+package com.daviddf.geeklab.notification
 
-import android.app.Application;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.os.Build;
+import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 
-import androidx.annotation.RequiresApi;
+class Not : Application() {
 
-public class Not extends Application {
-    public static final String CHANNEL_1_ID = "GeekLab";
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        createNotificationChannels();
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannels()
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createNotificationChannels() {
-        NotificationChannel channel1 = new NotificationChannel(
-                CHANNEL_1_ID,
-                "GeekLab",
-                NotificationManager.IMPORTANCE_HIGH
-        );
-        channel1.setDescription("Notifiaciones GeekLab");
 
-        NotificationManager manager = getSystemService(NotificationManager.class);
-        manager.createNotificationChannel(channel1);
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannels() {
+        val channel1 = NotificationChannel(
+            CHANNEL_1_ID,
+            "GeekLab",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Notifiaciones GeekLab"
+        }
 
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel1)
+    }
+
+    companion object {
+        const val CHANNEL_1_ID = "GeekLab"
     }
 }

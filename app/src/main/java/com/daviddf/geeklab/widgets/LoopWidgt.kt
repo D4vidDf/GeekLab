@@ -1,27 +1,33 @@
-package com.daviddf.geeklab.widgets;
+package com.daviddf.geeklab.widgets
 
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.RemoteViews;
-
-import com.daviddf.geeklab.loop.Countdown;
-import com.daviddf.geeklab.R;
+import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.widget.RemoteViews
+import com.daviddf.geeklab.R
+import com.daviddf.geeklab.loop.Countdown
 
 /**
  * Implementation of App Widget functionality.
  */
-public class LoopWidgt extends AppWidgetProvider {
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.loop_widg);
-        Intent configIntent = new Intent(context, Countdown.class);
+class LoopWidgt : AppWidgetProvider() {
 
-        PendingIntent configPendingIntent = PendingIntent.getActivity(context, 0, configIntent, 0);
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        val remoteViews = RemoteViews(context.packageName, R.layout.loop_widg)
+        val configIntent = Intent(context, Countdown::class.java)
 
-        remoteViews.setOnClickPendingIntent(R.id.loop_widg, configPendingIntent);
-        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
+        val configPendingIntent = PendingIntent.getActivity(context, 0, configIntent, flags)
+
+        remoteViews.setOnClickPendingIntent(R.id.loop_widg, configPendingIntent)
+        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
     }
 }

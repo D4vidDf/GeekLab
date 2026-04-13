@@ -1,14 +1,12 @@
-package com.daviddf.geeklab;
+package com.daviddf.geeklab
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 
-import android.os.Bundle;
+class AndroidDSU : AppCompatActivity() {
 
-public class AndroidDSU extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_android_dsu);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_android_dsu)
     }
 }
