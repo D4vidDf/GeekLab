@@ -36,3 +36,6 @@ val TextBateriaCritical = Color(0xFF4D0000)
 
 val BackgroundDark = Color(0xFF0B1220)
 val BackgroundLight = Color(0xFFF8F9FA)
+
+val ShimmerColor = Color(0xFFE0E0E0)
+val ShimmerColorDark = Color(0xFF1E293B)
