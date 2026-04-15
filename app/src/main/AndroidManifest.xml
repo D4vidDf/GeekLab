@@ -4,7 +4,7 @@
     package="com.daviddf.geeklab">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -23,18 +23,18 @@
 
             android:exported="true" />
         <activity
-            android:name=".navigation.AppNavigation"
-            android:exported="false"
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="uiMode"
             android:forceDarkAllowed="false"
-            tools:ignore="IntentFilterExportedReceiver"
-            tools:targetApi="r">
-            <tools:validation testUrl="https://geeklab.d4viddf.com/index" />
-
+            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:order="0">
+
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -45,7 +45,8 @@
                     android:pathPattern="/index"
                     android:scheme="https" />
             </intent-filter>
-            <intent-filter android:order="1">
+
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -56,6 +57,10 @@
                     android:pathPattern="/functions"
                     android:scheme="http" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <receiver
@@ -177,22 +182,6 @@
                     android:pathPattern="/loop"
                     android:scheme="https" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:configChanges="uiMode"
-            android:forceDarkAllowed="false"
-            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
         </activity>
 
         <meta-data

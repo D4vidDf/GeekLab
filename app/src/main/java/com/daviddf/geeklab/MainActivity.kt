@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.daviddf.geeklab.ui.apps.AppsScreen
 import com.daviddf.geeklab.ui.battery.BatteryScreen
+import com.daviddf.geeklab.ui.feed.NewsScreen
 import com.daviddf.geeklab.ui.home.HomeScreen
 import com.daviddf.geeklab.ui.info.InfoScreen
 import com.daviddf.geeklab.ui.notification.NotificationScreen
@@ -29,7 +30,14 @@ class MainActivity : ComponentActivity() {
                             onNotificationClick = { navController.navigate("notifications") },
                             onBatteryClick = { navController.navigate("battery") },
                             onInfoClick = { navController.navigate("info") },
-                            onAppsClick = { navController.navigate("apps") }
+                            onAppsClick = { navController.navigate("apps") },
+                            onSeeMoreNewsClick = { navController.navigate("news") }
+                        )
+                    }
+
+                    composable("news") {
+                        NewsScreen(
+                            onBackClick = { navController.popBackStack() }
                         )
                     }
                     

@@ -97,4 +97,6 @@
     <string name="error_invalid_number">Introduce un número válido</string>
     <string name="selected_image_desc">Imagen seleccionada</string>
     <string name="notification_channel_name">Notificaciones GeekLab</string>
+    <string name="news_not_found">No se han encontrado noticias</string>
+    <string name="no_internet_connection">El dispositivo no ha podido conectarse. Por favor, comprueba que tu dispositivo tiene acceso a internet.</string>
 </resources>

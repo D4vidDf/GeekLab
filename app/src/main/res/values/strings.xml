@@ -140,4 +140,6 @@
     <string name="featured">Destacado</string>
     <string name="featured_apps_title">Nueva aplicación y funciones</string>
     <string name="featured_design_title">Android y el diseño de aplicaciones</string>
+    <string name="news_not_found">No se han encontrado noticias</string>
+    <string name="no_internet_connection">El dispositivo no ha podido conectarse. Por favor, comprueba que tu dispositivo tiene acceso a internet.</string>
 </resources>
