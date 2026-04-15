@@ -1,35 +1,33 @@
 package com.daviddf.geeklab.ui.home
 
+import android.content.res.Configuration
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BatteryFull
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.GridView
-import androidx.compose.material.icons.rounded.ImageNotSupported
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.SearchOff
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -54,13 +53,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.SubcomposeAsyncImage
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.daviddf.geeklab.Experiments
 import com.daviddf.geeklab.R
 import com.daviddf.geeklab.ui.components.FavoriteCard
+import com.daviddf.geeklab.ui.components.FeaturedCard
 import com.daviddf.geeklab.ui.components.NewsItemCard
 import com.daviddf.geeklab.ui.components.NewsItemShimmer
-import com.daviddf.geeklab.ui.components.shimmerEffect
+import com.daviddf.geeklab.ui.components.SectionHeader
 import com.daviddf.geeklab.ui.feed.NewsViewModel
 import com.daviddf.geeklab.ui.theme.CardAplicaciones
 import com.daviddf.geeklab.ui.theme.CardBateria
@@ -112,6 +112,18 @@ private fun HomeScreen(
     onRefresh: () -> Unit
 ) {
     val context = LocalContext.current
+    val adaptiveInfo = currentWindowAdaptiveInfo()
+    val widthClass = adaptiveInfo.windowSizeClass.windowWidthSizeClass
+    val isCompact = widthClass == WindowWidthSizeClass.COMPACT
+    val isMedium = widthClass == WindowWidthSizeClass.MEDIUM
+    val isExpanded = widthClass == WindowWidthSizeClass.EXPANDED
+
+    val favorites = listOf(
+        FavoriteItem(stringResource(R.string.notificaciones), Icons.Rounded.Notifications, CardNotificaciones, TextNotificaciones, onNotificationClick),
+        FavoriteItem(stringResource(R.string.battery_title), Icons.Rounded.BatteryFull, CardBateria, TextBateria, onBatteryClick),
+        FavoriteItem(stringResource(R.string.info_title), Icons.Rounded.Info, CardInformacion, TextInformacion, onInfoClick),
+        FavoriteItem(stringResource(R.string.apps_title), Icons.Rounded.GridView, CardAplicaciones, TextAplicaciones, onAppsClick)
+    )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -131,7 +143,7 @@ private fun HomeScreen(
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.preset),
-                            contentDescription = stringResource(R.string.news), // Using news as fallback for now or we should add profile_pic
+                            contentDescription = stringResource(R.string.news),
                             modifier = Modifier
                                 .size(48.dp)
                                 .clip(CircleShape),
@@ -151,130 +163,150 @@ private fun HomeScreen(
         PullToRefreshBox(
             isRefreshing = isLoading && news.isNotEmpty(),
             onRefresh = onRefresh,
-            modifier = Modifier.fillMaxSize().padding(paddingValues)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp,
-                    bottom = 24.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                item {
-                    Column {
-                        SectionHeader(
-                            title = stringResource(R.string.favorites),
-                            onSeeAllClick = {})
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            FavoriteCard(
-                                modifier = Modifier.weight(1f),
-                                title = stringResource(R.string.notificaciones),
-                                icon = Icons.Rounded.Notifications,
-                                containerColor = CardNotificaciones,
-                                contentColor = TextNotificaciones,
-                                onClick = onNotificationClick
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            FavoriteCard(
-                                modifier = Modifier.weight(1f),
-                                title = stringResource(R.string.battery_title),
-                                icon = Icons.Rounded.BatteryFull,
-                                containerColor = CardBateria,
-                                contentColor = TextBateria,
-                                onClick = onBatteryClick
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            FavoriteCard(
-                                modifier = Modifier.weight(1f),
-                                title = stringResource(R.string.info_title),
-                                icon = Icons.Rounded.Info,
-                                containerColor = CardInformacion,
-                                contentColor = TextInformacion,
-                                onClick = onInfoClick
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            FavoriteCard(
-                                modifier = Modifier.weight(1f),
-                                title = stringResource(R.string.apps_title),
-                                icon = Icons.Rounded.GridView,
-                                containerColor = CardAplicaciones,
-                                contentColor = TextAplicaciones,
-                                onClick = onAppsClick
-                            )
+            if (isExpanded) {
+                // Tablet Layout: Side-by-Side
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
+                    // Left Column: Favorites (Vertical 1x4 to fill height)
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        SectionHeader(title = stringResource(R.string.favorites), onSeeAllClick = {})
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(favorites) { item ->
+                                FavoriteCard(
+                                    title = item.title,
+                                    icon = item.icon,
+                                    containerColor = item.containerColor,
+                                    contentColor = item.contentColor,
+                                    onClick = item.onClick
+                                )
+                            }
                         }
                     }
-                }
 
-                item {
-                    Column {
+                    // Right Column: Featured News (Grid 2x2)
+                    Column(
+                        modifier = Modifier
+                            .weight(2f)
+                            .fillMaxHeight()
+                    ) {
                         SectionHeader(
                             title = stringResource(R.string.featured),
                             onSeeAllClick = onSeeMoreNewsClick
                         )
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            if (isLoading && news.isEmpty()) {
+                                items(4) { NewsItemShimmer() }
+                            } else {
+                                items(news.take(4)) { item ->
+                                    FeaturedCard(
+                                    title = item.titulo ?: "",
+                                    tag = item.tag,
+                                    imageUrl = item.imagen,
+                                    onClick = {
+                                        item.url?.let { url ->
+                                            val intent = CustomTabsIntent.Builder().build()
+                                            intent.launchUrl(context, url.toUri())
+                                        }
+                                    }
+                                )
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Compact (Phone) or Medium (Fold)
+                // Use a single grid with dynamic spans to eliminate empty side space
+                val totalCols = if (isMedium) 4 else 2
+                
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(totalCols),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    // Favorites Section
+                    item(span = { GridItemSpan(totalCols) }) {
+                        SectionHeader(title = stringResource(R.string.favorites), onSeeAllClick = {})
+                    }
 
-                        val featuredNews = news.take(2)
-                        if (isLoading && news.isEmpty()) {
-                            repeat(2) {
-                                NewsItemShimmer()
-                            }
-                        } else if (error != null && news.isEmpty()) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 32.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.ErrorOutline,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(48.dp),
-                                    tint = MaterialTheme.colorScheme.error
+                    // Favorites: 1 row if Medium (4 cols), 2 rows if Compact (2 cols)
+                    items(favorites) { item ->
+                        FavoriteCard(
+                            title = item.title,
+                            icon = item.icon,
+                            containerColor = item.containerColor,
+                            contentColor = item.contentColor,
+                            onClick = item.onClick
+                        )
+                    }
+
+                    // News Section
+                    item(span = { GridItemSpan(totalCols) }) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        SectionHeader(
+                            title = stringResource(R.string.featured),
+                            onSeeAllClick = onSeeMoreNewsClick
+                        )
+                    }
+
+                    if (isLoading && news.isEmpty()) {
+                        items(if (isMedium) 2 else 1, span = { GridItemSpan(if (isMedium) 2 else totalCols) }) {
+                            NewsItemShimmer()
+                        }
+                    } else if (error != null && news.isEmpty()) {
+                        item(span = { GridItemSpan(totalCols) }) {
+                            ErrorState(message = stringResource(R.string.no_internet_connection), icon = Icons.Rounded.ErrorOutline)
+                        }
+                    } else if (news.isEmpty()) {
+                        item(span = { GridItemSpan(totalCols) }) {
+                            ErrorState(message = stringResource(R.string.news_not_found), icon = Icons.Rounded.SearchOff)
+                        }
+                    } else {
+                        val newsItems = if (isMedium) news.take(4) else news.take(2)
+                        val newsSpan = if (isMedium) 2 else totalCols
+                        
+                        items(newsItems, span = { GridItemSpan(newsSpan) }) { item ->
+                            if (isMedium) {
+                                FeaturedCard(
+                                    title = item.titulo ?: "",
+                                    tag = item.tag,
+                                    imageUrl = item.imagen,
+                                    onClick = {
+                                        item.url?.let { url ->
+                                            val intent = CustomTabsIntent.Builder().build()
+                                            intent.launchUrl(context, url.toUri())
+                                        }
+                                    }
                                 )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                Text(
-                                    text = stringResource(R.string.no_internet_connection),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        } else if (news.isEmpty()) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 32.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.SearchOff,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(48.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                Text(
-                                    text = stringResource(R.string.news_not_found),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        } else {
-                            featuredNews.forEach { item ->
+                            } else {
                                 NewsItemCard(
                                     item = item,
                                     onClick = {
@@ -286,8 +318,6 @@ private fun HomeScreen(
                                 )
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }
@@ -295,106 +325,41 @@ private fun HomeScreen(
     }
 }
 
-@Composable
-fun SectionHeader(title: String, onSeeAllClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.SemiBold
-        )
-        Text(
-            text = stringResource(R.string.see_all),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-            modifier = Modifier.clickable { onSeeAllClick() }
-        )
-    }
-}
+private data class FavoriteItem(
+    val title: String,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val containerColor: androidx.compose.ui.graphics.Color,
+    val contentColor: androidx.compose.ui.graphics.Color,
+    val onClick: () -> Unit
+)
 
 @Composable
-fun FeaturedCard(
-    title: String,
-    tag: String? = null,
-    imageRes: Int? = null,
-    imageUrl: String? = null,
-    onClick: () -> Unit
-) {
+private fun ErrorState(message: String, icon: androidx.compose.ui.graphics.vector.ImageVector) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .padding(vertical = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp),
-            shape = RoundedCornerShape(28.dp)
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                if (imageUrl != null) {
-                    SubcomposeAsyncImage(
-                        model = imageUrl,
-                        contentDescription = stringResource(R.string.imagen_portada),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                        loading = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .shimmerEffect()
-                            )
-                        },
-                        error = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                androidx.compose.material3.Icon(
-                                    imageVector = Icons.Rounded.ImageNotSupported,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    )
-                } else if (imageRes != null) {
-                    Image(
-                        painter = painterResource(id = imageRes),
-                        contentDescription = stringResource(R.string.imagen_portada),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-        }
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(48.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = tag ?: stringResource(R.string.app_name),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 4.dp)
-        )
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.ExtraBold,
-            modifier = Modifier.padding(horizontal = 4.dp),
-            maxLines = 2
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun HomeScreenPreview() {
     GeekLabTheme {
@@ -402,6 +367,30 @@ fun HomeScreenPreview() {
             news = listOf(
                 Experiments(titulo = "Noticia Destacada 1", tag = "TECNOLOGÍA"),
                 Experiments(titulo = "Noticia Destacada 2", tag = "DISEÑO")
+            ),
+            isLoading = false,
+            error = null,
+            onNotificationClick = {},
+            onBatteryClick = {},
+            onInfoClick = {},
+            onAppsClick = {},
+            onSeeMoreNewsClick = {},
+            onRefresh = {}
+        )
+    }
+}
+
+@Preview(name = "Tablet Light", showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview(name = "Tablet Dark", showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun HomeScreenExpandedPreview() {
+    GeekLabTheme {
+        HomeScreen(
+            news = listOf(
+                Experiments(titulo = "Noticia Destacada 1", tag = "TECNOLOGÍA"),
+                Experiments(titulo = "Noticia Destacada 2", tag = "DISEÑO"),
+                Experiments(titulo = "Noticia Destacada 3", tag = "ANDROID"),
+                Experiments(titulo = "Noticia Destacada 4", tag = "DEV")
             ),
             isLoading = false,
             error = null,

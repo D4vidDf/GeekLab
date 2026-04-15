@@ -1,6 +1,7 @@
 package com.daviddf.geeklab.ui.feed
 
 import androidx.browser.customtabs.CustomTabsIntent
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,9 +16,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ErrorOutline
@@ -93,17 +98,29 @@ fun NewsScreenContent(
     onLoadMore: () -> Unit
 ) {
     val context = LocalContext.current
-    val listState = rememberLazyListState()
+    val adaptiveInfo = currentWindowAdaptiveInfo()
+    val widthClass = adaptiveInfo.windowSizeClass.windowWidthSizeClass
+    val isCompact = widthClass == WindowWidthSizeClass.COMPACT
+    val isMedium = widthClass == WindowWidthSizeClass.MEDIUM
+    val isExpanded = widthClass == WindowWidthSizeClass.EXPANDED
+
+    val columns = when {
+        isExpanded -> 3
+        isMedium -> 2
+        else -> 1
+    }
+
+    val gridState = rememberLazyGridState()
     val pullState = rememberPullToRefreshState()
     val isRefreshing = isLoading && news.isNotEmpty()
 
     // Detect when we reach the end of the list to load more
     val shouldLoadMore by remember {
         derivedStateOf {
-            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            val lastVisibleItem = gridState.layoutInfo.visibleItemsInfo.lastOrNull()
                 ?: return@derivedStateOf false
 
-            lastVisibleItem.index >= listState.layoutInfo.totalItemsCount - 2
+            lastVisibleItem.index >= gridState.layoutInfo.totalItemsCount - 2
         }
     }
 
@@ -144,7 +161,9 @@ fun NewsScreenContent(
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
             state = pullState,
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             contentAlignment = Alignment.TopCenter,
             indicator = {
                 PullToRefreshDefaults.LoadingIndicator(
@@ -157,29 +176,32 @@ fun NewsScreenContent(
             if (news.isEmpty()) {
                 if (isLoading) {
                     // Shimmer Skeletons
-                    LazyColumn(
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(columns),
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(bottom = 24.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(16.dp)
                     ) {
-                        item {
+                        item(span = { GridItemSpan(columns) }) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(220.dp)
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
                                     .clip(MaterialTheme.shapes.extraLarge)
                                     .shimmerEffect()
                             )
                         }
                         items(6) {
-                            NewsItemShimmer(modifier = Modifier.padding(horizontal = 16.dp))
+                            NewsItemShimmer()
                         }
                     }
                 } else if (error != null) {
                     // Connection Error
                     Column(
-                        modifier = Modifier.fillMaxSize().padding(32.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -201,7 +223,9 @@ fun NewsScreenContent(
                 } else {
                     // Empty state
                     Column(
-                        modifier = Modifier.fillMaxSize().padding(32.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -224,22 +248,23 @@ fun NewsScreenContent(
                 val carouselItems = news.take(4)
                 val listItems = news.drop(4)
 
-                LazyColumn(
-                    state = listState,
+                LazyVerticalGrid(
+                    state = gridState,
+                    columns = GridCells.Fixed(columns),
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(bottom = 24.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(bottom = 24.dp, start = 16.dp, end = 16.dp)
                 ) {
                     if (carouselItems.isNotEmpty()) {
-                        item {
+                        item(span = { GridItemSpan(columns) }) {
                             HorizontalMultiBrowseCarousel(
                                 state = rememberCarouselState { carouselItems.size },
-                                preferredItemWidth = 340.dp,
+                                preferredItemWidth = if (isCompact) 340.dp else 480.dp,
                                 itemSpacing = 16.dp,
-                                contentPadding = PaddingValues(horizontal = 16.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(220.dp)
+                                    .height(if (isCompact) 220.dp else 320.dp)
                                     .padding(vertical = 8.dp)
                             ) { index ->
                                 val item = carouselItems[index]
@@ -285,7 +310,7 @@ fun NewsScreenContent(
                     }
 
                     items(listItems) { item ->
-                        NewsItemCard(item = item, modifier = Modifier.padding(horizontal = 16.dp)) {
+                        NewsItemCard(item = item) {
                             item.url?.let { url ->
                                 val intent = CustomTabsIntent.Builder().build()
                                 intent.launchUrl(context, url.toUri())
@@ -294,7 +319,7 @@ fun NewsScreenContent(
                     }
 
                     if (isLoading) {
-                        item {
+                        item(span = { GridItemSpan(columns) }) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -311,7 +336,9 @@ fun NewsScreenContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Tablet", showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 fun NewsScreenPreview() {
     GeekLabTheme {
