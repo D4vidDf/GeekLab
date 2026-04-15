@@ -25,6 +25,7 @@ import androidx.compose.material.icons.rounded.ImageNotSupported
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -81,7 +82,7 @@ fun NewsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NewsScreenContent(
     news: List<Experiments>,
@@ -233,7 +234,7 @@ fun NewsScreenContent(
                         item {
                             HorizontalMultiBrowseCarousel(
                                 state = rememberCarouselState { carouselItems.size },
-                                preferredItemWidth = 320.dp,
+                                preferredItemWidth = 340.dp,
                                 itemSpacing = 16.dp,
                                 contentPadding = PaddingValues(horizontal = 16.dp),
                                 modifier = Modifier
@@ -244,10 +245,10 @@ fun NewsScreenContent(
                                 val item = carouselItems[index]
                                 SubcomposeAsyncImage(
                                     model = item.imagen,
-                                    contentDescription = stringResource(R.string.imagen_portada),
+                                    contentDescription = item.titulo,
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .clip(MaterialTheme.shapes.extraLarge)
+                                        .maskClip(MaterialTheme.shapes.extraLarge)
                                         .clickable {
                                             item.url?.let { url ->
                                                 val intent = CustomTabsIntent.Builder().build()
@@ -260,13 +261,15 @@ fun NewsScreenContent(
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .shimmerEffect()
+                                                .maskClip(MaterialTheme.shapes.extraLarge)
                                         )
                                     },
                                     error = {
                                         Box(
                                             modifier = Modifier
                                                 .fillMaxSize()
-                                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                                .maskClip(MaterialTheme.shapes.extraLarge),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Icon(

@@ -7,7 +7,6 @@ import com.daviddf.geeklab.Experiments
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,19 +40,12 @@ class NewsViewModel : ViewModel() {
     fun refreshNews() {
         viewModelScope.launch {
             _isLoading.value = true
-            val startTime = System.currentTimeMillis()
             
             lastVisible = null
             isLastPage = false
-            _news.value = emptyList()
             
             fetchNewsInternal()
             
-            val elapsedTime = System.currentTimeMillis() - startTime
-            val remainingTime = 2000L - elapsedTime
-            if (remainingTime > 0) {
-                delay(remainingTime)
-            }
             _isLoading.value = false
         }
     }
