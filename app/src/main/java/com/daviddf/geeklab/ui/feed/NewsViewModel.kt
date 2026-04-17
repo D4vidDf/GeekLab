@@ -83,7 +83,7 @@ class NewsViewModel : ViewModel() {
             Log.d("NewsViewModel", "Loaded ${newsList.size} items. Total: ${_news.value.size}")
         } catch (e: Exception) {
             Log.e("NewsViewModel", "Error fetching news", e)
-            _error.value = e.message ?: "Unknown error"
+            _error.value = e.message
         }
     }
 }

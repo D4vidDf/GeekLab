@@ -78,6 +78,7 @@ fun HomeScreen(
     onBatteryClick: () -> Unit,
     onInfoClick: () -> Unit,
     onAppsClick: () -> Unit,
+    onToolsClick: () -> Unit,
     onSeeMoreNewsClick: () -> Unit,
     newsViewModel: NewsViewModel = viewModel()
 ) {
@@ -93,6 +94,7 @@ fun HomeScreen(
         onBatteryClick = onBatteryClick,
         onInfoClick = onInfoClick,
         onAppsClick = onAppsClick,
+        onToolsClick = onToolsClick,
         onSeeMoreNewsClick = onSeeMoreNewsClick,
         onRefresh = { newsViewModel.refreshNews() }
     )
@@ -108,6 +110,7 @@ private fun HomeScreen(
     onBatteryClick: () -> Unit,
     onInfoClick: () -> Unit,
     onAppsClick: () -> Unit,
+    onToolsClick: () -> Unit,
     onSeeMoreNewsClick: () -> Unit,
     onRefresh: () -> Unit
 ) {
@@ -181,7 +184,10 @@ private fun HomeScreen(
                             .weight(1f)
                             .fillMaxHeight()
                     ) {
-                        SectionHeader(title = stringResource(R.string.favorites), onSeeAllClick = {})
+                        SectionHeader(
+                            title = stringResource(R.string.favorites),
+                            onSeeAllClick = onToolsClick
+                        )
                         Spacer(modifier = Modifier.height(24.dp))
                         
                         LazyVerticalGrid(
@@ -254,7 +260,10 @@ private fun HomeScreen(
                 ) {
                     // Favorites Section
                     item(span = { GridItemSpan(totalCols) }) {
-                        SectionHeader(title = stringResource(R.string.favorites), onSeeAllClick = {})
+                        SectionHeader(
+                            title = stringResource(R.string.favorites),
+                            onSeeAllClick = onToolsClick
+                        )
                     }
 
                     // Favorites: 1 row if Medium (4 cols), 2 rows if Compact (2 cols)
@@ -374,6 +383,7 @@ fun HomeScreenPreview() {
             onBatteryClick = {},
             onInfoClick = {},
             onAppsClick = {},
+            onToolsClick = {},
             onSeeMoreNewsClick = {},
             onRefresh = {}
         )
@@ -398,6 +408,7 @@ fun HomeScreenExpandedPreview() {
             onBatteryClick = {},
             onInfoClick = {},
             onAppsClick = {},
+            onToolsClick = {},
             onSeeMoreNewsClick = {},
             onRefresh = {}
         )

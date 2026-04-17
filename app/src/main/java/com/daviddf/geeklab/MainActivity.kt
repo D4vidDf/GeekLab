@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.daviddf.geeklab.ui.apps.AppDetailScreen
 import com.daviddf.geeklab.ui.apps.AppsScreen
+import com.daviddf.geeklab.ui.apps.ToolsScreen
 import com.daviddf.geeklab.ui.battery.BatteryScreen
 import com.daviddf.geeklab.ui.feed.NewsScreen
 import com.daviddf.geeklab.ui.home.HomeScreen
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
                             onBatteryClick = { navController.navigate("battery") },
                             onInfoClick = { navController.navigate("info") },
                             onAppsClick = { navController.navigate("apps") },
+                            onToolsClick = { navController.navigate("tools") },
                             onSeeMoreNewsClick = { navController.navigate("news") }
                         )
                     }
@@ -58,7 +61,22 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("apps") {
-                        AppsScreen(onBackClick = { navController.popBackStack() })
+                        AppsScreen(
+                            onBackClick = { navController.popBackStack() },
+                            onAppClick = { packageName -> navController.navigate("app_detail/$packageName") }
+                        )
+                    }
+
+                    composable("app_detail/{packageName}") { backStackEntry ->
+                        val packageName = backStackEntry.arguments?.getString("packageName") ?: ""
+                        AppDetailScreen(
+                            packageName = packageName,
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("tools") {
+                        ToolsScreen(onBackClick = { navController.popBackStack() })
                     }
                 }
             }

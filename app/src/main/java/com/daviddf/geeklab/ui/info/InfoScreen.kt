@@ -96,7 +96,7 @@ fun InfoScreen(onBackClick: () -> Unit) {
                         append("\n")
                         append(stringResource(R.string.build_fingerprint, Build.FINGERPRINT))
                         append("\n")
-                        append(stringResource(R.string.base_os, Build.VERSION.BASE_OS ?: "N/A"))
+                        append(stringResource(R.string.base_os, Build.VERSION.BASE_OS ?: stringResource(R.string.not_available)))
                         append("\n")
                         append(stringResource(R.string.security_patch, Build.VERSION.SECURITY_PATCH))
                     }
