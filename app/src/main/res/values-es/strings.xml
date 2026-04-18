@@ -99,4 +99,5 @@
     <string name="notification_channel_name">Notificaciones GeekLab</string>
     <string name="news_not_found">No se han encontrado noticias</string>
     <string name="no_internet_connection">El dispositivo no ha podido conectarse. Por favor, comprueba que tu dispositivo tiene acceso a internet.</string>
+    <string name="select_app_info">Selecciona una aplicación para ver su información</string>
 </resources>

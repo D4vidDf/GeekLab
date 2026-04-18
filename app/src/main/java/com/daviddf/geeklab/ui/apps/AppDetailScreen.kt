@@ -27,7 +27,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.CloseFullscreen
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.OpenInFull
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Button
@@ -40,7 +43,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.SplitButtonDefaults
 import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Surface
@@ -58,6 +61,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -83,6 +87,10 @@ data class PermissionDetail(
 fun AppDetailScreen(
     packageName: String,
     onBackClick: () -> Unit,
+    onViewManifest: (String) -> Unit,
+    isExpanded: Boolean = false,
+    onToggleExpand: () -> Unit = {},
+    showExpandToggle: Boolean = false,
     viewModel: AppDetailViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -99,8 +107,13 @@ fun AppDetailScreen(
         uiState = uiState,
         onBackClick = onBackClick,
         onLaunchApp = { viewModel.launchApp(packageName) },
-        onShareApk = { viewModel.shareApk(packageName, uiState.label) },
-        onLaunchActivity = { activityName -> viewModel.launchActivity(packageName, activityName) }
+        onShareApk = { viewModel.shareApk(packageName, uiState.label, uiState.version) },
+        onLaunchActivity = { activityName -> viewModel.launchActivity(packageName, activityName) },
+        onViewManifest = { onViewManifest(packageName) },
+        isExpanded = isExpanded,
+        onToggleExpand = onToggleExpand,
+        showExpandToggle = showExpandToggle,
+        isDetailPane = showExpandToggle && !isExpanded
     )
 }
 
@@ -111,7 +124,12 @@ fun AppDetailContent(
     onBackClick: () -> Unit,
     onLaunchApp: () -> Unit,
     onShareApk: () -> Unit,
-    onLaunchActivity: (String) -> Unit
+    onLaunchActivity: (String) -> Unit,
+    onViewManifest: () -> Unit,
+    isExpanded: Boolean = false,
+    onToggleExpand: () -> Unit = {},
+    showExpandToggle: Boolean = false,
+    isDetailPane: Boolean = false
 ) {
     val context = LocalContext.current
     var selectedPermission by remember { mutableStateOf<PermissionDetail?>(null) }
@@ -119,12 +137,28 @@ fun AppDetailContent(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_info)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.back))
+                    if (!isDetailPane) {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                Icons.AutoMirrored.Rounded.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    if (showExpandToggle) {
+                        IconButton(onClick = onToggleExpand) {
+                            Icon(
+                                imageVector = if (isExpanded) Icons.Rounded.CloseFullscreen else Icons.Rounded.OpenInFull,
+                                contentDescription = if (isExpanded) "Exit Fullscreen" else "Expand to Fullscreen"
+                            )
+                        }
                     }
                 }
             )
@@ -135,18 +169,21 @@ fun AppDetailContent(
                 CircularProgressIndicator()
             }
         } else if (uiState.packageInfo != null) {
-            val packageInfo = uiState.packageInfo!!
-            val appInfo = packageInfo.applicationInfo
+            val packageInfo = uiState.packageInfo
             val label = uiState.label
             val icon = uiState.icon?.asImageBitmap()
 
             var selectedTab by remember { mutableIntStateOf(0) }
             val tabs = listOf(
+                stringResource(R.string.info_tab),
                 stringResource(R.string.permissions),
                 stringResource(R.string.activities),
                 stringResource(R.string.services),
                 stringResource(R.string.providers),
-                stringResource(R.string.shared_libraries)
+                stringResource(R.string.shared_libraries),
+                stringResource(R.string.receivers),
+                stringResource(R.string.signatures),
+                stringResource(R.string.overlays)
             )
 
             LazyColumn(
@@ -207,7 +244,7 @@ fun AppDetailContent(
                         color = MaterialTheme.colorScheme.surface,
                         shadowElevation = 2.dp
                     ) {
-                        ScrollableTabRow(
+                        SecondaryScrollableTabRow(
                             selectedTabIndex = selectedTab,
                             edgePadding = 16.dp,
                             containerColor = MaterialTheme.colorScheme.surface,
@@ -226,13 +263,79 @@ fun AppDetailContent(
 
                 when (selectedTab) {
                     0 -> {
-                        val permissions = packageInfo.requestedPermissions?.toList()
-                        if (permissions != null && permissions.isNotEmpty()) {
+                        val routes = listOfNotNull(
+                            R.string.source_dir to uiState.sourceDir,
+                            R.string.data_dir to uiState.dataDir,
+                            uiState.deviceProtectedDataDir?.let { R.string.device_protected_data_dir to it },
+                            uiState.nativeLibraryDir?.let { R.string.jni_library_dir to it }
+                        )
+                        val usage = listOf(
+                            R.string.data_transmitted to uiState.txBytes,
+                            R.string.data_received to uiState.rxBytes
+                        )
+                        val storage = listOf(
+                            R.string.app_size to uiState.appSize,
+                            R.string.data_size to uiState.dataSize,
+                            R.string.cache_size to uiState.cacheSize,
+                            R.string.total_size to uiState.totalSize
+                        )
+                        val moreInfo = listOfNotNull(
+                            R.string.target_sdk to uiState.targetSdk.toString(),
+                            R.string.min_sdk to uiState.minSdk.toString(),
+                            R.string.flags to uiState.flags.joinToString(", "),
+                            R.string.installed to uiState.installTime,
+                            R.string.last_update_time to uiState.updateTime,
+                            R.string.user_id to uiState.uid.toString(),
+                            uiState.sharedUserId?.let { R.string.shared_user_id to it },
+                            uiState.primaryCpuAbi?.let { R.string.primary_abi to it },
+                            uiState.selinux?.let { R.string.selinux to it }
+                        )
+
+                        item { Spacer(modifier = Modifier.height(8.dp)) }
+
+                        // Routes & Directories
+                        item { InfoSectionTitle(stringResource(R.string.routes_directories)) }
+                        itemsIndexed(routes) { index, (labelRes, value) ->
+                            InfoItem(stringResource(labelRes), value, index, routes.size)
+                        }
+
+                        // Data Usage
+                        item { InfoSectionTitle(stringResource(R.string.data_usage_tab)) }
+                        itemsIndexed(usage) { index, (labelRes, value) ->
+                            InfoItem(stringResource(labelRes), value, index, usage.size)
+                        }
+
+                        // Storage
+                        item { InfoSectionTitle(stringResource(R.string.storage_cache)) }
+                        itemsIndexed(storage) { index, (labelRes, value) ->
+                            InfoItem(stringResource(labelRes), value, index, storage.size)
+                        }
+
+                        // More Info
+                        item { InfoSectionTitle(stringResource(R.string.more_info)) }
+                        itemsIndexed(moreInfo) { index, (labelRes, value) ->
+                            InfoItem(stringResource(labelRes), value, index, moreInfo.size)
+                        }
+
+                        item {
+                            Button(
+                                onClick = onViewManifest,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Text(stringResource(R.string.view_manifest))
+                            }
+                        }
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
+                    }
+                    1 -> {
+                        val permissions = packageInfo.requestedPermissions?.toList() ?: emptyList()
+                        if (permissions.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(permissions) { index, permission ->
-                                val detail = getPermissionDetail(permission, context)
                                 val shape = getShape(index, permissions.size)
-
                                 Surface(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -240,24 +343,24 @@ fun AppDetailContent(
                                     shape = shape,
                                     color = MaterialTheme.colorScheme.surfaceContainerLow,
                                     onClick = {
-                                        selectedPermission = detail
+                                        selectedPermission = getPermissionDetail(permission, context)
                                         showBottomSheet = true
                                     }
                                 ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp)
+                                    Row(
+                                        modifier = Modifier.padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            detail.colloquialName,
+                                            permission.removePrefix("android.permission."),
+                                            modifier = Modifier.weight(1f),
                                             style = MaterialTheme.typography.bodyLarge,
-                                            fontWeight = FontWeight.SemiBold
+                                            fontWeight = FontWeight.Medium
                                         )
-                                        Text(
-                                            permission,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        Icon(
+                                            Icons.Rounded.Info,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                                         )
                                     }
                                 }
@@ -267,9 +370,9 @@ fun AppDetailContent(
                             item { EmptyState(stringResource(R.string.no_permissions_requested)) }
                         }
                     }
-                    1 -> {
+                    2 -> {
                         val activities = packageInfo.activities?.toList()
-                        if (activities != null && activities.isNotEmpty()) {
+                        if (!activities.isNullOrEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(activities) { index, activity ->
                                 val shape = getShape(index, activities.size)
@@ -288,7 +391,7 @@ fun AppDetailContent(
                             item { EmptyState(stringResource(R.string.no_activities_found)) }
                         }
                     }
-                    2 -> {
+                    3 -> {
                         val services = uiState.services
                         if (services.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
@@ -315,9 +418,9 @@ fun AppDetailContent(
                             item { EmptyState(stringResource(R.string.no_services_found)) }
                         }
                     }
-                    3 -> {
+                    4 -> {
                         val providers = packageInfo.providers?.toList()
-                        if (providers != null && providers.isNotEmpty()) {
+                        if (!providers.isNullOrEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(providers) { index, provider ->
                                 val shape = getShape(index, providers.size)
@@ -342,7 +445,7 @@ fun AppDetailContent(
                             item { EmptyState(stringResource(R.string.no_providers_found)) }
                         }
                     }
-                    4 -> {
+                    5 -> {
                         val sharedLibs = uiState.sharedLibraries
                         if (sharedLibs.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
@@ -371,6 +474,153 @@ fun AppDetailContent(
                             item { Spacer(modifier = Modifier.height(16.dp)) }
                         } else {
                             item { EmptyState(stringResource(R.string.no_native_libs_found)) }
+                        }
+                    }
+                    6 -> {
+                        val receivers = uiState.receivers
+                        if (receivers.isNotEmpty()) {
+                            item { Spacer(modifier = Modifier.height(12.dp)) }
+                            itemsIndexed(receivers) { index, receiver ->
+                                val shape = getShape(index, receivers.size)
+                                Surface(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 3.dp),
+                                    shape = shape,
+                                    color = MaterialTheme.colorScheme.surfaceContainerLow
+                                ) {
+                                    Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                                        Text(
+                                            receiver.name.removePrefix(packageInfo.packageName),
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                }
+                            }
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
+                        } else {
+                            item { EmptyState(stringResource(R.string.no_receivers_found)) }
+                        }
+                    }
+                    7 -> {
+                        val signatures = uiState.signatures
+                        if (signatures.isNotEmpty()) {
+                            item { Spacer(modifier = Modifier.height(12.dp)) }
+                            
+                            item {
+                                InfoSectionTitle(stringResource(R.string.signing_system))
+                                if (uiState.isVerified) {
+                                    Surface(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 16.dp, vertical = 2.dp),
+                                        shape = RoundedCornerShape(24.dp),
+                                        color = Color(0xFFE8F5E9) // Light green background
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.padding(16.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                Icons.Rounded.CheckCircle,
+                                                contentDescription = null,
+                                                tint = Color(0xFF2E7D32) // Dark green
+                                            )
+                                            Spacer(modifier = Modifier.width(12.dp))
+                                            Text(
+                                                stringResource(R.string.verified),
+                                                style = MaterialTheme.typography.bodyLarge,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color(0xFF2E7D32)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            signatures.forEach { sig ->
+                                item { InfoSectionTitle(stringResource(R.string.signatures)) }
+                                
+                                val certItems = listOfNotNull(
+                                    sig.subject?.let { R.string.subject to it },
+                                    sig.issuer?.let { R.string.issuer to it },
+                                    sig.issueDate?.let { R.string.issue_date to it },
+                                    sig.expiryDate?.let { R.string.expiry_date to it },
+                                    sig.type?.let { R.string.type to it },
+                                    sig.version?.let { R.string.version_label to it },
+                                    sig.serialNumber?.let { R.string.serial_number to it }
+                                )
+                                itemsIndexed(certItems) { index, (labelRes, value) ->
+                                    InfoItem(stringResource(labelRes), value, index, certItems.size)
+                                }
+
+                                val checksums = listOfNotNull(
+                                    sig.md5?.let { "MD5" to it },
+                                    sig.sha1?.let { "SHA-1" to it },
+                                    sig.sha256?.let { "SHA-256" to it },
+                                    sig.sha384?.let { "SHA-384" to it },
+                                    sig.sha512?.let { "SHA-512" to it }
+                                )
+                                if (checksums.isNotEmpty()) {
+                                    item { InfoSectionTitle(stringResource(R.string.checksums)) }
+                                    itemsIndexed(checksums) { index, (label, value) ->
+                                        InfoItem(label, value, index, checksums.size)
+                                    }
+                                }
+
+                                val signatureData = listOfNotNull(
+                                    sig.algorithm?.let { R.string.algorithm to it },
+                                    sig.oid?.let { R.string.oid to it },
+                                    sig.signature?.let { R.string.signature_label to it }
+                                )
+                                if (signatureData.isNotEmpty()) {
+                                    item { InfoSectionTitle(stringResource(R.string.signature_label)) }
+                                    itemsIndexed(signatureData) { index, (labelRes, value) ->
+                                        InfoItem(stringResource(labelRes), value, index, signatureData.size)
+                                    }
+                                }
+
+                                val publicKeyData = listOfNotNull(
+                                    sig.publicKeyAlgorithm?.let { R.string.algorithm to it },
+                                    sig.publicKeyFormat?.let { R.string.format to it },
+                                    sig.exponent?.let { R.string.exponent to it },
+                                    sig.modulus?.let { R.string.modulus to it }
+                                )
+                                if (publicKeyData.isNotEmpty()) {
+                                    item { InfoSectionTitle(stringResource(R.string.public_key)) }
+                                    itemsIndexed(publicKeyData) { index, (labelRes, value) ->
+                                        InfoItem(stringResource(labelRes), value, index, publicKeyData.size)
+                                    }
+                                }
+
+                                if (sig.extensions.isNotEmpty()) {
+                                    item { InfoSectionTitle(stringResource(R.string.non_critical_extensions)) }
+                                    val extensionsList = sig.extensions.toList()
+                                    itemsIndexed(extensionsList) { index, (oid, value) ->
+                                        InfoItem(oid, value, index, extensionsList.size)
+                                    }
+                                }
+                                
+                                item { Spacer(modifier = Modifier.height(16.dp)) }
+                            }
+                        } else {
+                            item { EmptyState(stringResource(R.string.no_signatures_found)) }
+                        }
+                    }
+                    8 -> {
+                        if (uiState.overlayTarget != null) {
+                            item {
+                                InfoSectionTitle(stringResource(R.string.overlays))
+                                InfoItem(
+                                    label = "Target Package",
+                                    value = uiState.overlayTarget,
+                                    index = 0,
+                                    size = 1
+                                )
+                            }
+                        } else {
+                            item { EmptyState(stringResource(R.string.no_overlays_found)) }
                         }
                     }
                 }
@@ -489,14 +739,14 @@ fun getPermissionDetail(permission: String, context: Context): PermissionDetail 
     val label = try {
         val info = pm.getPermissionInfo(permission, 0)
         info.loadLabel(pm).toString()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         permission.split(".").last().replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }
     }
 
     val description = try {
         val info = pm.getPermissionInfo(permission, 0)
         info.loadDescription(pm)?.toString() ?: context.getString(R.string.no_description_available)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         context.getString(R.string.default_permission_description)
     }
 
@@ -556,6 +806,51 @@ fun SplitButton(
             }
         }
     )
+}
+
+@Composable
+fun InfoSectionTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 8.dp)
+    )
+}
+
+@Composable
+fun InfoItem(
+    label: String,
+    value: String,
+    index: Int,
+    size: Int
+) {
+    val shape = getShape(index, size)
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 2.dp),
+        shape = shape,
+        color = MaterialTheme.colorScheme.surfaceContainerLow
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
 }
 
 @Composable
@@ -648,7 +943,8 @@ fun AppDetailPreview() {
             onBackClick = {},
             onLaunchApp = {},
             onShareApk = {},
-            onLaunchActivity = {}
+            onLaunchActivity = {},
+            onViewManifest = {}
         )
     }
 }

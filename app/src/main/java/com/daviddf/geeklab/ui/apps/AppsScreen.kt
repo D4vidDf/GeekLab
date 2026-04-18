@@ -40,10 +40,12 @@ import com.daviddf.geeklab.ui.theme.GeekLabTheme
 fun AppsScreen(
     onBackClick: () -> Unit,
     onAppClick: (String) -> Unit,
+    showNavigationIcon: Boolean = true,
     viewModel: AppsViewModel = viewModel()
 ) {
     val isGridView by viewModel.isGridView.collectAsState()
     val installedApps by viewModel.installedApps.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
@@ -51,13 +53,15 @@ fun AppsScreen(
     AppsScreenContent(
         isGridView = isGridView,
         installedApps = installedApps,
+        isLoading = isLoading,
         searchQuery = searchQuery,
         onSearchQueryChange = { searchQuery = it },
         isSearching = isSearching,
         onSearchToggle = { isSearching = it },
         onBackClick = onBackClick,
         onAppClick = onAppClick,
-        onToggleView = { viewModel.toggleViewMode() }
+        onToggleView = { viewModel.toggleViewMode() },
+        showNavigationIcon = showNavigationIcon
     )
 }
 
@@ -66,13 +70,15 @@ fun AppsScreen(
 fun AppsScreenContent(
     isGridView: Boolean,
     installedApps: List<ApplicationInfo>,
+    isLoading: Boolean,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     isSearching: Boolean,
     onSearchToggle: (Boolean) -> Unit,
     onBackClick: () -> Unit,
     onAppClick: (String) -> Unit,
-    onToggleView: () -> Unit
+    onToggleView: () -> Unit,
+    showNavigationIcon: Boolean = true
 ) {
     val context = LocalContext.current
     val packageManager = context.packageManager
@@ -80,13 +86,14 @@ fun AppsScreenContent(
     val filteredApps = remember(searchQuery, installedApps) {
         if (searchQuery.isEmpty()) installedApps
         else installedApps.filter {
-            val label = try { it.loadLabel(packageManager).toString() } catch (e: Exception) { it.packageName }
+            val label = try { it.loadLabel(packageManager).toString() } catch (_: Exception) { it.packageName }
             label.contains(searchQuery, ignoreCase = true) ||
                     it.packageName.contains(searchQuery, ignoreCase = true)
         }
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -109,8 +116,17 @@ fun AppsScreenContent(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = if (isSearching) { { onSearchToggle(false); onSearchQueryChange("") } } else onBackClick) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.back))
+                    if (showNavigationIcon || isSearching) {
+                        IconButton(onClick = if (isSearching) {
+                            {
+                                onSearchToggle(false); onSearchQueryChange("")
+                            }
+                        } else onBackClick) {
+                            Icon(
+                                Icons.AutoMirrored.Rounded.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
                     }
                 },
                 actions = {
@@ -135,30 +151,36 @@ fun AppsScreenContent(
             )
         }
     ) { paddingValues ->
-        if (isGridView) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 100.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(filteredApps) { app ->
-                    AppGridItem(app, packageManager, onAppClick)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            } else if (isGridView) {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 100.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(filteredApps) { app ->
+                        AppGridItem(app, packageManager, onAppClick)
+                    }
                 }
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(filteredApps) { app ->
-                    AppListItem(app, packageManager, onAppClick)
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(filteredApps) { app ->
+                        AppListItem(app, packageManager, onAppClick)
+                    }
                 }
             }
         }
@@ -175,7 +197,7 @@ fun AppGridItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> U
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val icon = remember(app.packageName) { 
-            try { app.loadIcon(pm).toBitmap().asImageBitmap() } catch (e: Exception) { null }
+            try { app.loadIcon(pm).toBitmap().asImageBitmap() } catch (_: Exception) { null }
         }
         if (icon != null) {
             Image(
@@ -186,7 +208,7 @@ fun AppGridItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> U
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = try { app.loadLabel(pm).toString() } catch (e: Exception) { app.packageName },
+            text = try { app.loadLabel(pm).toString() } catch (_: Exception) { app.packageName },
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
             maxLines = 2,
@@ -205,7 +227,7 @@ fun AppListItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> U
         verticalAlignment = Alignment.CenterVertically
     ) {
         val icon = remember(app.packageName) { 
-            try { app.loadIcon(pm).toBitmap().asImageBitmap() } catch (e: Exception) { null }
+            try { app.loadIcon(pm).toBitmap().asImageBitmap() } catch (_: Exception) { null }
         }
         if (icon != null) {
             Image(
@@ -217,7 +239,7 @@ fun AppListItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> U
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
-                text = try { app.loadLabel(pm).toString() } catch (e: Exception) { app.packageName },
+                text = try { app.loadLabel(pm).toString() } catch (_: Exception) { app.packageName },
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
@@ -249,7 +271,8 @@ fun AppsScreenPreview() {
             onSearchToggle = {},
             onBackClick = {},
             onAppClick = {},
-            onToggleView = {}
+            onToggleView = {},
+            isLoading = false
         )
     }
 }
