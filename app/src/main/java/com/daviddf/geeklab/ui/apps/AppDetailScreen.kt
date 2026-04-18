@@ -331,11 +331,14 @@ fun AppDetailContent(
                         item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
                     1 -> {
-                        val permissions = packageInfo.requestedPermissions?.toList() ?: emptyList()
+                        val permissions = uiState.packageInfo.requestedPermissions?.toList() ?: emptyList()
                         if (permissions.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
-                            itemsIndexed(permissions) { index, permission ->
-                                val shape = getShape(index, permissions.size)
+                            itemsIndexed(
+                                items = permissions,
+                                key = { _, permission -> permission }
+                            ) { index, permission ->
+                                val shape = remember(index, permissions.size) { getShape(index, permissions.size) }
                                 Surface(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -371,11 +374,14 @@ fun AppDetailContent(
                         }
                     }
                     2 -> {
-                        val activities = packageInfo.activities?.toList()
-                        if (!activities.isNullOrEmpty()) {
+                        val activities = uiState.packageInfo.activities?.toList() ?: emptyList()
+                        if (activities.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
-                            itemsIndexed(activities) { index, activity ->
-                                val shape = getShape(index, activities.size)
+                            itemsIndexed(
+                                items = activities,
+                                key = { _, activity -> activity.name }
+                            ) { index, activity ->
+                                val shape = remember(index, activities.size) { getShape(index, activities.size) }
                                 Surface(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -383,7 +389,7 @@ fun AppDetailContent(
                                     shape = shape,
                                     color = MaterialTheme.colorScheme.surfaceContainerLow
                                 ) {
-                                    ActivityRow(activity, packageInfo.packageName, onLaunchActivity)
+                                    ActivityRow(activity, uiState.packageInfo.packageName, onLaunchActivity)
                                 }
                             }
                             item { Spacer(modifier = Modifier.height(16.dp)) }

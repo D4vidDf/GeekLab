@@ -168,7 +168,10 @@ fun AppsScreenContent(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(filteredApps) { app ->
+                    items(
+                        items = filteredApps,
+                        key = { it.packageName }
+                    ) { app ->
                         AppGridItem(app, packageManager, onAppClick)
                     }
                 }
@@ -178,7 +181,10 @@ fun AppsScreenContent(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(filteredApps) { app ->
+                    items(
+                        items = filteredApps,
+                        key = { it.packageName }
+                    ) { app ->
                         AppListItem(app, packageManager, onAppClick)
                     }
                 }
@@ -189,6 +195,9 @@ fun AppsScreenContent(
 
 @Composable
 fun AppGridItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> Unit) {
+    val label = remember(app.packageName) {
+        try { app.loadLabel(pm).toString() } catch (_: Exception) { app.packageName }
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -208,7 +217,7 @@ fun AppGridItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> U
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = try { app.loadLabel(pm).toString() } catch (_: Exception) { app.packageName },
+            text = label,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
             maxLines = 2,
@@ -219,6 +228,9 @@ fun AppGridItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> U
 
 @Composable
 fun AppListItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> Unit) {
+    val label = remember(app.packageName) {
+        try { app.loadLabel(pm).toString() } catch (_: Exception) { app.packageName }
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -239,7 +251,7 @@ fun AppListItem(app: ApplicationInfo, pm: PackageManager, onClick: (String) -> U
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
-                text = try { app.loadLabel(pm).toString() } catch (_: Exception) { app.packageName },
+                text = label,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )

@@ -237,4 +237,7 @@
     <string name="non_critical_extensions">Extensiones no cruciales</string>
     <string name="validity">Vigencia</string>
     <string name="select_app_info">Selecciona una aplicación para ver su información</string>
+    <string name="share">Compartir</string>
+    <string name="save">Guardar</string>
+    <string name="filter">Filtrar</string>
 </resources>

@@ -1,5 +1,10 @@
 package com.daviddf.geeklab.ui.apps
 
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -13,30 +18,42 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +76,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.daviddf.geeklab.R
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,10 +91,48 @@ fun ManifestViewerScreen(
     
     var searchQuery by remember { mutableStateOf("") }
     var isSearchActive by remember { mutableStateOf(false) }
-    var isFilterEnabled by remember { mutableStateOf(false) }
+
+    val searchResults = remember(manifestContent, searchQuery) {
+        if (searchQuery.length < 2) emptyList<Int>()
+        else {
+            manifestContent?.mapIndexedNotNull { index, line ->
+                if (line.contains(searchQuery, ignoreCase = true)) index else null
+            } ?: emptyList()
+        }
+    }
+    var currentResultIndex by remember(searchQuery) { mutableStateOf(0) }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val saveMessage = stringResource(R.string.save)
+
+    val createDocumentLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("text/xml"),
+        onResult = { uri ->
+            uri?.let {
+                coroutineScope.launch {
+                    withContext(Dispatchers.IO) {
+                        try {
+                            context.contentResolver.openOutputStream(it)?.use { outputStream ->
+                                manifestContent?.forEach { line ->
+                                    outputStream.write((line + "\n").toByteArray())
+                                }
+                            }
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(context, saveMessage, Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
 
     LaunchedEffect(packageName) {
         withContext(Dispatchers.IO) {
@@ -98,31 +154,58 @@ fun ManifestViewerScreen(
             if (isSearchActive) {
                 TopAppBar(
                     title = {
-                        TextField(
-                            value = searchQuery,
-                            onValueChange = { searchQuery = it },
-                            placeholder = { Text(stringResource(R.string.buscar)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .focusRequester(focusRequester),
-                            singleLine = true,
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent,
-                                disabledContainerColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                            ),
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                            keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
-                            trailingIcon = {
-                                IconButton(onClick = { 
-                                    if (searchQuery.isNotEmpty()) searchQuery = "" else isSearchActive = false 
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextField(
+                                value = searchQuery,
+                                onValueChange = { 
+                                    searchQuery = it 
+                                    currentResultIndex = 0
+                                },
+                                placeholder = { Text(stringResource(R.string.buscar)) },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .focusRequester(focusRequester),
+                                singleLine = true,
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = Color.Transparent,
+                                    unfocusedContainerColor = Color.Transparent,
+                                    disabledContainerColor = Color.Transparent,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                ),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                                keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+                            )
+                            
+                            if (searchResults.isNotEmpty()) {
+                                Text(
+                                    text = "${currentResultIndex + 1}/${searchResults.size}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                )
+                                IconButton(onClick = {
+                                    if (currentResultIndex > 0) currentResultIndex--
+                                    else currentResultIndex = searchResults.size - 1
                                 }) {
-                                    Icon(Icons.Rounded.Close, contentDescription = null)
+                                    Icon(Icons.Rounded.KeyboardArrowUp, contentDescription = "Previous")
+                                }
+                                IconButton(onClick = {
+                                    if (currentResultIndex < searchResults.size - 1) currentResultIndex++
+                                    else currentResultIndex = 0
+                                }) {
+                                    Icon(Icons.Rounded.KeyboardArrowDown, contentDescription = "Next")
                                 }
                             }
-                        )
+
+                            IconButton(onClick = { 
+                                if (searchQuery.isNotEmpty()) searchQuery = "" else isSearchActive = false 
+                            }) {
+                                Icon(Icons.Rounded.Close, contentDescription = null)
+                            }
+                        }
                         LaunchedEffect(Unit) {
                             focusRequester.requestFocus()
                         }
@@ -142,16 +225,30 @@ fun ManifestViewerScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { isSearchActive = true }) {
-                            Icon(Icons.Rounded.Search, contentDescription = stringResource(R.string.buscar))
-                        }
-                        IconButton(onClick = { isFilterEnabled = !isFilterEnabled }) {
-                            Icon(
-                                Icons.Rounded.FilterList, 
-                                contentDescription = "Filter",
-                                tint = if (isFilterEnabled) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                            )
-                        }
+                        TooltipIconButton(
+                            onClick = { isSearchActive = true },
+                            icon = Icons.Rounded.Search,
+                            contentDescription = stringResource(R.string.buscar),
+                            tooltipText = stringResource(R.string.buscar)
+                        )
+                        TooltipIconButton(
+                            onClick = { 
+                                manifestContent?.let { content ->
+                                    shareManifest(context, packageName, content.joinToString("\n"))
+                                }
+                            },
+                            icon = Icons.Rounded.Share,
+                            contentDescription = stringResource(R.string.share),
+                            tooltipText = stringResource(R.string.share)
+                        )
+                        TooltipIconButton(
+                            onClick = { 
+                                createDocumentLauncher.launch("AndroidManifest_$packageName.xml")
+                            },
+                            icon = Icons.Rounded.Save,
+                            contentDescription = stringResource(R.string.save),
+                            tooltipText = stringResource(R.string.save)
+                        )
                     }
                 )
             }
@@ -165,7 +262,7 @@ fun ManifestViewerScreen(
             ManifestContent(
                 lines = manifestContent!!, 
                 searchQuery = searchQuery,
-                isFilterEnabled = isFilterEnabled,
+                scrollToIndex = if (searchResults.isNotEmpty()) searchResults[currentResultIndex] else null,
                 modifier = Modifier.padding(padding)
             )
         } else {
@@ -176,71 +273,114 @@ fun ManifestViewerScreen(
     }
 }
 
+fun shareManifest(context: Context, packageName: String, content: String) {
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, content)
+        putExtra(Intent.EXTRA_TITLE, "AndroidManifest.xml - $packageName")
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TooltipIconButton(
+    onClick: () -> Unit,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    contentDescription: String,
+    tooltipText: String,
+    modifier: Modifier = Modifier,
+    tint: Color = LocalContentColor.current
+) {
+    val tooltipState = rememberTooltipState()
+    TooltipBox(
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+            positioning = TooltipAnchorPosition.Below
+        ),
+        tooltip = {
+            PlainTooltip {
+                Text(tooltipText)
+            }
+        },
+        state = tooltipState
+    ) {
+        IconButton(onClick = onClick, modifier = modifier) {
+            Icon(icon, contentDescription = contentDescription, tint = tint)
+        }
+    }
+}
+
 @Composable
 fun ManifestContent(
     lines: List<String>, 
     searchQuery: String,
-    isFilterEnabled: Boolean,
+    scrollToIndex: Int? = null,
     modifier: Modifier = Modifier
 ) {
     val horizontalScrollState = rememberScrollState()
+    val listState = rememberLazyListState()
 
-    val filteredLines = remember(lines, searchQuery, isFilterEnabled) {
-        if (isFilterEnabled && searchQuery.isNotEmpty()) {
-            lines.mapIndexed { index, s -> index to s }.filter { it.second.contains(searchQuery, ignoreCase = true) }
-        } else {
-            lines.mapIndexed { index, s -> index to s }
+    LaunchedEffect(scrollToIndex) {
+        scrollToIndex?.let {
+            listState.animateScrollToItem(it)
         }
     }
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        itemsIndexed(filteredLines) { _, (originalIndex, line) ->
-            val textColor = MaterialTheme.colorScheme.onSurface
-            val highlightedLine = remember(line, textColor, searchQuery) {
-                highlightXml(line, textColor, searchQuery)
-            }
+    SelectionContainer {
+        LazyColumn(
+            state = listState,
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            itemsIndexed(lines) { index, line ->
+                val textColor = MaterialTheme.colorScheme.onSurface
+                val highlightedLine = remember(line, textColor, searchQuery) {
+                    highlightXml(line, textColor, searchQuery)
+                }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .horizontalScroll(horizontalScrollState)
-            ) {
-                // Line number
-                Text(
-                    text = (originalIndex + 1).toString(),
+                Row(
                     modifier = Modifier
-                        .width(48.dp)
-                        .padding(horizontal = 8.dp),
-                    style = TextStyle(
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                        textAlign = TextAlign.End
-                    )
-                )
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
+                        .horizontalScroll(horizontalScrollState)
+                ) {
+                    DisableSelection {
+                        // Line number
+                        Text(
+                            text = (index + 1).toString(),
+                            modifier = Modifier
+                                .width(48.dp)
+                                .padding(horizontal = 8.dp),
+                            style = TextStyle(
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                textAlign = TextAlign.End
+                            )
+                        )
 
-                // Vertical divider for line numbers
-                Box(
-                    modifier = Modifier
-                        .width(1.dp)
-                        .fillMaxHeight()
-                        .background(MaterialTheme.colorScheme.outlineVariant)
-                )
+                        // Vertical divider for line numbers
+                        Box(
+                            modifier = Modifier
+                                .width(1.dp)
+                                .fillMaxHeight()
+                                .background(MaterialTheme.colorScheme.outlineVariant)
+                        )
+                    }
 
-                // XML Content with syntax highlighting
-                Text(
-                    text = highlightedLine,
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    style = TextStyle(
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 13.sp
+                    // XML Content with syntax highlighting
+                    Text(
+                        text = highlightedLine,
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        style = TextStyle(
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 13.sp
+                        )
                     )
-                )
+                }
             }
         }
     }
