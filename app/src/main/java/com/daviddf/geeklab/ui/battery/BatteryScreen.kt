@@ -73,15 +73,17 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
             val percentage = if (level != -1 && scale != -1) level.toFloat() / scale else 0f
 
             val tempTenths = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)
-            val temperature = "${tempTenths / 10f} °C"
+            val tempValue = tempTenths / 10f
+            val temperature = context.getString(R.string.battery_temp_format, tempValue)
 
             val voltMilli = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0)
+            val voltValue = voltMilli / 1000f
             
             val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
             val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                              status == BatteryManager.BATTERY_STATUS_FULL
 
-            val voltageStr = "${voltMilli / 1000f} V"
+            val voltageStr = context.getString(R.string.battery_voltage_format, voltValue)
 
             val plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
             val (pluggedTypeResId, _) = when (plugged) {
@@ -126,7 +128,11 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
                 if (timeRemainingMs > 0) {
                     val hours = TimeUnit.MILLISECONDS.toHours(timeRemainingMs)
                     val minutes = TimeUnit.MILLISECONDS.toMinutes(timeRemainingMs) % 60
-                    timeRemainingStr = if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
+                    timeRemainingStr = if (hours > 0) {
+                        context.getString(R.string.hours_minutes_short, hours, minutes)
+                    } else {
+                        context.getString(R.string.minutes_short, minutes)
+                    }
                 }
             }
 
@@ -136,7 +142,11 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
                 0L
             }
             val estimatedTotal = if (percentage > 0) (chargeCounter / percentage / 1000).toInt() else 0
-            val capacityStr = if (estimatedTotal > 0) "$estimatedTotal mAh" else "-- mAh"
+            val capacityStr = if (estimatedTotal > 0) {
+                context.getString(R.string.battery_capacity_format, estimatedTotal)
+            } else {
+                context.getString(R.string.not_available)
+            }
 
             val healthStatusText = context.getString(R.string.battery_health_status, context.getString(healthResId))
             val chargeStatusText = if (isCharging) {

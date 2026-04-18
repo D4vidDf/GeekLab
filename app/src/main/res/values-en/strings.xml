@@ -99,4 +99,8 @@
     <string name="notification_channel_name">GeekLab Notifications</string>
     <string name="news_not_found">No news found</string>
     <string name="no_internet_connection">The device could not connect. Please check that your device has internet access.</string>
+    <string name="select_app_info">Select an app to see its information</string>
+    <string name="share">Share</string>
+    <string name="save">Save</string>
+    <string name="filter">Filter</string>
 </resources>
