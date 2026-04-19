@@ -21,11 +21,10 @@
         android:windowSoftInputMode="adjustPan"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="r">
-        <activity
-            android:name=".AndroidDSU"
+        android:enableOnBackInvokedCallback="false"
+        tools:targetApi="33">
+        <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
 
-            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -62,93 +61,6 @@
                     android:scheme="http" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
-        </activity>
-
-        <receiver
-            android:name=".widgets.Google"
-            android:exported="false"
-            tools:ignore="IntentFilterExportedReceiver">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/google_info" />
-        </receiver>
-        <receiver
-            android:name=".widgets.NotiWidg"
-            android:exported="false"
-            tools:ignore="IntentFilterExportedReceiver">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/noti_widg_info" />
-        </receiver>
-        <receiver
-            android:name=".widgets.LoopWidgt"
-            android:exported="false"
-            tools:ignore="IntentFilterExportedReceiver">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/loop_widgt_info" />
-        </receiver>
-        <receiver
-            android:name=".widgets.fecha"
-            android:exported="false"
-            tools:ignore="IntentFilterExportedReceiver">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/fecha_info" />
-        </receiver>
-        <receiver
-            android:name=".widgets.Hora"
-            android:exported="false"
-            tools:ignore="IntentFilterExportedReceiver">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ACTION_AUTO_UPDATE_WIDGET" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/hora_info" />
-        </receiver>
-
-        <activity
-            android:name=".loop.Countdown"
-            android:exported="true"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".loop.Loop2"
-            android:exported="false"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".Loop"
-            android:exported="false"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".notification.Notifiaction"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-            <tools:validation testUrl="https://geeklab.d4viddf.com/notification" />
-
             <intent-filter
                 android:autoVerify="true"
                 android:order="2">
@@ -162,38 +74,22 @@
                     android:pathPattern="/notification"
                     android:scheme="https" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".Menu"
-            android:exported="false"
-            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
-            <tools:validation testUrl="https://geeklab.d4viddf.com/functions" />
-        </activity>
-        <activity
-            android:name=".loop.Consentimiento"
-            android:exported="true"
-            tools:ignore="IntentFilterExportedReceiver,LockedOrientationActivity">
-            <tools:validation testUrl="https://geeklab.d4viddf.com/loop" />
 
-            <intent-filter android:order="3">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="geeklab.d4viddf.com"
-                    android:pathPattern="/loop"
-                    android:scheme="https" />
+                <data android:scheme="geeklab" android:host="notification" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/actions" />
 
         <provider
             android:name=".ManifestProvider"
@@ -206,6 +102,13 @@
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="geeklab" android:host="notification" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />

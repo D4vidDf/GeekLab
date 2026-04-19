@@ -1,5 +1,6 @@
 package com.daviddf.geeklab
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,19 +24,23 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.widthIn
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.ui.NavDisplay
+import com.daviddf.geeklab.navigation.GeekLabKey
+import com.daviddf.geeklab.navigation.Navigator
+import com.daviddf.geeklab.navigation.rememberNavigationState
 import com.daviddf.geeklab.ui.apps.AppDetailScreen
 import com.daviddf.geeklab.ui.apps.AppsScreen
 import com.daviddf.geeklab.ui.apps.ManifestViewerScreen
@@ -43,8 +49,10 @@ import com.daviddf.geeklab.ui.battery.BatteryScreen
 import com.daviddf.geeklab.ui.feed.NewsScreen
 import com.daviddf.geeklab.ui.home.HomeScreen
 import com.daviddf.geeklab.ui.info.InfoScreen
+import com.daviddf.geeklab.ui.notification.CustomNotificationScreen
 import com.daviddf.geeklab.ui.notification.NotificationScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,68 +61,110 @@ class MainActivity : ComponentActivity() {
         
         setContent {
             GeekLabTheme {
-                val navController = rememberNavController()
-                
-                NavHost(navController = navController, startDestination = "home") {
-                    composable("home") {
-                        HomeScreen(
-                            onNotificationClick = { navController.navigate("notifications") },
-                            onBatteryClick = { navController.navigate("battery") },
-                            onInfoClick = { navController.navigate("info") },
-                            onAppsClick = { navController.navigate("apps") },
-                            onToolsClick = { navController.navigate("tools") },
-                            onSeeMoreNewsClick = { navController.navigate("news") }
-                        )
-                    }
+                val state = rememberNavigationState(
+                    startRoute = GeekLabKey.Home,
+                    topLevelRoutes = setOf(GeekLabKey.Home)
+                )
+                val navigator = remember(state) { Navigator(state) }
+                val scope = rememberCoroutineScope()
 
-                    composable("news") {
-                        NewsScreen(
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
-                    
-                    composable("battery") {
-                        BatteryScreen(
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
+                LaunchedEffect(intent) {
+                    handleIntent(intent, navigator)
+                }
 
-                    composable("notifications") {
-                        NotificationScreen(
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
+                val entryProvider: (NavKey) -> NavEntry<NavKey> = { key ->
+                    when (key) {
+                        is GeekLabKey.Home -> NavEntry(key) {
+                            HomeScreen(
+                                onNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.Notifications) } },
+                                onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
+                                onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
+                                onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
+                                onToolsClick = { scope.launch { navigator.navigate(GeekLabKey.Tools) } },
+                                onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } }
+                            )
+                        }
 
-                    composable("info") {
-                        InfoScreen(onBackClick = { navController.popBackStack() })
-                    }
+                        is GeekLabKey.News -> NavEntry(key) {
+                            NewsScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
 
-                    composable("apps") {
-                        AppsListDetailScreen(
-                            onBackClick = { navController.popBackStack() },
-                            onViewManifest = { pkg -> navController.navigate("manifest_viewer/$pkg") }
-                        )
-                    }
+                        is GeekLabKey.Battery -> NavEntry(key) {
+                            BatteryScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
 
-                    composable("app_detail/{packageName}") { backStackEntry ->
-                        val packageName = backStackEntry.arguments?.getString("packageName") ?: ""
-                        AppDetailScreen(
-                            packageName = packageName,
-                            onBackClick = { navController.popBackStack() },
-                            onViewManifest = { pkg -> navController.navigate("manifest_viewer/$pkg") }
-                        )
-                    }
+                        is GeekLabKey.Notifications -> NavEntry(key) {
+                            NotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
 
-                    composable("manifest_viewer/{packageName}") { backStackEntry ->
-                        val packageName = backStackEntry.arguments?.getString("packageName") ?: ""
-                        ManifestViewerScreen(
-                            packageName = packageName,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
+                        is GeekLabKey.Info -> NavEntry(key) {
+                            InfoScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
 
-                    composable("tools") {
-                        ToolsScreen(onBackClick = { navController.popBackStack() })
+                        is GeekLabKey.Apps -> NavEntry(key) {
+                            AppsListDetailScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onViewManifest = { pkg: String -> scope.launch { navigator.navigate(GeekLabKey.ManifestViewer(pkg)) } }
+                            )
+                        }
+
+                        is GeekLabKey.AppDetail -> NavEntry(key) {
+                            AppDetailScreen(
+                                packageName = key.packageName,
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onViewManifest = { pkg: String -> scope.launch { navigator.navigate(GeekLabKey.ManifestViewer(pkg)) } }
+                            )
+                        }
+
+                        is GeekLabKey.ManifestViewer -> NavEntry(key) {
+                            ManifestViewerScreen(
+                                packageName = key.packageName,
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.Tools -> NavEntry(key) {
+                            ToolsScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.CustomNotification -> NavEntry(key) {
+                            CustomNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        else -> NavEntry(key) {
+                            Text("Not implemented yet")
+                        }
+                    }
+                }
+
+                NavDisplay(
+                    backStack = state.backStacks[state.topLevelRoute]!!,
+                    entryProvider = entryProvider
+                )
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
+    private suspend fun handleIntent(intent: Intent?, navigator: Navigator) {
+        val data = intent?.data ?: return
+        when (data.scheme) {
+            "geeklab" -> {
+                when (data.host) {
+                    "notification" -> {
+                        navigator.navigate(GeekLabKey.CustomNotification)
+                    }
+                }
+            }
+            "https", "http" -> {
+                if (data.host == "geeklab.d4viddf.com") {
+                    when (data.path) {
+                        "/notification" -> navigator.navigate(GeekLabKey.CustomNotification)
+                        "/functions" -> navigator.navigate(GeekLabKey.Tools)
                     }
                 }
             }
@@ -153,6 +203,8 @@ fun AppsListDetailScreen(
         scaffoldDirective = currentDirective
     )
 
+    val scope = rememberCoroutineScope()
+
     ListDetailPaneScaffold(
         modifier = Modifier.fillMaxSize(),
         directive = navigator.scaffoldDirective,
@@ -165,9 +217,11 @@ fun AppsListDetailScreen(
                 ) {
                     AppsScreen(
                         onBackClick = onBackClick,
-                        onAppClick = { packageName ->
-                            if (navigator.currentDestination?.content != packageName) {
-                                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, packageName)
+                        onAppClick = { packageName: String ->
+                            if (navigator.currentDestination?.contentKey != packageName) {
+                                scope.launch {
+                                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, packageName)
+                                }
                             }
                         },
                         showNavigationIcon = true
@@ -177,7 +231,7 @@ fun AppsListDetailScreen(
         },
         detailPane = {
             AnimatedPane {
-                val packageName = navigator.currentDestination?.content
+                val packageName = navigator.currentDestination?.contentKey
                 if (packageName != null) {
                     Row(Modifier.fillMaxSize()) {
                         AnimatedVisibility(
@@ -197,7 +251,9 @@ fun AppsListDetailScreen(
                                     isExpanded = false
                                 } else {
                                     // Clear selection instead of navigating back in multi-pane
-                                    navigator.navigateBack()
+                                    scope.launch {
+                                        navigator.navigateBack()
+                                    }
                                 }
                             },
                             onViewManifest = onViewManifest,
