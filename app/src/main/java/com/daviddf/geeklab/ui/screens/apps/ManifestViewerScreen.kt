@@ -1,7 +1,9 @@
 package com.daviddf.geeklab.ui.screens.apps
 
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,11 +39,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import com.daviddf.geeklab.BuildConfig
 import com.daviddf.geeklab.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -239,14 +244,33 @@ fun ManifestViewerScreen(
 }
 
 fun shareManifest(context: Context, packageName: String, content: String) {
-    val sendIntent: Intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, content)
-        putExtra(Intent.EXTRA_TITLE, "AndroidManifest.xml - $packageName")
-        type = "text/plain"
+    try {
+        val cachePath = File(context.cacheDir, "shared_manifests")
+        if (!cachePath.exists()) cachePath.mkdirs()
+        val file = File(cachePath, "${packageName}_manifest.xml")
+        file.writeText(content)
+
+        val contentUri: Uri = FileProvider.getUriForFile(
+            context,
+            "${BuildConfig.APPLICATION_ID}.provider",
+            file
+        )
+
+        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/xml"
+            putExtra(Intent.EXTRA_STREAM, contentUri)
+            putExtra(Intent.EXTRA_TITLE, "${packageName}_manifest.xml")
+            // Add ClipData to ensure the URI permission is granted correctly and show a preview on Android 10+
+            clipData = ClipData.newRawUri(null, contentUri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Toast.makeText(context, "Error sharing manifest", Toast.LENGTH_SHORT).show()
     }
-    val shareIntent = Intent.createChooser(sendIntent, null)
-    context.startActivity(shareIntent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
