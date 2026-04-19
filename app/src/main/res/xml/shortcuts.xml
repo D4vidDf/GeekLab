@@ -1,24 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This is a sample shortcuts.xml -->
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
-    <capability android:name="actions.intent.OPEN_APP_FEATURE">
-        <intent
-            android:targetPackage="com.daviddf.geeklab"
-            android:targetClass="com.daviddf.geeklab.MainActivity">
-            <parameter
-                android:name="feature"
-                android:key="featureParam"/>
-        </intent>
-    </capability>
-    <!-- Short and long labels must be @string resource. -->
     <shortcut
-        android:shortcutId="ID_ONE"
-        android:shortcutShortLabel="@string/shortcut_short_label"
+        android:shortcutId="notification"
+        android:enabled="true"
+        android:icon="@drawable/notification"
+        android:shortcutShortLabel="@string/notificaciones"
         android:shortcutLongLabel="@string/shortcut_long_label">
-        <capability-binding android:key="actions.intent.OPEN_APP_FEATURE">
-            <parameter-binding
-                android:value="featureParam"
-                android:key="feature"/>
-        </capability-binding>
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.daviddf.geeklabtest"
+            android:targetClass="com.daviddf.geeklab.MainActivity"
+            android:data="geeklab://notification" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="functions"
+        android:enabled="true"
+        android:icon="@drawable/ic_code"
+        android:shortcutShortLabel="@string/title_functions"
+        android:shortcutLongLabel="@string/title_functions">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.daviddf.geeklabtest"
+            android:targetClass="com.daviddf.geeklab.MainActivity"
+            android:data="https://geeklab.d4viddf.com/functions" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="apps"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/apps_title"
+        android:shortcutLongLabel="@string/apps_title">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.daviddf.geeklabtest"
+            android:targetClass="com.daviddf.geeklab.MainActivity"
+            android:data="https://geeklab.d4viddf.com/apps" />
     </shortcut>
 </shortcuts>

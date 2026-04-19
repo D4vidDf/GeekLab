@@ -23,6 +23,9 @@
         android:theme="@style/AppTheme"
         android:enableOnBackInvokedCallback="false"
         tools:targetApi="33">
+        <meta-data
+            android:name="android.app.shortcuts"
+            android:resource="@xml/shortcuts" />
         <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
 
         <activity

@@ -21,8 +21,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ErrorOutline
@@ -37,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -59,6 +58,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.window.core.layout.WindowSizeClass
 import coil.compose.SubcomposeAsyncImage
 import com.daviddf.geeklab.Experiments
 import com.daviddf.geeklab.R
@@ -97,17 +97,16 @@ fun NewsScreenContent(
     onLoadMore: () -> Unit
 ) {
     val context = LocalContext.current
-    val adaptiveInfo = currentWindowAdaptiveInfo()
-    val widthClass = adaptiveInfo.windowSizeClass.windowWidthSizeClass
-    val isCompact = widthClass == WindowWidthSizeClass.COMPACT
-    val isMedium = widthClass == WindowWidthSizeClass.MEDIUM
-    val isExpanded = widthClass == WindowWidthSizeClass.EXPANDED
-
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val windowSizeClass = adaptiveInfo.windowSizeClass
+    
     val columns = when {
-        isExpanded -> 3
-        isMedium -> 2
+        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) -> 3
+        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> 2
         else -> 1
     }
+
+    val isCompact = !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 
     val gridState = rememberLazyGridState()
     val pullState = rememberPullToRefreshState()

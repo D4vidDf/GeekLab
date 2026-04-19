@@ -105,7 +105,7 @@ fun CustomNotificationScreen(onBackClick: () -> Unit) {
             OutlinedTextField(
                 value = count,
                 onValueChange = { count = it.filter { char -> char.isDigit() } },
-                label = { Text("Number of Notifications") },
+                label = { Text(stringResource(R.string.notification_count_input)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -117,7 +117,7 @@ fun CustomNotificationScreen(onBackClick: () -> Unit) {
             ) {
                 Icon(Icons.Rounded.AddPhotoAlternate, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
-                Text("Select Image")
+                Text(stringResource(R.string.select_image))
             }
 
             bitmap?.let {
@@ -140,7 +140,7 @@ fun CustomNotificationScreen(onBackClick: () -> Unit) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Generate Notifications")
+                Text(stringResource(R.string.generate_notifications))
             }
         }
     }

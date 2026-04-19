@@ -17,7 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
@@ -25,6 +25,7 @@ import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,9 +56,12 @@ import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private val _intentFlow: MutableState<Intent?> = mutableStateOf(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        _intentFlow.value = intent
         
         setContent {
             GeekLabTheme {
@@ -68,8 +72,11 @@ class MainActivity : ComponentActivity() {
                 val navigator = remember(state) { Navigator(state) }
                 val scope = rememberCoroutineScope()
 
-                LaunchedEffect(intent) {
-                    handleIntent(intent, navigator)
+                LaunchedEffect(_intentFlow.value) {
+                    _intentFlow.value?.let { 
+                        handleIntent(it, navigator)
+                        _intentFlow.value = null // Reset after handling
+                    }
                 }
 
                 val entryProvider: (NavKey) -> NavEntry<NavKey> = { key ->
@@ -148,6 +155,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        _intentFlow.value = intent
     }
 
     private suspend fun handleIntent(intent: Intent?, navigator: Navigator) {
@@ -165,6 +173,7 @@ class MainActivity : ComponentActivity() {
                     when (data.path) {
                         "/notification" -> navigator.navigate(GeekLabKey.CustomNotification)
                         "/functions" -> navigator.navigate(GeekLabKey.Tools)
+                        "/apps" -> navigator.navigate(GeekLabKey.Apps)
                     }
                 }
             }
@@ -178,7 +187,8 @@ fun AppsListDetailScreen(
     onBackClick: () -> Unit,
     onViewManifest: (String) -> Unit
 ) {
-    val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val scaffoldDirective = calculatePaneScaffoldDirective(adaptiveInfo)
     
     var isExpanded by remember { mutableStateOf(false) }
 

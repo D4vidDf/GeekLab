@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,24 +50,30 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -93,14 +98,14 @@ fun ManifestViewerScreen(
     var isSearchActive by remember { mutableStateOf(false) }
 
     val searchResults = remember(manifestContent, searchQuery) {
-        if (searchQuery.length < 2) emptyList<Int>()
+        if (searchQuery.length < 2) emptyList()
         else {
             manifestContent?.mapIndexedNotNull { index, line ->
                 if (line.contains(searchQuery, ignoreCase = true)) index else null
             } ?: emptyList()
         }
     }
-    var currentResultIndex by remember(searchQuery) { mutableStateOf(0) }
+    var currentResultIndex by remember(searchQuery) { mutableIntStateOf(0) }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -124,8 +129,9 @@ fun ManifestViewerScreen(
                                 Toast.makeText(context, saveMessage, Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: Exception) {
+                            e.printStackTrace()
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Error saving file", Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -304,9 +310,10 @@ fun TooltipIconButton(
                 Text(tooltipText)
             }
         },
-        state = tooltipState
+        state = tooltipState,
+        modifier = modifier
     ) {
-        IconButton(onClick = onClick, modifier = modifier) {
+        IconButton(onClick = onClick) {
             Icon(icon, contentDescription = contentDescription, tint = tint)
         }
     }
@@ -314,13 +321,39 @@ fun TooltipIconButton(
 
 @Composable
 fun ManifestContent(
-    lines: List<String>, 
+    lines: List<String>,
     searchQuery: String,
-    scrollToIndex: Int? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollToIndex: Int? = null
 ) {
-    val horizontalScrollState = rememberScrollState()
     val listState = rememberLazyListState()
+    val horizontalScrollState = rememberScrollState()
+    val textColor = MaterialTheme.colorScheme.onSurface
+    val density = LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
+
+    var highlightedLines by remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
+    var codeMaxWidth by remember { mutableStateOf(0.dp) }
+
+    LaunchedEffect(lines, searchQuery, textColor) {
+        withContext(Dispatchers.Default) {
+            val highlighted = lines.map { highlightXml(it, textColor, searchQuery) }
+            
+            // Optimization for Monospace: width = charWidth * maxChars
+            val style = TextStyle(
+                fontFamily = FontFamily.Monospace,
+                fontSize = 13.sp
+            )
+            val charWidth = textMeasurer.measure("M", style).size.width
+            val maxChars = lines.maxOfOrNull { it.length } ?: 0
+            val maxW = charWidth * maxChars
+
+            withContext(Dispatchers.Main) {
+                highlightedLines = highlighted
+                codeMaxWidth = with(density) { maxW.toDp() } + 32.dp
+            }
+        }
+    }
 
     LaunchedEffect(scrollToIndex) {
         scrollToIndex?.let {
@@ -329,57 +362,75 @@ fun ManifestContent(
     }
 
     SelectionContainer {
-        LazyColumn(
-            state = listState,
+        Box(
             modifier = modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-            itemsIndexed(lines) { index, line ->
-                val textColor = MaterialTheme.colorScheme.onSurface
-                val highlightedLine = remember(line, textColor, searchQuery) {
-                    highlightXml(line, textColor, searchQuery)
-                }
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                itemsIndexed(
+                    items = highlightedLines,
+                    key = { index, _ -> index }
+                ) { index, line ->
+                    Row(
+                        modifier = Modifier.height(20.dp)
+                    ) {
+                        // Sticky Line Numbers (Fixed horizontally)
+                        DisableSelection {
+                            Box(
+                                modifier = Modifier
+                                    .width(64.dp)
+                                    .fillMaxHeight()
+                                    .background(MaterialTheme.colorScheme.surface),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Text(
+                                    text = (index + 1).toString(),
+                                    modifier = Modifier.padding(end = 12.dp),
+                                    style = TextStyle(
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                        textAlign = TextAlign.End,
+                                        lineHeight = 20.sp
+                                    )
+                                )
+                                // Vertical divider
+                                Box(
+                                    modifier = Modifier
+                                        .width(1.dp)
+                                        .fillMaxHeight()
+                                        .background(MaterialTheme.colorScheme.outlineVariant)
+                                        .align(Alignment.CenterEnd)
+                                )
+                            }
+                        }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                        .horizontalScroll(horizontalScrollState)
-                ) {
-                    DisableSelection {
-                        // Line number
-                        Text(
-                            text = (index + 1).toString(),
-                            modifier = Modifier
-                                .width(48.dp)
-                                .padding(horizontal = 8.dp),
-                            style = TextStyle(
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                textAlign = TextAlign.End
-                            )
-                        )
-
-                        // Vertical divider for line numbers
+                        // Code content (Horizontally Scrollable)
+                        // Shared horizontalScrollState ensures all rows stay in sync
                         Box(
                             modifier = Modifier
-                                .width(1.dp)
+                                .weight(1f)
                                 .fillMaxHeight()
-                                .background(MaterialTheme.colorScheme.outlineVariant)
-                        )
+                                .horizontalScroll(horizontalScrollState)
+                        ) {
+                            Text(
+                                text = line,
+                                modifier = Modifier
+                                    .width(codeMaxWidth)
+                                    .padding(horizontal = 12.dp),
+                                style = TextStyle(
+                                    fontFamily = FontFamily.Monospace,
+                                    fontSize = 13.sp,
+                                    lineHeight = 20.sp
+                                ),
+                                softWrap = false
+                            )
+                        }
                     }
-
-                    // XML Content with syntax highlighting
-                    Text(
-                        text = highlightedLine,
-                        modifier = Modifier.padding(horizontal = 12.dp),
-                        style = TextStyle(
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = 13.sp
-                        )
-                    )
                 }
             }
         }
