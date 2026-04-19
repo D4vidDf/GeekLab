@@ -45,7 +45,7 @@ import com.daviddf.geeklab.navigation.rememberNavigationState
 import com.daviddf.geeklab.ui.screens.apps.AppDetailScreen
 import com.daviddf.geeklab.ui.screens.apps.AppsScreen
 import com.daviddf.geeklab.ui.screens.apps.ManifestViewerScreen
-import com.daviddf.geeklab.ui.screens.tools.ToolsScreen
+import com.daviddf.geeklab.ui.screens.apps.ToolsScreen
 import com.daviddf.geeklab.ui.screens.battery.BatteryScreen
 import com.daviddf.geeklab.ui.screens.news.NewsScreen
 import com.daviddf.geeklab.ui.screens.home.HomeScreen

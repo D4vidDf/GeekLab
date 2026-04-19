@@ -1,4 +1,4 @@
-package com.daviddf.geeklab.ui.feed
+package com.daviddf.geeklab.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

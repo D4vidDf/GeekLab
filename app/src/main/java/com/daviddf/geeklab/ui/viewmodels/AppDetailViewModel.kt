@@ -1,4 +1,4 @@
-package com.daviddf.geeklab.ui.apps
+package com.daviddf.geeklab.ui.viewmodels
 
 import android.app.Application
 import android.app.usage.StorageStatsManager
@@ -9,7 +9,6 @@ import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.TrafficStats
@@ -62,7 +61,7 @@ data class AppDetailState(
     val size: String = "",
     val installTime: String = "",
     val origin: String = "",
-    val services: List<ServiceInfo> = emptyList(),
+    val services: List<android.content.pm.ServiceInfo> = emptyList(),
     val receivers: List<ActivityInfo> = emptyList(),
     val sharedLibraries: List<String> = emptyList(),
     val signatures: List<SignatureDetail> = emptyList(),
