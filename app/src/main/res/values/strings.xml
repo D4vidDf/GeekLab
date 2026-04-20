@@ -243,4 +243,8 @@
     <string name="custom_notification_title">Personalizar Notificación</string>
     <string name="title">Título</string>
     <string name="message">Mensaje</string>
+    <string name="category_device">Dispositivo</string>
+    <string name="category_apps">Aplicaciones</string>
+    <string name="category_notifications">Notificaciones</string>
+    <string name="category_developer">Desarrollador</string>
 </resources>

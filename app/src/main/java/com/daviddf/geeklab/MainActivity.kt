@@ -132,7 +132,13 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is GeekLabKey.Tools -> NavEntry(key) {
-                            ToolsScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                            ToolsScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.Notifications) } },
+                                onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
+                                onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
+                                onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } }
+                            )
                         }
 
                         is GeekLabKey.CustomNotification -> NavEntry(key) {
@@ -159,7 +165,7 @@ class MainActivity : ComponentActivity() {
         _intentFlow.value = intent
     }
 
-    private suspend fun handleIntent(intent: Intent?, navigator: Navigator) {
+    private fun handleIntent(intent: Intent?, navigator: Navigator) {
         val data = intent?.data ?: return
         when (data.scheme) {
             "geeklab" -> {

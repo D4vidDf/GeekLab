@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,11 +31,11 @@ import com.daviddf.geeklab.R
 
 @Composable
 fun FeaturedCard(
+    modifier: Modifier = Modifier,
     title: String,
     tag: String? = null,
     imageRes: Int? = null,
     imageUrl: String? = null,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Column(
@@ -45,7 +46,7 @@ fun FeaturedCard(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(180.dp),
+                .aspectRatio(16f / 9f),
             shape = RoundedCornerShape(28.dp)
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
