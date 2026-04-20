@@ -240,4 +240,7 @@
     <string name="share">Compartir</string>
     <string name="save">Guardar</string>
     <string name="filter">Filtrar</string>
+    <string name="custom_notification_title">Personalizar Notificación</string>
+    <string name="title">Título</string>
+    <string name="message">Mensaje</string>
 </resources>

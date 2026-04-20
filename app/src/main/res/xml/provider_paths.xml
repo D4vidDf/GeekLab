@@ -2,4 +2,5 @@
 <paths>
     <root-path name="root" path="." />
     <cache-path name="shared_apks" path="shared_apks/" />
+    <cache-path name="shared_manifests" path="shared_manifests/" />
 </paths>
