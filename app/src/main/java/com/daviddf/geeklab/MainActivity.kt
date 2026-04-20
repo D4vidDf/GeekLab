@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.BackHandler
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -118,7 +119,7 @@ class MainActivity : ComponentActivity() {
                         is GeekLabKey.AppDetail -> NavEntry(key) {
                             AppDetailScreen(
                                 packageName = key.packageName,
-                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onBackClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
                                 onViewManifest = { pkg: String -> scope.launch { navigator.navigate(GeekLabKey.ManifestViewer(pkg)) } }
                             )
                         }
@@ -214,6 +215,12 @@ fun AppsListDetailScreen(
     )
 
     val scope = rememberCoroutineScope()
+
+    BackHandler(enabled = navigator.canNavigateBack()) {
+        scope.launch {
+            navigator.navigateBack()
+        }
+    }
 
     ListDetailPaneScaffold(
         modifier = Modifier.fillMaxSize(),
