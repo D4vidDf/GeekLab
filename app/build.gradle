@@ -12,9 +12,9 @@ android {
     defaultConfig {
         applicationId "com.daviddf.geeklabtest"
         minSdk 25
-        targetSdk 36
+        targetSdk 37
         versionCode 18
-        versionName "2.2.0-a"
+        versionName "3.0.0-alpha1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
