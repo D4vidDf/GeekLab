@@ -117,6 +117,7 @@
     <string name="error_invalid_number">Introduce un número válido</string>
     <string name="selected_image_desc">Imagen seleccionada</string>
     <string name="notification_channel_name">Notificaciones GeekLab</string>
+    <string name="live_update_channel_name">Actualizaciones en vivo</string>
     <string name="apps_title">Aplicaciones</string>
     <string name="tools_title">Herramientas</string>
     <string name="search_apps">Buscar aplicaciones…</string>
@@ -256,7 +257,8 @@
     <string name="permission_rationale">El permiso de notificación es necesario para mostrar el progreso de la simulación.</string>
     <string name="permission_grant">Conceder</string>
     <string name="steps_label">Pasos totales</string>
-    <string name="interval_label">Intervalo (ms)</string>
+    <string name="interval_label">Duración por paso: %1$d ms</string>
+    <string name="interval_seconds_format">%1$ds</string>
     <string name="short_critical_text_label">Texto crítico corto (Opcional)</string>
     <string name="short_critical_text_placeholder">Ej: En camino, Preparando…</string>
     <string name="use_colors_label">Usar colores personalizados</string>

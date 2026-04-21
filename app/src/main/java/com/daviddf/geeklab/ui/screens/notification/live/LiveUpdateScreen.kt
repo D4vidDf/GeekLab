@@ -95,6 +95,9 @@ fun LiveUpdateScreen(
 
     val isSimulating by viewModel.isSimulating.collectAsState()
     val config by viewModel.config.collectAsState()
+
+    val startedMessage = stringResource(R.string.live_update_started)
+    val stoppedMessage = stringResource(R.string.live_update_stopped)
     
     DisposableEffect(context) {
         val receiver = object : BroadcastReceiver() {
@@ -218,7 +221,7 @@ fun LiveUpdateScreen(
                                     onClick = { viewModel.updateConfig(config.copy(intervalMs = interval)) },
                                     shape = SegmentedButtonDefaults.itemShape(index = index, count = intervals.size)
                                 ) {
-                                    Text("${interval / 1000}s")
+                                    Text(stringResource(R.string.interval_seconds_format, interval / 1000))
                                 }
                             }
                         }
@@ -320,7 +323,7 @@ fun LiveUpdateScreen(
                         onClick = {
                             viewModel.startSimulation()
                             scope.launch {
-                                snackbarHostState.showSnackbar(context.getString(R.string.live_update_started))
+                                snackbarHostState.showSnackbar(startedMessage)
                             }
                         },
                         modifier = Modifier
@@ -339,7 +342,7 @@ fun LiveUpdateScreen(
                         onClick = {
                             viewModel.stopSimulation()
                             scope.launch {
-                                snackbarHostState.showSnackbar(context.getString(R.string.live_update_stopped))
+                                snackbarHostState.showSnackbar(stoppedMessage)
                             }
                         },
                         modifier = Modifier

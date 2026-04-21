@@ -32,7 +32,6 @@ class LiveUpdateViewModel : ViewModel() {
 
     companion object {
         const val CHANNEL_ID = "live_updates_channel_id"
-        private const val CHANNEL_NAME = "live_updates_channel_name"
         private const val NOTIFICATION_ID = 1234
     }
 
@@ -56,7 +55,11 @@ class LiveUpdateViewModel : ViewModel() {
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                context.getString(R.string.live_update_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+            )
             notificationManager?.createNotificationChannel(channel)
         }
     }

@@ -117,6 +117,7 @@
     <string name="error_invalid_number">Introduce un número válido</string>
     <string name="selected_image_desc">Imagen seleccionada</string>
     <string name="notification_channel_name">Notificaciones GeekLab</string>
+    <string name="live_update_channel_name">Actualizaciones en vivo</string>
     <string name="apps_title">Aplicaciones</string>
     <string name="tools_title">Herramientas</string>
     <string name="search_apps">Buscar aplicaciones…</string>
@@ -257,6 +258,7 @@
     <string name="permission_grant">Conceder</string>
     <string name="steps_label">Número de pasos: %1$d</string>
     <string name="interval_label">Duración por paso: %1$d ms</string>
+    <string name="interval_seconds_format">%1$ds</string>
     <string name="use_colors_label">Usar colores personalizados</string>
     <string name="point_color_label">Color de Puntos (Progreso)</string>
     <string name="segment_color_label">Color de Segmentos (Fondo)</string>
@@ -272,7 +274,7 @@
     <string name="stop_live_update">Detener</string>
     <string name="progress_label">Progreso: %1$d%%</string>
     <string name="live_update_status_placing_title">Tu pedido se está procesando</string>
-    <string name="live_update_status_placing_text">Confirmando con la pastelería...</string>
+    <string name="live_update_status_placing_text">Confirmando con la pastelería…</string>
     <string name="live_update_status_prepping_title">Tu pedido se está preparando</string>
     <string name="live_update_status_prepping_text">El siguiente paso será el envío</string>
     <string name="live_update_status_enroute_title">Tu pedido está en camino</string>

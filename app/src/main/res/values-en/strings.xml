@@ -97,6 +97,7 @@
     <string name="error_invalid_number">Enter a valid number</string>
     <string name="selected_image_desc">Selected image</string>
     <string name="notification_channel_name">GeekLab Notifications</string>
+    <string name="live_update_channel_name">Live Updates</string>
     <string name="news_not_found">No news found</string>
     <string name="no_internet_connection">The device could not connect. Please check that your device has internet access.</string>
     <string name="select_app_info">Select an app to see its information</string>
@@ -239,7 +240,8 @@
     <string name="permission_rationale">Notification permission is needed to show the simulation progress.</string>
     <string name="permission_grant">Grant</string>
     <string name="steps_label">Total steps</string>
-    <string name="interval_label">Interval (ms)</string>
+    <string name="interval_label">Step Duration: %1$d ms</string>
+    <string name="interval_seconds_format">%1$ds</string>
     <string name="short_critical_text_label">Short critical text (Optional)</string>
     <string name="short_critical_text_placeholder">e.g. Enroute, Prepping…</string>
     <string name="use_colors_label">Use custom colors</string>
@@ -305,7 +307,7 @@
     <string name="metric_segment_title">Active Cores</string>
     <string name="metric_segment_value">4 of 8</string>
     <string name="metric_footer">Optimal performance</string>
-    <string name="start_live_update">Start</string>
-    <string name="custom_simulation_title">Settings</string>
+    <string name="start_live_update">Start Simulation</string>
+    <string name="custom_simulation_title">Simulation Settings</string>
     <string name="step_title_format">Order - Step %1$d</string>
 </resources>
