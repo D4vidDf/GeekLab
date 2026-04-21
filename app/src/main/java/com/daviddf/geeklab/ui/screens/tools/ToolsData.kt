@@ -28,6 +28,7 @@ data class ToolCategory(
 interface ToolsActions {
     fun onNotificationClick()
     fun onLiveUpdateClick()
+    fun onMetricStyleClick()
     fun onBatteryClick()
     fun onInfoClick()
     fun onAppsClick()
@@ -70,7 +71,8 @@ object ToolsData {
             titleResId = R.string.category_notifications,
             items = listOf(
                 ToolItem(R.string.notificaciones, Icons.Rounded.Notifications, CardNotificaciones, TextNotificaciones) { _, actions -> actions.onNotificationClick() },
-                ToolItem(R.string.live_update_title, Icons.Rounded.Sync, Color(0xFFE8EAF6), Color(0xFF1A237E), minApi = 36) { _, actions -> actions.onLiveUpdateClick() }
+                ToolItem(R.string.live_update_title, Icons.Rounded.Sync, Color(0xFFE8EAF6), Color(0xFF1A237E), minApi = 36) { _, actions -> actions.onLiveUpdateClick() },
+                ToolItem(R.string.metric_style_title, Icons.Rounded.BarChart, Color(0xFFF1F8E9), Color(0xFF33691E), minApi = 37) { _, actions -> actions.onMetricStyleClick() }
             )
         ),
         ToolCategory(

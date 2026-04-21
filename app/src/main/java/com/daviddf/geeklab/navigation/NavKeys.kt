@@ -16,4 +16,5 @@ sealed interface GeekLabKey : NavKey {
     @Serializable data class ManifestViewer(val packageName: String) : GeekLabKey
     @Serializable data object CustomNotification : GeekLabKey
     @Serializable data object LiveUpdate : GeekLabKey
+    @Serializable data object MetricStyle : GeekLabKey
 }

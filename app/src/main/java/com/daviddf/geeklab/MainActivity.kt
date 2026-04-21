@@ -53,6 +53,7 @@ import com.daviddf.geeklab.ui.screens.home.HomeScreen
 import com.daviddf.geeklab.ui.screens.info.InfoScreen
 import com.daviddf.geeklab.ui.screens.notification.standard.CustomNotificationScreen
 import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
+import com.daviddf.geeklab.ui.screens.notification.metric.MetricStyleScreen
 import com.daviddf.geeklab.ui.screens.notification.standard.NotificationScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
@@ -137,6 +138,7 @@ class MainActivity : ComponentActivity() {
                                 onBackClick = { scope.launch { navigator.goBack() } },
                                 onNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.Notifications) } },
                                 onLiveUpdateClick = { scope.launch { navigator.navigate(GeekLabKey.LiveUpdate) } },
+                                onMetricStyleClick = { scope.launch { navigator.navigate(GeekLabKey.MetricStyle) } },
                                 onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } }
@@ -145,6 +147,10 @@ class MainActivity : ComponentActivity() {
 
                         is GeekLabKey.LiveUpdate -> NavEntry(key) {
                             LiveUpdateScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.MetricStyle -> NavEntry(key) {
+                            MetricStyleScreen(onBackClick = { scope.launch { navigator.goBack() } })
                         }
 
                         is GeekLabKey.CustomNotification -> NavEntry(key) {
