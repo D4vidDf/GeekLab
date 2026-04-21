@@ -16,6 +16,7 @@ data class ToolItem(
     val containerColor: Color,
     val contentColor: Color,
     val isXiaomiOnly: Boolean = false,
+    val minApi: Int = 0,
     val action: (Context, ToolsActions) -> Unit
 )
 
@@ -26,6 +27,7 @@ data class ToolCategory(
 
 interface ToolsActions {
     fun onNotificationClick()
+    fun onLiveUpdateClick()
     fun onBatteryClick()
     fun onInfoClick()
     fun onAppsClick()
@@ -67,7 +69,8 @@ object ToolsData {
         ToolCategory(
             titleResId = R.string.category_notifications,
             items = listOf(
-                ToolItem(R.string.notificaciones, Icons.Rounded.Notifications, CardNotificaciones, TextNotificaciones) { _, actions -> actions.onNotificationClick() }
+                ToolItem(R.string.notificaciones, Icons.Rounded.Notifications, CardNotificaciones, TextNotificaciones) { _, actions -> actions.onNotificationClick() },
+                ToolItem(R.string.live_update_title, Icons.Rounded.Sync, Color(0xFFE8EAF6), Color(0xFF1A237E), minApi = 36) { _, actions -> actions.onLiveUpdateClick() }
             )
         ),
         ToolCategory(

@@ -1,4 +1,4 @@
-package com.daviddf.geeklab.ui.screens.notification
+package com.daviddf.geeklab.ui.screens.notification.standard
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

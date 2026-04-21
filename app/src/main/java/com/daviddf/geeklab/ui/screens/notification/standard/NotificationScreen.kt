@@ -1,4 +1,4 @@
-package com.daviddf.geeklab.ui.screens.notification
+package com.daviddf.geeklab.ui.screens.notification.standard
 
 import android.Manifest
 import android.app.Notification
@@ -249,7 +249,7 @@ private fun sendNotifications(context: Context, title: String, message: String, 
         try {
             // Using a unique ID for each notification in the loop
             NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt() + i.toInt(), builder.build())
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             // Handle or log
         }
     }

@@ -51,8 +51,9 @@ import com.daviddf.geeklab.ui.screens.battery.BatteryScreen
 import com.daviddf.geeklab.ui.screens.news.NewsScreen
 import com.daviddf.geeklab.ui.screens.home.HomeScreen
 import com.daviddf.geeklab.ui.screens.info.InfoScreen
-import com.daviddf.geeklab.ui.screens.notification.CustomNotificationScreen
-import com.daviddf.geeklab.ui.screens.notification.NotificationScreen
+import com.daviddf.geeklab.ui.screens.notification.standard.CustomNotificationScreen
+import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
+import com.daviddf.geeklab.ui.screens.notification.standard.NotificationScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
 
@@ -135,10 +136,15 @@ class MainActivity : ComponentActivity() {
                             ToolsScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } },
                                 onNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.Notifications) } },
+                                onLiveUpdateClick = { scope.launch { navigator.navigate(GeekLabKey.LiveUpdate) } },
                                 onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } }
                             )
+                        }
+
+                        is GeekLabKey.LiveUpdate -> NavEntry(key) {
+                            LiveUpdateScreen(onBackClick = { scope.launch { navigator.goBack() } })
                         }
 
                         is GeekLabKey.CustomNotification -> NavEntry(key) {

@@ -31,6 +31,7 @@ import androidx.window.core.layout.WindowSizeClass
 fun ToolsScreen(
     onBackClick: () -> Unit,
     onNotificationClick: () -> Unit = {},
+    onLiveUpdateClick: () -> Unit = {},
     onBatteryClick: () -> Unit = {},
     onInfoClick: () -> Unit = {},
     onAppsClick: () -> Unit = {}
@@ -38,9 +39,10 @@ fun ToolsScreen(
     val context = LocalContext.current
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     
-    val actions = remember(onNotificationClick, onBatteryClick, onInfoClick, onAppsClick) {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onBatteryClick, onInfoClick, onAppsClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
+            override fun onLiveUpdateClick() = onLiveUpdateClick()
             override fun onBatteryClick() = onBatteryClick()
             override fun onInfoClick() = onInfoClick()
             override fun onAppsClick() = onAppsClick()
@@ -66,7 +68,6 @@ fun ToolsScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.tools_title),
-                        style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -97,10 +98,10 @@ fun ToolsScreen(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             ToolsData.categories.forEach { category ->
-                val visibleItems = if (isXiaomiDevice) {
-                    category.items
-                } else {
-                    category.items.filter { !it.isXiaomiOnly }
+                val visibleItems = category.items.filter { item ->
+                    val xiaomiMatch = isXiaomiDevice || !item.isXiaomiOnly
+                    val apiMatch = android.os.Build.VERSION.SDK_INT >= item.minApi
+                    xiaomiMatch && apiMatch
                 }
 
                 if (visibleItems.isNotEmpty()) {
