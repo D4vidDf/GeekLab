@@ -35,7 +35,8 @@ fun ToolsScreen(
     onMetricStyleClick: () -> Unit = {},
     onBatteryClick: () -> Unit = {},
     onInfoClick: () -> Unit = {},
-    onAppsClick: () -> Unit = {}
+    onAppsClick: () -> Unit = {},
+    onNotificationHistoryClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
@@ -48,6 +49,7 @@ fun ToolsScreen(
             override fun onBatteryClick() = onBatteryClick()
             override fun onInfoClick() = onInfoClick()
             override fun onAppsClick() = onAppsClick()
+            override fun onNotificationHistoryClick() = onNotificationHistoryClick()
         }
     }
 

@@ -327,4 +327,13 @@
     <string name="start_live_update">Iniciar Simulación</string>
     <string name="custom_simulation_title">Configuración de Simulación</string>
     <string name="step_title_format">Pedido - Paso %1$d</string>
+    <string name="notification_history">Historial de notificaciones</string>
+    <string name="recently_dismissed">Eliminadas recientemente</string>
+    <string name="use_notification_history">Usar historial de notificaciones</string>
+    <string name="notification_history_off">Historial de notificaciones desactivado</string>
+    <string name="notification_history_off_desc">Activa el historial de notificaciones para ver las notificaciones recientes y pospuestas</string>
+    <string name="no_recent_notifications">No hay notificaciones recientes</string>
+    <string name="no_recent_notifications_desc">Tus notificaciones recientes y pospuestas aparecerán aquí</string>
+    <string name="last_24_hours">Últimas 24 horas</string>
+    <string name="recently_dismissed_label">Eliminadas recientemente</string>
 </resources>

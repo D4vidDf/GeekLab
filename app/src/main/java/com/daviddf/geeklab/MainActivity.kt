@@ -141,7 +141,8 @@ class MainActivity : ComponentActivity() {
                                 onMetricStyleClick = { scope.launch { navigator.navigate(GeekLabKey.MetricStyle) } },
                                 onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
-                                onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } }
+                                onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
+                                onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } }
                             )
                         }
 
@@ -155,6 +156,20 @@ class MainActivity : ComponentActivity() {
 
                         is GeekLabKey.CustomNotification -> NavEntry(key) {
                             CustomNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.NotificationHistory -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.notification.history.NotificationHistoryScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onNotificationClick = { id -> scope.launch { navigator.navigate(GeekLabKey.NotificationDetail(id)) } }
+                            )
+                        }
+
+                        is GeekLabKey.NotificationDetail -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.notification.history.NotificationDetailScreen(
+                                notificationId = key.notificationId,
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
                         }
 
                         else -> NavEntry(key) {
