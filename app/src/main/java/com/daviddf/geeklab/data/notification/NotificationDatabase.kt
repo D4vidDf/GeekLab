@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [NotificationEntity::class], version = 1, exportSchema = false)
+@Database(entities = [NotificationEntity::class], version = 3, exportSchema = false)
 abstract class NotificationDatabase : RoomDatabase() {
     abstract fun notificationDao(): NotificationDao
 
@@ -19,7 +19,9 @@ abstract class NotificationDatabase : RoomDatabase() {
                     context.applicationContext,
                     NotificationDatabase::class.java,
                     "notification_database"
-                ).build()
+                )
+                .fallbackToDestructiveMigration(true)
+                .build()
                 INSTANCE = instance
                 instance
             }

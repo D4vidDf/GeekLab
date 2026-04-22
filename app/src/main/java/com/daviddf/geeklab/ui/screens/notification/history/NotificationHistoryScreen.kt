@@ -1,5 +1,6 @@
 package com.daviddf.geeklab.ui.screens.notification.history
 
+import android.app.Application
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Spring
@@ -88,7 +89,7 @@ fun NotificationHistoryScreen(
     val timeFormat = remember(locale) { SimpleDateFormat("h:mm a", locale) }
 
     val viewModel: NotificationHistoryViewModel = viewModel(
-        factory = NotificationHistoryViewModelFactory(context)
+        factory = NotificationHistoryViewModelFactory(context.applicationContext as Application)
     )
     val notifications by viewModel.notifications.collectAsState(initial = emptyList())
 
@@ -504,9 +505,39 @@ fun NotificationHistoryScreenPreview() {
     GeekLabTheme(darkTheme = true) {
         // Mock data for preview
         val mockNotifications = listOf(
-            NotificationEntity(1, "com.whatsapp", "John Doe", "Hey, how are you?", null, System.currentTimeMillis(), "msg", true, "key1"),
-            NotificationEntity(2, "com.instagram.android", "Instagram", "Someone liked your photo", null, System.currentTimeMillis() - 3600000, "notif", true, "key2"),
-            NotificationEntity(3, "com.android.settings", "System", "Battery low", null, System.currentTimeMillis() - 7200000, "sys", true, "key3")
+            NotificationEntity(
+                id = 1,
+                packageName = "com.whatsapp",
+                title = "John Doe",
+                text = "Hey, how are you?",
+                bigText = null,
+                timestamp = System.currentTimeMillis(),
+                channelId = "msg",
+                isClearable = true,
+                key = "key1"
+            ),
+            NotificationEntity(
+                id = 2,
+                packageName = "com.instagram.android",
+                title = "Instagram",
+                text = "Someone liked your photo",
+                bigText = null,
+                timestamp = System.currentTimeMillis() - 3600000,
+                channelId = "notif",
+                isClearable = true,
+                key = "key2"
+            ),
+            NotificationEntity(
+                id = 3,
+                packageName = "com.android.settings",
+                title = "System",
+                text = "Battery low",
+                bigText = null,
+                timestamp = System.currentTimeMillis() - 7200000,
+                channelId = "sys",
+                isClearable = true,
+                key = "key3"
+            )
         )
         
         Scaffold(
@@ -555,7 +586,17 @@ fun RecentNotificationItemPreview() {
         val locale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
         val timeFormat = remember { SimpleDateFormat("h:mm a", locale) }
         RecentNotificationItem(
-            notification = NotificationEntity(1, "com.whatsapp", "John Doe", "This is a preview message to test the design.", null, System.currentTimeMillis(), "msg", true, "key1"),
+            notification = NotificationEntity(
+                id = 1,
+                packageName = "com.whatsapp",
+                title = "John Doe",
+                text = "This is a preview message to test the design.",
+                bigText = null,
+                timestamp = System.currentTimeMillis(),
+                channelId = "msg",
+                isClearable = true,
+                key = "key1"
+            ),
             timeFormat = timeFormat,
             locale = locale,
             onClick = {}
@@ -571,8 +612,28 @@ fun AppNotificationGroupPreview() {
         AppNotificationGroup(
             packageName = "com.whatsapp",
             notifications = listOf(
-                NotificationEntity(1, "com.whatsapp", "John Doe", "Message 1", null, System.currentTimeMillis(), "msg", true, "key1"),
-                NotificationEntity(2, "com.whatsapp", "Jane Smith", "Message 2", null, System.currentTimeMillis() - 60000, "msg", true, "key2")
+                NotificationEntity(
+                    id = 1,
+                    packageName = "com.whatsapp",
+                    title = "John Doe",
+                    text = "Message 1",
+                    bigText = null,
+                    timestamp = System.currentTimeMillis(),
+                    channelId = "msg",
+                    isClearable = true,
+                    key = "key1"
+                ),
+                NotificationEntity(
+                    id = 2,
+                    packageName = "com.whatsapp",
+                    title = "Jane Smith",
+                    text = "Message 2",
+                    bigText = null,
+                    timestamp = System.currentTimeMillis() - 60000,
+                    channelId = "msg",
+                    isClearable = true,
+                    key = "key2"
+                )
             ),
             locale = locale,
             onNotificationClick = {}
