@@ -205,6 +205,24 @@ fun BatteryContent(
                                         append(stringResource(R.string.cycle_count, state.cycleCount))
                                         append("\n")
                                     }
+                                    
+                                    // Additional Metrics
+                                    append("\n")
+                                    append("Corriente actual: ${state.currentNow}")
+                                    append("\n")
+                                    append("Corriente promedio: ${state.currentAverage}")
+                                    append("\n")
+                                    append("Energía restante: ${state.remainingEnergy}")
+                                    append("\n")
+
+                                    // Power Profile Extras
+                                    if (state.powerProfileExtras.isNotEmpty()) {
+                                        append("\nConsumo promedio (PowerProfile):\n")
+                                        state.powerProfileExtras.forEach { (label, value) ->
+                                            append("$label: $value\n")
+                                        }
+                                    }
+
                                     append("\n")
                                     append(stringResource(R.string.battery_monitoring_desc))
                                 }

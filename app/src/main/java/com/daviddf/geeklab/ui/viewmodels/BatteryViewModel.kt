@@ -1,5 +1,6 @@
 package com.daviddf.geeklab.ui.viewmodels
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -27,7 +28,11 @@ data class BatteryState(
     val technology: String = "Li-ion",
     val cycleCount: Int = 0,
     val pluggedTypeResId: Int = R.string.none,
-    val healthType: HealthType = HealthType.UNKNOWN
+    val healthType: HealthType = HealthType.UNKNOWN,
+    val currentNow: String = "-- mA",
+    val currentAverage: String = "-- mA",
+    val remainingEnergy: String = "-- mWh",
+    val powerProfileExtras: Map<String, String> = emptyMap()
 )
 
 enum class HealthType {
@@ -109,17 +114,25 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
 
-            val chargeCounter = try {
-                bm?.getLongProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER) ?: 0L
-            } catch (_: SecurityException) {
-                0L
-            }
-            val estimatedTotal = if (percentage > 0) (chargeCounter / percentage / 1000).toInt() else 0
-            val capacityStr = if (estimatedTotal > 0) {
-                context.getString(R.string.battery_capacity_format, estimatedTotal)
+            // --- Improved Battery Capacity Calculation ---
+            val totalCapacityMah = getBatteryCapacity(context, bm, percentage)
+            val capacityStr = if (totalCapacityMah > 0) {
+                context.getString(R.string.battery_capacity_format, totalCapacityMah)
             } else {
                 context.getString(R.string.not_available)
             }
+
+            // --- Additional Battery Metrics ---
+            val currentNow = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) ?: 0
+            val currentAverage = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_AVERAGE) ?: 0
+            val energyCounter = bm?.getLongProperty(BatteryManager.BATTERY_PROPERTY_ENERGY_COUNTER) ?: 0L
+
+            val currentNowStr = if (currentNow != Int.MIN_VALUE) "${currentNow / 1000} mA" else "-- mA"
+            val currentAverageStr = if (currentAverage != Int.MIN_VALUE) "${currentAverage / 1000} mA" else "-- mA"
+            val energyCounterStr = if (energyCounter > 0) "${energyCounter / 1_000_000} mWh" else "-- mWh"
+
+            // --- PowerProfile Extras ---
+            val extras = getPowerProfileExtras(context)
 
             val healthStatusText = context.getString(R.string.battery_health_status, context.getString(healthResId))
             val chargeStatusText = if (isCharging) {
@@ -145,9 +158,47 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
                 technology = technology,
                 cycleCount = cycles,
                 pluggedTypeResId = pluggedTypeResId,
-                healthType = healthType
+                healthType = healthType,
+                currentNow = currentNowStr,
+                currentAverage = currentAverageStr,
+                remainingEnergy = energyCounterStr,
+                powerProfileExtras = extras
             )
         }
+    }
+
+    @SuppressLint("PrivateApi", "DefaultLocale")
+    private fun getPowerProfileExtras(context: Context): Map<String, String> {
+        val extras = mutableMapOf<String, String>()
+        try {
+            val powerProfileClass = Class.forName("com.android.internal.os.PowerProfile")
+            val powerProfileConstructor = powerProfileClass.getConstructor(Context::class.java)
+            val powerProfileInstance = powerProfileConstructor.newInstance(context)
+            
+            val getAveragePower = powerProfileClass.getMethod("getAveragePower", String::class.java)
+            
+            // Commonly available PowerProfile constants
+            val constants = mapOf(
+                "battery.capacity" to "Capacidad de diseño",
+                "cpu.active" to "CPU Activa",
+                "wifi.active" to "Wi-Fi Activo",
+                "gps.on" to "GPS Activo",
+                "bluetooth.active" to "Bluetooth Activo",
+                "screen.on" to "Pantalla Activa",
+                "dsp.audio" to "Audio DSP",
+                "dsp.video" to "Video DSP"
+            )
+
+            constants.forEach { (key, label) ->
+                try {
+                    val value = getAveragePower.invoke(powerProfileInstance, key) as Double
+                    if (value > 0) {
+                        extras[label] = String.format("%.2f mA", value)
+                    }
+                } catch (_: Exception) {}
+            }
+        } catch (_: Exception) {}
+        return extras
     }
 
     init {
@@ -155,6 +206,7 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
         application.registerReceiver(batteryReceiver, filter)
     }
 
+    @SuppressLint("EmptySuperCall")
     override fun onCleared() {
         super.onCleared()
         try {
@@ -162,5 +214,40 @@ class BatteryViewModel(application: Application) : AndroidViewModel(application)
         } catch (_: Exception) {
             // Ignore
         }
+    }
+
+    /**
+     * Attempts to get the total battery capacity in mAh.
+     * Uses PowerProfile reflection (most accurate for design capacity) 
+     * with a fallback to the charge counter estimation.
+     */
+    @SuppressLint("PrivateApi")
+    private fun getBatteryCapacity(context: Context, bm: BatteryManager?, percentage: Float): Int {
+        // Method 1: PowerProfile (Design Capacity)
+        try {
+            val powerProfileClass = Class.forName("com.android.internal.os.PowerProfile")
+            val powerProfileConstructor = powerProfileClass.getConstructor(Context::class.java)
+            val powerProfileInstance = powerProfileConstructor.newInstance(context)
+            val batteryCapacityMethod = powerProfileClass.getMethod("getBatteryCapacity")
+            val capacity = batteryCapacityMethod.invoke(powerProfileInstance) as Double
+            if (capacity > 0) return capacity.toInt()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        // Method 2: Charge Counter Fallback (Actual available capacity)
+        val chargeCounter = try {
+            bm?.getLongProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER) ?: 0L
+        } catch (_: SecurityException) {
+            0L
+        }
+        
+        // If the counter is in micro-ampere-hours, convert to mAh
+        if (chargeCounter > 0 && percentage > 0) {
+            val estimated = (chargeCounter / percentage / 1000).toInt()
+            if (estimated > 100) return estimated // Sanity check for realistic values
+        }
+        
+        return 0
     }
 }
