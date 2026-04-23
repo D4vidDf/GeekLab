@@ -52,12 +52,14 @@ fun ToolsScreen(
     onInfoClick: () -> Unit = {},
     onAppsClick: () -> Unit = {},
     onNotificationHistoryClick: () -> Unit = {},
-    onCallNotificationClick: () -> Unit = {}
+    onCallNotificationClick: () -> Unit = {},
+    onBluetoothClick: () -> Unit = {},
+    onBluetoothBleClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     
-    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onCallNotificationClick) {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
             override fun onLiveUpdateClick() = onLiveUpdateClick()
@@ -67,6 +69,8 @@ fun ToolsScreen(
             override fun onAppsClick() = onAppsClick()
             override fun onNotificationHistoryClick() = onNotificationHistoryClick()
             override fun onCallNotificationClick() = onCallNotificationClick()
+            override fun onBluetoothClick() = onBluetoothClick()
+            override fun onBluetoothBleClick() = onBluetoothBleClick()
         }
     }
 

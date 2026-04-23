@@ -142,7 +142,21 @@ class MainActivity : ComponentActivity() {
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
                                 onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
-                                onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } }
+                                onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
+                                onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
+                                onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } }
+                            )
+                        }
+
+                        is GeekLabKey.Bluetooth -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.bluetooth.BluetoothScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.BluetoothBle -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.bluetooth.BleScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 

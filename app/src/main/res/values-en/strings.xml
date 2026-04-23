@@ -168,6 +168,31 @@
     <string name="sha2">SHA2: %1$s</string>
     <string name="supported">Supported</string>
     <string name="not_supported">Not supported</string>
+    <string name="bluetooth_title">Bluetooth</string>
+    <string name="bluetooth_ble_title">Bluetooth LTE (BLE)</string>
+    <string name="bluetooth_desc">Search for nearby classic Bluetooth devices and view their information.</string>
+    <string name="bluetooth_ble_desc">Scan for Low Energy devices, services, and characteristics.</string>
+    <string name="scan_devices">Scan Devices</string>
+    <string name="stop_scan">Stop Scan</string>
+    <string name="available_devices">Available Devices</string>
+    <string name="paired_devices">Paired Devices</string>
+    <string name="no_devices_found">No devices found</string>
+    <string name="bluetooth_not_supported">Bluetooth is not supported on this device</string>
+    <string name="bluetooth_disabled">Bluetooth is disabled</string>
+    <string name="enable_bluetooth">Enable Bluetooth</string>
+    <string name="device_address">Address: %1$s</string>
+    <string name="device_class">Class: %1$s</string>
+    <string name="device_bond_state">Bond State: %1$s</string>
+    <string name="bond_none">None</string>
+    <string name="bond_bonding">Bonding…</string>
+    <string name="bond_bonded">Bonded</string>
+    <string name="ble_services">Services (%1$d)</string>
+    <string name="ble_characteristics">Characteristics (%1$d)</string>
+    <string name="ble_rssi">RSSI: %1$d dBm</string>
+    <string name="view_documentation">View Documentation</string>
+    <string name="bluetooth_classic_doc_url" translatable="false">https://developer.android.com/develop/connectivity/bluetooth</string>
+    <string name="bluetooth_ble_doc_url" translatable="false">https://developer.android.com/develop/connectivity/bluetooth/ble/ble-overview</string>
+    <string name="documentation_desc">Official Android Documentation</string>
     <string name="welcome">Welcome</string>
     <string name="favorites">Favorites</string>
     <string name="see_all">see all</string>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.BluetoothSearching
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,6 +35,8 @@ interface ToolsActions {
     fun onAppsClick()
     fun onNotificationHistoryClick()
     fun onCallNotificationClick()
+    fun onBluetoothClick()
+    fun onBluetoothBleClick()
 }
 
 object ToolsData {
@@ -84,6 +87,13 @@ object ToolsData {
             items = listOf(
                 ToolItem(R.string.developer_options, Icons.Rounded.Code, Color(0xFFE8F5E9), Color(0xFF1B5E20)) { ctx, _ ->
                     launchSettings(ctx, "com.android.settings", "com.android.settings.Settings\$DevelopmentSettingsActivity")
+                },
+
+                ToolItem(R.string.bluetooth_title, Icons.Rounded.Bluetooth, Color(0xFFE3F2FD), Color(0xFF1565C0)) { _, actions ->
+                    actions.onBluetoothClick()
+                },
+                ToolItem(R.string.bluetooth_ble_title, Icons.AutoMirrored.Rounded.BluetoothSearching, Color(0xFFF3E5F5), Color(0xFF7B1FA2)) { _, actions ->
+                    actions.onBluetoothBleClick()
                 },
                 ToolItem(R.string.band_selector, Icons.Rounded.CellTower, Color(0xFFFFF3E0), Color(0xFFE65100), isXiaomiOnly = true) { ctx, _ ->
                     launchSettings(ctx, "com.android.settings", "com.android.settings.MiuiBandMode")
