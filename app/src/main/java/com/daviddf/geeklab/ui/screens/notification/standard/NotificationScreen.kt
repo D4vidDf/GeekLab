@@ -1,16 +1,8 @@
 package com.daviddf.geeklab.ui.screens.notification.standard
 
 import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -58,10 +50,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -75,48 +65,40 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.R
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: NotificationViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     
-    var title by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
-    var count by remember { mutableStateOf("1") }
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    val title by viewModel.title.collectAsState()
+    val message by viewModel.message.collectAsState()
+    val count by viewModel.count.collectAsState()
+    val imageUri by viewModel.imageUri.collectAsState()
+    val bitmap by viewModel.bitmap.collectAsState()
 
-    var titleError by remember { mutableStateOf<String?>(null) }
-    var messageError by remember { mutableStateOf<String?>(null) }
-    var countError by remember { mutableStateOf<String?>(null) }
+    val titleError by viewModel.titleError.collectAsState()
+    val messageError by viewModel.messageError.collectAsState()
+    val countError by viewModel.countError.collectAsState()
 
     val pickMedia = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        if (uri != null) {
-            imageUri = uri
-            bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(context.contentResolver, uri)
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-            }
-        }
+        viewModel.updateImage(context, uri)
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            sendNotifications(context, title, message, count.toLongOrNull() ?: 0L, bitmap)
+            viewModel.sendNotifications(context, title, message, count.toLongOrNull() ?: 0L, bitmap)
         }
     }
 
@@ -143,7 +125,7 @@ fun NotificationScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                    scrolledContainerColor = Color.Transparent,
                     navigationIconContentColor = Color.Unspecified,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.Unspecified
@@ -205,10 +187,7 @@ fun NotificationScreen(
 
                     OutlinedTextField(
                         value = title,
-                        onValueChange = { 
-                            title = it
-                            titleError = null
-                        },
+                        onValueChange = { viewModel.updateTitle(it) },
                         label = { Text(stringResource(R.string.notification_title_input)) },
                         modifier = Modifier.fillMaxWidth(),
                         isError = titleError != null,
@@ -219,10 +198,7 @@ fun NotificationScreen(
 
                     OutlinedTextField(
                         value = message,
-                        onValueChange = { 
-                            message = it
-                            messageError = null
-                        },
+                        onValueChange = { viewModel.updateMessage(it) },
                         label = { Text(stringResource(R.string.notification_message_input)) },
                         modifier = Modifier.fillMaxWidth(),
                         isError = messageError != null,
@@ -233,10 +209,7 @@ fun NotificationScreen(
 
                     OutlinedTextField(
                         value = count,
-                        onValueChange = { 
-                            count = it
-                            countError = null
-                        },
+                        onValueChange = { viewModel.updateCount(it) },
                         label = { Text(stringResource(R.string.notification_count_input)) },
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -304,32 +277,14 @@ fun NotificationScreen(
 
             Button(
                 onClick = {
-                    var hasError = false
-                    if (title.isEmpty()) {
-                        titleError = errorTitleRequired
-                        hasError = true
-                    } else if (title.length > 30) {
-                        titleError = errorTitleTooLong
-                        hasError = true
-                    }
-
-                    if (message.isEmpty()) {
-                        messageError = errorMessageRequired
-                        hasError = true
-                    }
-
-                    val n = count.toLongOrNull() ?: 0L
-                    if (n <= 0) {
-                        countError = errorInvalidNumber
-                        hasError = true
-                    }
-
-                    if (!hasError) {
-                        val areNotificationsEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
-                        
-                        if (areNotificationsEnabled) {
-                            sendNotifications(context, title, message, n, bitmap)
-                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    viewModel.generateNotifications(
+                        context,
+                        errorTitleRequired,
+                        errorTitleTooLong,
+                        errorMessageRequired,
+                        errorInvalidNumber
+                    ) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                         }
                     }
@@ -357,45 +312,6 @@ fun NotificationScreen(
             }
             
             Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
-private fun sendNotifications(context: Context, title: String, message: String, count: Long, bitmap: Bitmap?) {
-    // Final check before sending each batch
-    if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return
-
-    val channelId = "GeekLab"
-    val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channel = NotificationChannel(channelId, context.getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH)
-        notificationManager.createNotificationChannel(channel)
-    }
-
-    for (i in 1..count) {
-        val builder = NotificationCompat.Builder(context, channelId).apply {
-            setSmallIcon(R.drawable.ic_launcher_foreground)
-            setContentTitle(title)
-            setContentText(message)
-            setPriority(NotificationCompat.PRIORITY_MAX)
-            setDefaults(Notification.DEFAULT_ALL)
-            setAutoCancel(true)
-            if (bitmap != null) {
-                setStyle(NotificationCompat.BigPictureStyle()
-                    .bigPicture(bitmap)
-                    .setBigContentTitle(title)
-                    .setSummaryText(message))
-            } else {
-                setStyle(NotificationCompat.BigTextStyle().bigText(message))
-            }
-        }
-
-        try {
-            // Using a unique ID for each notification in the loop
-            NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt() + i.toInt(), builder.build())
-        } catch (_: SecurityException) {
-            // Handle or log
         }
     }
 }
