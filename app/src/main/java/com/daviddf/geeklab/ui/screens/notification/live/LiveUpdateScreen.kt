@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,26 +16,39 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.AvTimer
+import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -46,10 +60,11 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -59,28 +74,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.R
+import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
-
-@Preview(showBackground = true)
-@Composable
-fun LiveUpdateScreenPreview() {
-    MaterialTheme {
-        LiveUpdateScreen(onBackClick = {})
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,14 +134,15 @@ fun LiveUpdateScreen(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     
     Scaffold(
+        modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.live_update_title),
-                        style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -139,234 +151,274 @@ fun LiveUpdateScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
+                scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent,
-                    navigationIconContentColor = Color.Unspecified,
-                    titleContentColor = Color.White,
-                    actionIconContentColor = Color.Unspecified
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    actionIconContentColor = MaterialTheme.colorScheme.onBackground
                 )
             )
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { contentPadding ->
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .padding(16.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            item {
-                NotificationPermissionSection()
-                Spacer(modifier = Modifier.height(8.dp))
+            // Header Icon
+            Surface(
+                modifier = Modifier.size(96.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                color = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Rounded.AvTimer,
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
+
+            Text(
+                text = stringResource(R.string.live_update_summary_text),
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.widthIn(max = 600.dp)
+            )
+
+            // Primary Action Button
+            if (!isSimulating) {
+                Button(
+                    onClick = {
+                        viewModel.startSimulation()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(startedMessage)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = 600.dp)
+                        .height(64.dp),
+                    shape = MaterialTheme.shapes.extraLarge
+                ) {
+                    Icon(Icons.Rounded.PlayArrow, contentDescription = null)
+                    Spacer(modifier = Modifier.size(12.dp))
+                    Text(
+                        text = stringResource(R.string.start_live_update),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            } else {
+                Button(
+                    onClick = {
+                        viewModel.stopSimulation()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(stoppedMessage)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = 600.dp)
+                        .height(64.dp),
+                    shape = MaterialTheme.shapes.extraLarge,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Icon(Icons.Rounded.Stop, contentDescription = null)
+                    Spacer(modifier = Modifier.size(12.dp))
+                    Text(
+                        text = stringResource(R.string.stop_live_update),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            NotificationPermissionSection()
             
             if (Build.VERSION.SDK_INT >= 35) {
-                item {
-                    NotificationPostPromotedPermission(viewModel)
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-            
-            item {
-                Text(
-                    text = stringResource(R.string.live_update_summary_text),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                NotificationPostPromotedPermission(viewModel)
             }
 
-            item {
-                // Behavior Card
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
-                ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+            // Behavior Card
+            Card(
+                modifier = Modifier.fillMaxWidth().widthIn(max = 600.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                )
+            ) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.Settings, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(Modifier.width(12.dp))
                         Text(
                             text = stringResource(R.string.custom_simulation_title),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
-                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                        Text(
-                            text = stringResource(R.string.steps_label, config.steps),
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Slider(
-                            value = config.steps.toFloat(),
-                            onValueChange = { viewModel.updateConfig(config.copy(steps = it.toInt())) },
-                            valueRange = 2f..10f,
-                            steps = 7,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
+                    Text(
+                        text = stringResource(R.string.steps_label, config.steps),
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Slider(
+                        value = config.steps.toFloat(),
+                        onValueChange = { viewModel.updateConfig(config.copy(steps = it.toInt())) },
+                        valueRange = 2f..10f,
+                        steps = 7,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        Text(
-                            text = stringResource(R.string.interval_label, config.intervalMs),
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        val intervals = listOf(1000L, 2000L, 5000L, 10000L)
-                        val selectedIndex = intervals.indexOf(config.intervalMs).coerceAtLeast(0)
-                        
-                        SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 12.dp)
-                        ) {
-                            intervals.forEachIndexed { index, interval ->
-                                SegmentedButton(
-                                    selected = index == selectedIndex,
-                                    onClick = { viewModel.updateConfig(config.copy(intervalMs = interval)) },
-                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = intervals.size)
-                                ) {
-                                    Text(stringResource(R.string.interval_seconds_format, interval / 1000))
-                                }
+                    Text(
+                        text = stringResource(R.string.interval_label, config.intervalMs),
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    val intervals = listOf(1000L, 2000L, 5000L, 10000L)
+                    val selectedIndex = intervals.indexOf(config.intervalMs).coerceAtLeast(0)
+                    
+                    SingleChoiceSegmentedButtonRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp)
+                    ) {
+                        intervals.forEachIndexed { index, interval ->
+                            SegmentedButton(
+                                selected = index == selectedIndex,
+                                onClick = { viewModel.updateConfig(config.copy(intervalMs = interval)) },
+                                shape = SegmentedButtonDefaults.itemShape(index = index, count = intervals.size)
+                            ) {
+                                Text(stringResource(R.string.interval_seconds_format, interval / 1000))
                             }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
             }
 
-            item {
-                // Color Card
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
-                        ListItem(
-                            headlineContent = { Text(stringResource(R.string.use_colors_label)) },
-                            trailingContent = {
-                                Switch(
-                                    checked = config.useColors,
-                                    onCheckedChange = { viewModel.updateConfig(config.copy(useColors = it)) }
-                                )
-                            },
-                            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                            modifier = Modifier.padding(horizontal = 0.dp)
+            // Color Card
+            Card(
+                modifier = Modifier.fillMaxWidth().widthIn(max = 600.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                )
+            ) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.Palette, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(R.string.use_colors_label),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
                         )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        if (config.useColors) {
-                            ColorPickerSection(
-                                label = stringResource(R.string.point_color_label),
-                                selectedColor = Color(config.selectedPointColor),
-                                onColorSelected = { viewModel.updateConfig(config.copy(selectedPointColor = it.toArgb())) }
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.use_colors_label)) },
+                        trailingContent = {
+                            Switch(
+                                checked = config.useColors,
+                                onCheckedChange = { viewModel.updateConfig(config.copy(useColors = it)) }
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            ColorPickerSection(
-                                label = stringResource(R.string.segment_color_label),
-                                selectedColor = Color(config.selectedSegmentColor),
-                                onColorSelected = { viewModel.updateConfig(config.copy(selectedSegmentColor = it.toArgb())) }
-                            )
-                        }
+                        },
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        modifier = Modifier.padding(horizontal = 0.dp)
+                    )
+
+                    if (config.useColors) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        ColorPickerSection(
+                            label = stringResource(R.string.point_color_label),
+                            selectedColor = Color(config.selectedPointColor),
+                            onColorSelected = { viewModel.updateConfig(config.copy(selectedPointColor = it.toArgb())) }
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        ColorPickerSection(
+                            label = stringResource(R.string.segment_color_label),
+                            selectedColor = Color(config.selectedSegmentColor),
+                            onColorSelected = { viewModel.updateConfig(config.copy(selectedSegmentColor = it.toArgb())) }
+                        )
                     }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
             }
 
-            item {
-                // Pill Mode Card
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp)
-                ) {
-                    Column(modifier = Modifier.padding(24.dp)) {
+            // Pill Mode Card
+            Card(
+                modifier = Modifier.fillMaxWidth().widthIn(max = 600.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                )
+            ) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.AvTimer, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(Modifier.width(12.dp))
                         Text(
                             text = stringResource(R.string.chip_mode_label),
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(vertical = 8.dp)
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
                         )
-                        
-                        SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val modes = listOf(
-                                LiveUpdateViewModel.ChipMode.TIMER to R.string.chip_mode_timer,
-                                LiveUpdateViewModel.ChipMode.TEXT to R.string.chip_mode_text
-                            )
-                            modes.forEachIndexed { index, (mode, labelRes) ->
-                                SegmentedButton(
-                                    selected = config.chipMode == mode,
-                                    onClick = { viewModel.updateConfig(config.copy(chipMode = mode)) },
-                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = modes.size)
-                                ) {
-                                    Text(stringResource(labelRes))
-                                }
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    SingleChoiceSegmentedButtonRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val modes = listOf(
+                            LiveUpdateViewModel.ChipMode.TIMER to R.string.chip_mode_timer,
+                            LiveUpdateViewModel.ChipMode.TEXT to R.string.chip_mode_text
+                        )
+                        modes.forEachIndexed { index, (mode, labelRes) ->
+                            SegmentedButton(
+                                selected = config.chipMode == mode,
+                                onClick = { viewModel.updateConfig(config.copy(chipMode = mode)) },
+                                shape = SegmentedButtonDefaults.itemShape(index = index, count = modes.size)
+                            ) {
+                                Text(stringResource(labelRes))
                             }
                         }
+                    }
 
-                        if (config.chipMode == LiveUpdateViewModel.ChipMode.TEXT) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            OutlinedTextField(
-                                value = config.customShortCriticalText,
-                                onValueChange = { viewModel.updateConfig(config.copy(customShortCriticalText = it)) },
-                                label = { Text(stringResource(R.string.short_critical_text_label)) },
-                                placeholder = { Text(stringResource(R.string.short_critical_text_placeholder)) },
-                                modifier = Modifier.fillMaxWidth(),
-                                singleLine = true,
-                                shape = MaterialTheme.shapes.medium
-                            )
-                        }
+                    if (config.chipMode == LiveUpdateViewModel.ChipMode.TEXT) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        OutlinedTextField(
+                            value = config.customShortCriticalText,
+                            onValueChange = { viewModel.updateConfig(config.copy(customShortCriticalText = it)) },
+                            label = { Text(stringResource(R.string.short_critical_text_label)) },
+                            placeholder = { Text(stringResource(R.string.short_critical_text_placeholder)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            shape = MaterialTheme.shapes.large
+                        )
                     }
                 }
-                Spacer(modifier = Modifier.height(24.dp))
             }
-
             
-            item {
-                if (!isSimulating) {
-                    Button(
-                        onClick = {
-                            viewModel.startSimulation()
-                            scope.launch {
-                                snackbarHostState.showSnackbar(startedMessage)
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        shape = MaterialTheme.shapes.large
-                    ) {
-                        Text(
-                            text = stringResource(R.string.start_live_update),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                } else {
-                    Button(
-                        onClick = {
-                            viewModel.stopSimulation()
-                            scope.launch {
-                                snackbarHostState.showSnackbar(stoppedMessage)
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        shape = MaterialTheme.shapes.large,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(R.string.stop_live_update),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -393,7 +445,7 @@ private fun ColorPickerSection(
             text = label,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 12.dp)
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -402,15 +454,15 @@ private fun ColorPickerSection(
                 val isSelected = color == selectedColor
                 Box(
                     modifier = Modifier
-                        .size(44.dp)
-                        .clip(if (isSelected) RoundedCornerShape(12.dp) else CircleShape)
+                        .size(48.dp)
+                        .clip(if (isSelected) RoundedCornerShape(14.dp) else CircleShape)
                         .background(color)
                         .then(
                             if (isSelected) {
                                 Modifier.border(
                                     width = 3.dp,
                                     color = MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(12.dp)
+                                    shape = RoundedCornerShape(14.dp)
                                 )
                             } else Modifier
                         )
@@ -446,7 +498,7 @@ fun NotificationPermissionSection() {
             onGrantClick = {
                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().widthIn(max = 600.dp),
             permissionStringResourceId = R.string.permission_message,
             permissionRationalStringResourceId = R.string.permission_rationale,
         )
@@ -463,9 +515,12 @@ fun NotificationPostPromotedPermission(viewModel: LiveUpdateViewModel) {
     }
     
     if (!isPostPromotionsEnabled) {
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.extraLarge
+        Card(
+            modifier = Modifier.fillMaxWidth().widthIn(max = 600.dp),
+            shape = MaterialTheme.shapes.extraLarge,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+            )
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
@@ -484,7 +539,7 @@ fun NotificationPostPromotedPermission(viewModel: LiveUpdateViewModel) {
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.large
                 ) {
                     Text(text = stringResource(R.string.to_settings))
                 }
@@ -501,9 +556,12 @@ private fun NotificationPermissionCard(
     permissionStringResourceId: Int,
     permissionRationalStringResourceId: Int,
 ) {
-    ElevatedCard(
+    Card(
         modifier = modifier,
-        shape = MaterialTheme.shapes.extraLarge
+        shape = MaterialTheme.shapes.extraLarge,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+        )
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
@@ -523,10 +581,24 @@ private fun NotificationPermissionCard(
             Button(
                 onClick = onGrantClick,
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.large
             ) {
                 Text(text = stringResource(R.string.permission_grant))
             }
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Light Mode")
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
+@Composable
+fun LiveUpdateScreenPreview() {
+    GeekLabTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            LiveUpdateScreen(onBackClick = {})
         }
     }
 }
