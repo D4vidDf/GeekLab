@@ -19,4 +19,5 @@ sealed interface GeekLabKey : NavKey {
     @Serializable data object MetricStyle : GeekLabKey
     @Serializable data object NotificationHistory : GeekLabKey
     @Serializable data class NotificationDetail(val notificationId: Long) : GeekLabKey
+    @Serializable data object CallNotification : GeekLabKey
 }

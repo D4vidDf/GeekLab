@@ -142,7 +142,14 @@ class MainActivity : ComponentActivity() {
                                 onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
-                                onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } }
+                                onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
+                                onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } }
+                            )
+                        }
+
+                        is GeekLabKey.CallNotification -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.notification.call.CallNotificationScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 

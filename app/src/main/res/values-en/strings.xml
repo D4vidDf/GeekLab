@@ -351,4 +351,18 @@
     <string name="save_desc">Save</string>
     <string name="share_desc">Share</string>
     <string name="share_media_title">Share Media</string>
+    <string name="call_notification_title">Call Notifications</string>
+    <string name="call_notification_desc">Test incoming and ongoing call notifications.</string>
+    <string name="normal_call">Normal Call</string>
+    <string name="telecom_call">Telecom Call (Jetpack)</string>
+    <string name="incoming_call_test">Incoming Call Test</string>
+    <string name="ongoing_call_test">Ongoing Call Test</string>
+    <string name="caller_name_label">Caller Name</string>
+    <string name="test_call">Test Call</string>
+    <string name="call_notification_summary">Simulates call notification behavior using CallStyle and the Telecom API.</string>
+    <string name="ongoing_call">ONGOING CALL</string>
+    <string name="incoming_call">INCOMING CALL</string>
+    <string name="answer">Answer</string>
+    <string name="end">End</string>
+    <string name="unknown_caller">Unknown</string>
 </resources>

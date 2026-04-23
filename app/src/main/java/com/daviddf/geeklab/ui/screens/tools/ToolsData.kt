@@ -33,6 +33,7 @@ interface ToolsActions {
     fun onInfoClick()
     fun onAppsClick()
     fun onNotificationHistoryClick()
+    fun onCallNotificationClick()
 }
 
 object ToolsData {
@@ -72,6 +73,7 @@ object ToolsData {
             titleResId = R.string.category_notifications,
             items = listOf(
                 ToolItem(R.string.notification_history, Icons.Rounded.History, Color(0xFFE1F5FE), Color(0xFF01579B)) { _, actions -> actions.onNotificationHistoryClick() },
+                ToolItem(R.string.call_notification_title, Icons.Rounded.Call, Color(0xFFF1F8E9), Color(0xFF33691E)) { _, actions -> actions.onCallNotificationClick() },
                 ToolItem(R.string.notificaciones, Icons.Rounded.Notifications, CardNotificaciones, TextNotificaciones) { _, actions -> actions.onNotificationClick() },
                 ToolItem(R.string.live_update_title, Icons.Rounded.Sync, Color(0xFFE8EAF6), Color(0xFF1A237E), minApi = 36) { _, actions -> actions.onLiveUpdateClick() },
                 ToolItem(R.string.metric_style_title, Icons.Rounded.BarChart, Color(0xFFF1F8E9), Color(0xFF33691E), minApi = 37) { _, actions -> actions.onMetricStyleClick() }
