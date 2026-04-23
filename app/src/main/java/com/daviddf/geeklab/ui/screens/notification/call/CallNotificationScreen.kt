@@ -90,7 +90,14 @@ fun CallNotificationScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent,
+                    navigationIconContentColor = Color.Unspecified,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.Unspecified
+                )
             )
         }
     ) { padding ->

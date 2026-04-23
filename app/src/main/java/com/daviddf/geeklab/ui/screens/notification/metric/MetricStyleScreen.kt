@@ -121,7 +121,11 @@ private fun MetricStyleContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent,
+                    navigationIconContentColor = Color.Unspecified,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.Unspecified
                 ),
                 scrollBehavior = scrollBehavior
             )

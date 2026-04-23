@@ -51,7 +51,6 @@ import com.daviddf.geeklab.ui.screens.battery.BatteryScreen
 import com.daviddf.geeklab.ui.screens.news.NewsScreen
 import com.daviddf.geeklab.ui.screens.home.HomeScreen
 import com.daviddf.geeklab.ui.screens.info.InfoScreen
-import com.daviddf.geeklab.ui.screens.notification.standard.CustomNotificationScreen
 import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
 import com.daviddf.geeklab.ui.screens.notification.metric.MetricStyleScreen
 import com.daviddf.geeklab.ui.screens.notification.standard.NotificationScreen
@@ -159,10 +158,6 @@ class MainActivity : ComponentActivity() {
 
                         is GeekLabKey.MetricStyle -> NavEntry(key) {
                             MetricStyleScreen(onBackClick = { scope.launch { navigator.goBack() } })
-                        }
-
-                        is GeekLabKey.CustomNotification -> NavEntry(key) {
-                            CustomNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
                         }
 
                         is GeekLabKey.NotificationHistory -> NavEntry(key) {

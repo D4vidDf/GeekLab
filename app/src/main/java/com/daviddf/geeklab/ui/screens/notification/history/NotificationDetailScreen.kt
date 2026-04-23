@@ -62,10 +62,17 @@ fun NotificationDetailScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.notification_details)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(onClick = onBackClick, shapes = IconButtonDefaults.shapes()) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent,
+                    navigationIconContentColor = Color.Unspecified,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.Unspecified
+                )
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }

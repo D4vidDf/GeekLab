@@ -127,7 +127,7 @@ fun NotificationHistoryScreen(
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                    scrolledContainerColor = Color.Transparent,
                     navigationIconContentColor = Color.Unspecified,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.Unspecified
