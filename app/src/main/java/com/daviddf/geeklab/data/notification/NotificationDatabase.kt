@@ -15,15 +15,14 @@ abstract class NotificationDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): NotificationDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
+                INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     NotificationDatabase::class.java,
                     "notification_database"
                 )
                 .fallbackToDestructiveMigration(true)
                 .build()
-                INSTANCE = instance
-                instance
+                .also { INSTANCE = it }
             }
         }
     }

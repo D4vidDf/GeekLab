@@ -144,7 +144,8 @@ class MainActivity : ComponentActivity() {
                                 onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
                                 onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
                                 onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
-                                onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } }
+                                onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
+                                onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } }
                             )
                         }
 
@@ -156,6 +157,19 @@ class MainActivity : ComponentActivity() {
 
                         is GeekLabKey.BluetoothBle -> NavEntry(key) {
                             com.daviddf.geeklab.ui.screens.tools.bluetooth.BleScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.Camera -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.camera.CameraScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onTryCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.CameraX) } }
+                            )
+                        }
+
+                        is GeekLabKey.CameraX -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.camera.CameraXScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
