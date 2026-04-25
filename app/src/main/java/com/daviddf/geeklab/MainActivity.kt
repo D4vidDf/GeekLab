@@ -51,8 +51,9 @@ import com.daviddf.geeklab.ui.screens.battery.BatteryScreen
 import com.daviddf.geeklab.ui.screens.news.NewsScreen
 import com.daviddf.geeklab.ui.screens.home.HomeScreen
 import com.daviddf.geeklab.ui.screens.info.InfoScreen
-import com.daviddf.geeklab.ui.screens.notification.CustomNotificationScreen
-import com.daviddf.geeklab.ui.screens.notification.NotificationScreen
+import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
+import com.daviddf.geeklab.ui.screens.notification.metric.MetricStyleScreen
+import com.daviddf.geeklab.ui.screens.notification.standard.NotificationScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
 
@@ -132,11 +133,87 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is GeekLabKey.Tools -> NavEntry(key) {
-                            ToolsScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                            ToolsScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.Notifications) } },
+                                onLiveUpdateClick = { scope.launch { navigator.navigate(GeekLabKey.LiveUpdate) } },
+                                onMetricStyleClick = { scope.launch { navigator.navigate(GeekLabKey.MetricStyle) } },
+                                onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
+                                onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
+                                onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
+                                onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
+                                onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
+                                onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
+                                onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
+                                onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
+                                onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
+                                onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } }
+                            )
                         }
 
-                        is GeekLabKey.CustomNotification -> NavEntry(key) {
-                            CustomNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        is GeekLabKey.Bluetooth -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.bluetooth.BluetoothScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.BluetoothBle -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.bluetooth.BleScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.Wifi -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.wifi.WifiScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.WifiScanner -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.wifi.WifiScannerScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.Camera -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.camera.CameraScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onTryCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.CameraX) } }
+                            )
+                        }
+
+                        is GeekLabKey.CameraX -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.camera.CameraXScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.CallNotification -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.notification.call.CallNotificationScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.LiveUpdate -> NavEntry(key) {
+                            LiveUpdateScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.MetricStyle -> NavEntry(key) {
+                            MetricStyleScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.NotificationHistory -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.notification.history.NotificationHistoryScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onNotificationClick = { id -> scope.launch { navigator.navigate(GeekLabKey.NotificationDetail(id)) } }
+                            )
+                        }
+
+                        is GeekLabKey.NotificationDetail -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.notification.history.NotificationDetailScreen(
+                                notificationId = key.notificationId,
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
                         }
 
                         else -> NavEntry(key) {
@@ -159,7 +236,7 @@ class MainActivity : ComponentActivity() {
         _intentFlow.value = intent
     }
 
-    private suspend fun handleIntent(intent: Intent?, navigator: Navigator) {
+    private fun handleIntent(intent: Intent?, navigator: Navigator) {
         val data = intent?.data ?: return
         when (data.scheme) {
             "geeklab" -> {

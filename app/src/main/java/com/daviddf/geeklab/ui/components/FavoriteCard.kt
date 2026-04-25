@@ -21,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -43,23 +45,27 @@ fun FavoriteCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1.5f)
-                .clip(RoundedCornerShape(24.dp))
+                .clip(RoundedCornerShape(20.dp))
                 .background(containerColor),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(32.dp),
                 tint = contentColor.copy(alpha = 0.8f)
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.bodySmall,
             color = displayContentColor,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

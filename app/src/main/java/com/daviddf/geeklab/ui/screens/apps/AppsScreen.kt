@@ -26,9 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.window.core.layout.WindowSizeClass
 import com.daviddf.geeklab.R
 import com.daviddf.geeklab.data.model.AppInfo
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
@@ -85,6 +87,13 @@ fun AppsScreenContent(
             it.name.contains(searchQuery, ignoreCase = true) ||
                     it.packageName.contains(searchQuery, ignoreCase = true)
         }
+    }
+
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val columns = when {
+        adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) -> GridCells.Adaptive(minSize = 130.dp)
+        adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> GridCells.Adaptive(minSize = 110.dp)
+        else -> GridCells.Fixed(3)
     }
 
     Scaffold(
@@ -157,7 +166,7 @@ fun AppsScreenContent(
                 )
             } else if (isGridView) {
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 100.dp),
+                    columns = columns,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -204,7 +213,7 @@ fun AppGridItem(app: AppInfo, onClick: (String) -> Unit) {
             Image(
                 bitmap = icon,
                 contentDescription = null,
-                modifier = Modifier.size(56.dp)
+                modifier = Modifier.size(48.dp)
             )
         }
         Spacer(modifier = Modifier.height(8.dp))

@@ -21,7 +21,7 @@ class Not : Application() {
             "GeekLab",
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "Notifiaciones GeekLab"
+            description = "Notificaciones GeekLab"
         }
 
         val manager = getSystemService(NotificationManager::class.java)

@@ -1,19 +1,57 @@
 package com.daviddf.geeklab.ui.screens.battery
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.ElectricBolt
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +65,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.R
-import com.daviddf.geeklab.ui.theme.*
+import com.daviddf.geeklab.ui.theme.BackgroundDark
+import com.daviddf.geeklab.ui.theme.CardBateriaCritical
+import com.daviddf.geeklab.ui.theme.CardBateriaGood
+import com.daviddf.geeklab.ui.theme.CardBateriaUnknown
+import com.daviddf.geeklab.ui.theme.CardBateriaWarning
+import com.daviddf.geeklab.ui.theme.GeekLabTheme
+import com.daviddf.geeklab.ui.theme.TextBateriaCritical
+import com.daviddf.geeklab.ui.theme.TextBateriaGood
+import com.daviddf.geeklab.ui.theme.TextBateriaUnknown
+import com.daviddf.geeklab.ui.theme.TextBateriaWarning
 import com.daviddf.geeklab.ui.viewmodels.BatteryState
 import com.daviddf.geeklab.ui.viewmodels.BatteryViewModel
 import com.daviddf.geeklab.ui.viewmodels.HealthType
@@ -64,11 +111,8 @@ fun BatteryContent(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
+                    FilledTonalIconButton(onClick = onBackClick, shapes = IconButtonDefaults.shapes()) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -161,6 +205,24 @@ fun BatteryContent(
                                         append(stringResource(R.string.cycle_count, state.cycleCount))
                                         append("\n")
                                     }
+                                    
+                                    // Additional Metrics
+                                    append("\n")
+                                    append("Corriente actual: ${state.currentNow}")
+                                    append("\n")
+                                    append("Corriente promedio: ${state.currentAverage}")
+                                    append("\n")
+                                    append("Energía restante: ${state.remainingEnergy}")
+                                    append("\n")
+
+                                    // Power Profile Extras
+                                    if (state.powerProfileExtras.isNotEmpty()) {
+                                        append("\nConsumo promedio (PowerProfile):\n")
+                                        state.powerProfileExtras.forEach { (label, value) ->
+                                            append("$label: $value\n")
+                                        }
+                                    }
+
                                     append("\n")
                                     append(stringResource(R.string.battery_monitoring_desc))
                                 }
