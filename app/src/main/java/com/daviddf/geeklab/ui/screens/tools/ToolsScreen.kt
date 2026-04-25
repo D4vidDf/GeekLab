@@ -55,6 +55,7 @@ fun ToolsScreen(
     onCallNotificationClick: () -> Unit = {},
     onBluetoothClick: () -> Unit = {},
     onBluetoothBleClick: () -> Unit = {},
+    onNfcScannerClick: () -> Unit = {},
     onWifiClick: () -> Unit = {},
     onWifiScannerClick: () -> Unit = {},
     onCameraXClick: () -> Unit = {}
@@ -62,7 +63,7 @@ fun ToolsScreen(
     val context = LocalContext.current
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     
-    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onWifiClick, onWifiScannerClick, onCameraXClick) {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
             override fun onLiveUpdateClick() = onLiveUpdateClick()
@@ -74,6 +75,7 @@ fun ToolsScreen(
             override fun onCallNotificationClick() = onCallNotificationClick()
             override fun onBluetoothClick() = onBluetoothClick()
             override fun onBluetoothBleClick() = onBluetoothBleClick()
+            override fun onNfcScannerClick() = onNfcScannerClick()
             override fun onWifiClick() = onWifiClick()
             override fun onWifiScannerClick() = onWifiScannerClick()
             override fun onCameraXClick() = onCameraXClick()

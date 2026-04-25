@@ -37,6 +37,7 @@ interface ToolsActions {
     fun onCallNotificationClick()
     fun onBluetoothClick()
     fun onBluetoothBleClick()
+    fun onNfcScannerClick()
     fun onWifiClick()
     fun onWifiScannerClick()
     fun onCameraXClick()
@@ -188,6 +189,13 @@ object ToolsData {
                     containerColor = Color(0xFFF3E5F5),
                     contentColor = Color(0xFF7B1FA2),
                     action = { _, actions -> actions.onBluetoothBleClick() }
+                ),
+                ToolItem(
+                    titleResId = R.string.nfc_scanner_title,
+                    icon = Icons.Rounded.Nfc,
+                    containerColor = Color(0xFFEFEBE9),
+                    contentColor = Color(0xFF4E342E),
+                    action = { _, actions -> actions.onNfcScannerClick() }
                 ),
                 ToolItem(
                     titleResId = R.string.band_selector,

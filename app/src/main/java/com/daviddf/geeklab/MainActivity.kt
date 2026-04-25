@@ -145,6 +145,7 @@ class MainActivity : ComponentActivity() {
                                 onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
                                 onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
                                 onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
+                                onNfcScannerClick = { scope.launch { navigator.navigate(GeekLabKey.NfcScanner) } },
                                 onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
                                 onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
                                 onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } }
@@ -159,6 +160,12 @@ class MainActivity : ComponentActivity() {
 
                         is GeekLabKey.BluetoothBle -> NavEntry(key) {
                             com.daviddf.geeklab.ui.screens.tools.bluetooth.BleScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.NfcScanner -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.nfc.NfcScannerScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
