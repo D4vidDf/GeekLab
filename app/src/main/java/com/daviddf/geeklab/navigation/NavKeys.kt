@@ -22,6 +22,8 @@ sealed interface GeekLabKey : NavKey {
     @Serializable data object CallNotification : GeekLabKey
     @Serializable data object Bluetooth : GeekLabKey
     @Serializable data object BluetoothBle : GeekLabKey
+    @Serializable data object Wifi : GeekLabKey
+    @Serializable data object WifiScanner : GeekLabKey
     @Serializable data object Camera : GeekLabKey
     @Serializable data object CameraX : GeekLabKey
 }

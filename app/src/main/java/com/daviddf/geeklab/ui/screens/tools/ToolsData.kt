@@ -37,6 +37,8 @@ interface ToolsActions {
     fun onCallNotificationClick()
     fun onBluetoothClick()
     fun onBluetoothBleClick()
+    fun onWifiClick()
+    fun onWifiScannerClick()
     fun onCameraXClick()
 }
 
@@ -70,6 +72,20 @@ object ToolsData {
                     containerColor = CardBateria,
                     contentColor = TextBateria,
                     action = { _, actions -> actions.onBatteryClick() }
+                ),
+                ToolItem(
+                    titleResId = R.string.wifi_analyzer_title,
+                    icon = Icons.Rounded.Wifi,
+                    containerColor = Color(0xFFE8EAF6),
+                    contentColor = Color(0xFF1A237E),
+                    action = { _, actions -> actions.onWifiClick() }
+                ),
+                ToolItem(
+                    titleResId = R.string.wifi_scanner_title,
+                    icon = Icons.Rounded.WifiFind,
+                    containerColor = Color(0xFFF3E5F5),
+                    contentColor = Color(0xFF7B1FA2),
+                    action = { _, actions -> actions.onWifiScannerClick() }
                 ),
                 ToolItem(
                     titleResId = R.string.camera_title,

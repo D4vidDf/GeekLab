@@ -6,22 +6,40 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import androidx.core.graphics.createBitmap
 import com.daviddf.geeklab.data.notification.NotificationDatabase
 import com.daviddf.geeklab.data.notification.NotificationEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
-import androidx.core.graphics.createBitmap
 
 class NotificationInspectorService : NotificationListenerService() {
 
-    private val serviceScope = CoroutineScope(Dispatchers.IO)
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val notificationChannel = Channel<StatusBarNotification>(Channel.UNLIMITED)
+
+    override fun onCreate() {
+        super.onCreate()
+        serviceScope.launch {
+            notificationChannel.receiveAsFlow().collect { sbn ->
+                handleNotificationPosted(sbn)
+            }
+        }
+    }
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
+        // Offload from system callback immediately to avoid blocking system server binder threads
+        notificationChannel.trySend(sbn)
+    }
+
+    private suspend fun handleNotificationPosted(sbn: StatusBarNotification) {
         val notification = sbn.notification
         val extras = notification.extras
         
@@ -94,9 +112,7 @@ class NotificationInspectorService : NotificationListenerService() {
             mediaPathsJson = mediaPathsJson
         )
 
-        serviceScope.launch {
-            NotificationDatabase.getDatabase(applicationContext).notificationDao().insert(entity)
-        }
+        NotificationDatabase.getDatabase(applicationContext).notificationDao().insert(entity)
     }
 
     private fun saveMedia(bitmap: Bitmap, key: String): String? {
@@ -107,6 +123,8 @@ class NotificationInspectorService : NotificationListenerService() {
             val fileName = "media_${UUID.randomUUID()}_${key.replace(".", "_")}.png"
             val file = File(mediaDir, fileName)
             FileOutputStream(file).use { out ->
+                // Use lower quality or faster compression if needed, but PNG quality param is ignored.
+                // WEBP might be faster/smaller on modern devices.
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             }
             file.absolutePath
@@ -117,5 +135,10 @@ class NotificationInspectorService : NotificationListenerService() {
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         // Optional: track removal
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        notificationChannel.close()
     }
 }
