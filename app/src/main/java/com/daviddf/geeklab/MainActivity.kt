@@ -54,6 +54,7 @@ import com.daviddf.geeklab.ui.screens.info.InfoScreen
 import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
 import com.daviddf.geeklab.ui.screens.notification.metric.MetricStyleScreen
 import com.daviddf.geeklab.ui.screens.notification.standard.NotificationScreen
+import com.daviddf.geeklab.ui.screens.tools.ultrahdr.UltraHdrScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
 
@@ -164,7 +165,14 @@ class MainActivity : ComponentActivity() {
                                 onNfcScannerClick = { scope.launch { navigator.navigate(GeekLabKey.NfcScanner) } },
                                 onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
                                 onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
-                                onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } }
+                                onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } },
+                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } }
+                            )
+                        }
+
+                        is GeekLabKey.UltraHdr -> NavEntry(key) {
+                            UltraHdrScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 

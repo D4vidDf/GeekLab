@@ -42,6 +42,7 @@ interface ToolsActions {
     fun onWifiClick()
     fun onWifiScannerClick()
     fun onCameraXClick()
+    fun onUltraHdrClick()
 }
 
 object ToolsData {
@@ -95,6 +96,14 @@ object ToolsData {
                     containerColor = Color(0xFFF1F8E9),
                     contentColor = Color(0xFF33691E),
                     action = { _, actions -> actions.onCameraXClick() }
+                ),
+                ToolItem(
+                    titleResId = R.string.ultrahdr_title,
+                    icon = Icons.Rounded.HdrOn,
+                    containerColor = Color(0xFFFFF3E0),
+                    contentColor = Color(0xFFE65100),
+                    minApi = 34,
+                    action = { _, actions -> actions.onUltraHdrClick() }
                 ),
                 ToolItem(
                     titleResId = R.string.data_usage,
