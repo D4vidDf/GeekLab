@@ -14,6 +14,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -142,7 +143,7 @@ fun WifiScreen(
         }
     }
 
-    // Automatically trigger permission prompt if missing and WiFi is enabled (better UX)
+    // Automatically trigger permission prompt if missing and Wi-Fi is enabled (better UX)
     LaunchedEffect(uiState.isWifiEnabled, hasPermissions) {
         if (uiState.isWifiEnabled && !hasPermissions && !isPreview) {
             permissionLauncher.launch(permissions.toTypedArray())
@@ -158,7 +159,9 @@ fun WifiScreen(
         onTestClick = viewModel::runConnectionTest,
         onSpeedTestClick = viewModel::runSpeedTest,
         onServerSelect = viewModel::setStabilityServer,
+        onSpeedServerSelect = viewModel::setSpeedServer,
         onCustomServerUpdate = viewModel::updateCustomServer,
+        onCustomSpeedUrlUpdate = viewModel::updateCustomSpeedUrl,
         estimateDistance = viewModel::estimateDistance
     )
 }
@@ -174,12 +177,15 @@ fun WifiScreenContent(
     onTestClick: () -> Unit,
     onSpeedTestClick: () -> Unit,
     onServerSelect: (StabilityServer) -> Unit,
+    onSpeedServerSelect: (SpeedTestServer) -> Unit,
     onCustomServerUpdate: (String, String) -> Unit,
+    onCustomSpeedUrlUpdate: (String) -> Unit,
     estimateDistance: (Int, Int) -> Double,
 ) {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var showServerPicker by remember { mutableStateOf(false) }
+    var showSpeedServerPicker by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -257,7 +263,9 @@ fun WifiScreenContent(
                     isTesting = uiState.isTestingSpeed,
                     downloadSpeed = uiState.downloadSpeed,
                     uploadSpeed = uiState.uploadSpeed,
-                    onTestClick = onSpeedTestClick
+                    selectedServer = uiState.selectedSpeedServer,
+                    onTestClick = onSpeedTestClick,
+                    onSelectServerClick = { showSpeedServerPicker = true }
                 )
 
                 NetworkDetailsCard(uiState.currentWifi)
@@ -310,6 +318,60 @@ fun WifiScreenContent(
                     
                     Button(
                         onClick = { showServerPicker = false },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.large
+                    ) {
+                        Text(stringResource(R.string.aceptar))
+                    }
+                }
+            }
+        }
+    }
+
+    if (showSpeedServerPicker) {
+        ModalBottomSheet(
+            onDismissRequest = { showSpeedServerPicker = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            tonalElevation = 4.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+                    .navigationBarsPadding(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    stringResource(R.string.wifi_select_server),
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                
+                SpeedTestServer.entries.forEach { server ->
+                    SpeedServerOption(
+                        server = server,
+                        selected = server == uiState.selectedSpeedServer,
+                        onClick = {
+                            onSpeedServerSelect(server)
+                            if (server != SpeedTestServer.CUSTOM) showSpeedServerPicker = false
+                        }
+                    )
+                }
+
+                if (uiState.selectedSpeedServer == SpeedTestServer.CUSTOM) {
+                    OutlinedTextField(
+                        value = uiState.customSpeedDownloadUrl,
+                        onValueChange = onCustomSpeedUrlUpdate,
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(stringResource(R.string.wifi_download_url)) },
+                        placeholder = { Text("https://example.com/file.zip") },
+                        shape = MaterialTheme.shapes.large,
+                        singleLine = true
+                    )
+                    
+                    Button(
+                        onClick = { showSpeedServerPicker = false },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.large
                     ) {
@@ -565,7 +627,9 @@ fun SpeedTestCard(
     isTesting: Boolean,
     downloadSpeed: Double?,
     uploadSpeed: Double?,
-    onTestClick: () -> Unit
+    selectedServer: SpeedTestServer,
+    onTestClick: () -> Unit,
+    onSelectServerClick: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth().widthIn(max = 600.dp),
@@ -580,11 +644,32 @@ fun SpeedTestCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = stringResource(R.string.wifi_speed_test),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                Column {
+                    Text(
+                        text = stringResource(R.string.wifi_speed_test),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.wifi_current_server, 
+                            when(selectedServer) {
+                                SpeedTestServer.GOOGLE -> stringResource(R.string.wifi_server_google)
+                                SpeedTestServer.CLOUDFLARE -> stringResource(R.string.wifi_server_cloudflare)
+                                SpeedTestServer.CUSTOM -> stringResource(R.string.wifi_server_custom)
+                            }
+                        ),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                if (!isTesting) {
+                    IconButton(onClick = onSelectServerClick) {
+                        Icon(Icons.Rounded.Settings, contentDescription = null, tint = MaterialTheme.colorScheme.secondary)
+                    }
+                }
+
                 if (isTesting) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                 }
@@ -696,7 +781,7 @@ fun ServerOption(
         onClick = onClick,
         shape = MaterialTheme.shapes.extraLarge,
         color = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        border = if (selected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
+        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
     ) {
         Row(
             modifier = Modifier
@@ -733,6 +818,48 @@ fun ServerOption(
                     Icons.Rounded.CheckCircle,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SpeedServerOption(
+    server: SpeedTestServer,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        shape = MaterialTheme.shapes.extraLarge,
+        color = if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.secondary) else null
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = when(server) {
+                        SpeedTestServer.GOOGLE -> stringResource(R.string.wifi_server_google)
+                        SpeedTestServer.CLOUDFLARE -> stringResource(R.string.wifi_server_cloudflare)
+                        SpeedTestServer.CUSTOM -> stringResource(R.string.wifi_server_custom)
+                    },
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            if (selected) {
+                Icon(
+                    Icons.Rounded.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
         }
@@ -777,7 +904,9 @@ fun WifiScreenConnectedPreview() {
             onSpeedTestClick = {},
             onServerSelect = {},
             onCustomServerUpdate = { _, _ -> },
-            estimateDistance = { _, _ -> 2.5 }
+            estimateDistance = { _, _ -> 2.5 },
+            onSpeedServerSelect = {},
+            onCustomSpeedUrlUpdate = {}
         )
     }
 }
@@ -796,7 +925,9 @@ fun WifiScreenDisabledPreview() {
             onSpeedTestClick = {},
             onServerSelect = {},
             onCustomServerUpdate = { _, _ -> },
-            estimateDistance = { _, _ -> 0.0 }
+            estimateDistance = { _, _ -> 0.0 },
+            onSpeedServerSelect = {},
+            onCustomSpeedUrlUpdate = {}
         )
     }
 }
@@ -815,7 +946,9 @@ fun WifiScreenPermissionsPreview() {
             onSpeedTestClick = {},
             onServerSelect = {},
             onCustomServerUpdate = { _, _ -> },
-            estimateDistance = { _, _ -> 0.0 }
+            estimateDistance = { _, _ -> 0.0 },
+            onSpeedServerSelect = {},
+            onCustomSpeedUrlUpdate = {}
         )
     }
 }
@@ -834,7 +967,9 @@ fun WifiScreenLocationPreview() {
             onSpeedTestClick = {},
             onServerSelect = {},
             onCustomServerUpdate = { _, _ -> },
-            estimateDistance = { _, _ -> 0.0 }
+            estimateDistance = { _, _ -> 0.0 },
+            onSpeedServerSelect = {},
+            onCustomSpeedUrlUpdate = {}
         )
     }
 }
@@ -853,7 +988,9 @@ fun WifiScreenNotConnectedPreview() {
             onSpeedTestClick = {},
             onServerSelect = {},
             onCustomServerUpdate = { _, _ -> },
-            estimateDistance = { _, _ -> 0.0 }
+            estimateDistance = { _, _ -> 0.0 },
+            onSpeedServerSelect = {},
+            onCustomSpeedUrlUpdate = {}
         )
     }
 }

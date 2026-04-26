@@ -490,6 +490,8 @@
     <string name="wifi_server_cloudflare">Cloudflare</string>
     <string name="wifi_server_opendns">OpenDNS</string>
     <string name="wifi_server_quad9">Quad9</string>
+    <string name="wifi_server_custom">Custom</string>
+    <string name="wifi_download_url">Download URL</string>
     <string name="wifi_current_server">Testing with %s</string>
     <string name="wifi_scanning">Scanning…</string>
     <string name="wifi_unknown">Unknown</string>
