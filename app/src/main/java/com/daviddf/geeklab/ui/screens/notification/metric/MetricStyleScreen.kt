@@ -112,6 +112,7 @@ private fun MetricStyleContent(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.metric_style_title)) },

@@ -120,6 +120,7 @@ fun ManifestViewerScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (isSearchActive) {
                 TopAppBar(

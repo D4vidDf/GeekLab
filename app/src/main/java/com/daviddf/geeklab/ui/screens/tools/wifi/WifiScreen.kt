@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -91,6 +90,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.R
+import com.daviddf.geeklab.ui.components.DetailItem
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -183,6 +183,7 @@ fun WifiScreenContent(
 
     Scaffold(
         modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.wifi_analyzer_title), fontWeight = FontWeight.Bold) },
@@ -734,27 +735,6 @@ fun ServerOption(
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ResultBoxPreview() {
-    GeekLabTheme {
-        Row(modifier = Modifier.padding(16.dp).width(300.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ResultBox(
-                label = "Latency",
-                value = "120ms",
-                color = Color(0xFFF44336),
-                modifier = Modifier.weight(1f)
-            )
-            ResultBox(
-                label = "Status",
-                value = "Stable",
-                color = Color(0xFF4CAF50),
-                modifier = Modifier.weight(1f)
-            )
         }
     }
 }

@@ -117,6 +117,21 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        is GeekLabKey.WidgetInspector -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.widgets.WidgetInspectorScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onWidgetClick = { pkg: String, cls: String -> scope.launch { navigator.navigate(GeekLabKey.WidgetDetail(pkg, cls)) } }
+                            )
+                        }
+
+                        is GeekLabKey.WidgetDetail -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.tools.widgets.WidgetDetailScreen(
+                                packageName = key.packageName,
+                                className = key.className,
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
                         is GeekLabKey.AppDetail -> NavEntry(key) {
                             AppDetailScreen(
                                 packageName = key.packageName,
@@ -141,6 +156,7 @@ class MainActivity : ComponentActivity() {
                                 onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
+                                onWidgetInspectorClick = { scope.launch { navigator.navigate(GeekLabKey.WidgetInspector) } },
                                 onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
                                 onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
                                 onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },

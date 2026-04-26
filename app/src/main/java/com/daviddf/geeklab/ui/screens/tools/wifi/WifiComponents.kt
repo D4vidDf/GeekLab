@@ -9,8 +9,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.daviddf.geeklab.ui.theme.GeekLabTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.*
 
 @Composable
 fun InfoChip(icon: ImageVector, label: String, value: String) {
@@ -18,58 +22,6 @@ fun InfoChip(icon: ImageVector, label: String, value: String) {
         Icon(icon, null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary)
         Text(text = label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(text = value, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
-    }
-}
-
-@Composable
-fun DetailItem(
-    icon: ImageVector, 
-    label: String, 
-    value: String,
-    multiline: Boolean = false
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = if (multiline) Alignment.Top else Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon, 
-            contentDescription = null, 
-            modifier = Modifier.size(16.dp).padding(top = if (multiline) 2.dp else 0.dp), 
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        
-        if (multiline) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = label, 
-                    style = MaterialTheme.typography.bodyMedium, 
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = value, 
-                    style = MaterialTheme.typography.bodySmall, 
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.End
-                )
-            }
-        } else {
-            Text(
-                text = label, 
-                style = MaterialTheme.typography.bodyMedium, 
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = value, 
-                style = MaterialTheme.typography.bodyMedium, 
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End
-            )
-        }
     }
 }
 
@@ -132,6 +84,38 @@ fun ResultBox(label: String, value: String, color: Color, modifier: Modifier = M
                     textAlign = TextAlign.Center
                 )
             }
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Info Chip")
+@Composable
+fun InfoChipPreview() {
+    GeekLabTheme {
+        Surface(modifier = Modifier.padding(16.dp)) {
+            InfoChip(Icons.Rounded.Speed, "Speed", "1200 Mbps")
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Tech Badge")
+@Composable
+fun TechBadgePreview() {
+    GeekLabTheme {
+        Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TechBadge("Wi-Fi 6", MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer)
+            TechBadge("5 GHz", MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.onSecondaryContainer)
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Result Box")
+@Composable
+fun ResultBoxPreview() {
+    GeekLabTheme {
+        Row(modifier = Modifier.padding(16.dp).width(300.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            ResultBox("Latency", "24ms", Color(0xFF4CAF50), Modifier.weight(1f))
+            ResultBox("Jitter", "4ms", Color(0xFFFF9800), Modifier.weight(1f))
         }
     }
 }

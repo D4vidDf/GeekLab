@@ -33,6 +33,7 @@ interface ToolsActions {
     fun onBatteryClick()
     fun onInfoClick()
     fun onAppsClick()
+    fun onWidgetInspectorClick()
     fun onNotificationHistoryClick()
     fun onCallNotificationClick()
     fun onBluetoothClick()
@@ -114,6 +115,13 @@ object ToolsData {
                     containerColor = CardAplicaciones,
                     contentColor = TextAplicaciones,
                     action = { _, actions -> actions.onAppsClick() }
+                ),
+                ToolItem(
+                    titleResId = R.string.widget_inspector_title,
+                    icon = Icons.Rounded.Widgets,
+                    containerColor = Color(0xFFFFF3E0),
+                    contentColor = Color(0xFFE65100),
+                    action = { _, actions -> actions.onWidgetInspectorClick() }
                 ),
                 ToolItem(
                     titleResId = R.string.multiaccount,
