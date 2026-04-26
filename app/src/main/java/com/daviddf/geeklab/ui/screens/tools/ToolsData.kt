@@ -33,13 +33,16 @@ interface ToolsActions {
     fun onBatteryClick()
     fun onInfoClick()
     fun onAppsClick()
+    fun onWidgetInspectorClick()
     fun onNotificationHistoryClick()
     fun onCallNotificationClick()
     fun onBluetoothClick()
     fun onBluetoothBleClick()
+    fun onNfcScannerClick()
     fun onWifiClick()
     fun onWifiScannerClick()
     fun onCameraXClick()
+    fun onUltraHdrClick()
 }
 
 object ToolsData {
@@ -95,6 +98,14 @@ object ToolsData {
                     action = { _, actions -> actions.onCameraXClick() }
                 ),
                 ToolItem(
+                    titleResId = R.string.ultrahdr_title,
+                    icon = Icons.Rounded.HdrOn,
+                    containerColor = Color(0xFFFFF3E0),
+                    contentColor = Color(0xFFE65100),
+                    minApi = 34,
+                    action = { _, actions -> actions.onUltraHdrClick() }
+                ),
+                ToolItem(
                     titleResId = R.string.data_usage,
                     icon = Icons.Rounded.PermDeviceInformation,
                     containerColor = Color(0xFFE1F5FE),
@@ -113,6 +124,13 @@ object ToolsData {
                     containerColor = CardAplicaciones,
                     contentColor = TextAplicaciones,
                     action = { _, actions -> actions.onAppsClick() }
+                ),
+                ToolItem(
+                    titleResId = R.string.widget_inspector_title,
+                    icon = Icons.Rounded.Widgets,
+                    containerColor = Color(0xFFFFF3E0),
+                    contentColor = Color(0xFFE65100),
+                    action = { _, actions -> actions.onWidgetInspectorClick() }
                 ),
                 ToolItem(
                     titleResId = R.string.multiaccount,
@@ -188,6 +206,13 @@ object ToolsData {
                     containerColor = Color(0xFFF3E5F5),
                     contentColor = Color(0xFF7B1FA2),
                     action = { _, actions -> actions.onBluetoothBleClick() }
+                ),
+                ToolItem(
+                    titleResId = R.string.nfc_scanner_title,
+                    icon = Icons.Rounded.Nfc,
+                    containerColor = Color(0xFFEFEBE9),
+                    contentColor = Color(0xFF4E342E),
+                    action = { _, actions -> actions.onNfcScannerClick() }
                 ),
                 ToolItem(
                     titleResId = R.string.band_selector,

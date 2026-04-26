@@ -111,6 +111,7 @@ fun NotificationHistoryScreen(
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -126,8 +127,8 @@ fun NotificationHistoryScreen(
                 },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background,
                     navigationIconContentColor = Color.Unspecified,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.Unspecified

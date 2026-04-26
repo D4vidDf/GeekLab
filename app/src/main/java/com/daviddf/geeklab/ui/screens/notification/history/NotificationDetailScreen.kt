@@ -58,6 +58,7 @@ fun NotificationDetailScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.notification_details)) },
@@ -67,8 +68,8 @@ fun NotificationDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background,
                     navigationIconContentColor = Color.Unspecified,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.Unspecified

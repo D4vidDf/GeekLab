@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import java.util.concurrent.atomic.AtomicLong
 import java.net.URL
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -65,9 +68,26 @@ data class WifiUiState(
     val customServerAddress: String = "",
     val customServerPort: String = "53",
     val isTestingSpeed: Boolean = false,
+    val selectedSpeedServer: SpeedTestServer = SpeedTestServer.GOOGLE,
+    val customSpeedDownloadUrl: String = "",
     val downloadSpeed: Double? = null, // Mbps
     val uploadSpeed: Double? = null // Mbps
 )
+
+enum class SpeedTestServer(
+    val downloadUrl: String,
+    val uploadUrl: String
+) {
+    GOOGLE(
+        "https://dl.google.com/android/repository/android-ndk-r26b-windows.zip",
+        "https://speed.cloudflare.com/__up"
+    ),
+    CLOUDFLARE(
+        "https://speed.cloudflare.com/__down?bytes=90000000", // 100MB chunk
+        "https://speed.cloudflare.com/__up"
+    ),
+    CUSTOM("", "https://speed.cloudflare.com/__up")
+}
 
 enum class StabilityServer(val address: String, val port: Int) {
     GOOGLE("8.8.8.8", 53),
@@ -337,6 +357,14 @@ class WifiViewModel : ViewModel() {
         _uiState.update { it.copy(customServerAddress = address, customServerPort = port) }
     }
 
+    fun setSpeedServer(server: SpeedTestServer) {
+        _uiState.update { it.copy(selectedSpeedServer = server) }
+    }
+
+    fun updateCustomSpeedUrl(url: String) {
+        _uiState.update { it.copy(customSpeedDownloadUrl = url) }
+    }
+
     fun runConnectionTest() {
         val state = _uiState.value
         val server = state.selectedServer
@@ -349,7 +377,7 @@ class WifiViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isTestingConnection = true) }
             
-            val start = System.currentTimeMillis()
+            val testStart = System.currentTimeMillis()
             val reachable = try {
                 Socket().use { socket ->
                     socket.connect(InetSocketAddress(targetAddress, targetPort), 2000)
@@ -358,7 +386,11 @@ class WifiViewModel : ViewModel() {
             } catch (_: Exception) {
                 false
             }
-            val latency = System.currentTimeMillis() - start
+            val latency = System.currentTimeMillis() - testStart
+
+            // Artificial delay to satisfy user requirement of 2s for stability test
+            val remainingDelay = 2000L - (System.currentTimeMillis() - testStart)
+            if (remainingDelay > 0) delay(remainingDelay)
 
             _uiState.update { it.copy(
                 isTestingConnection = false,
@@ -372,89 +404,116 @@ class WifiViewModel : ViewModel() {
     }
 
     fun runSpeedTest() {
+        val state = _uiState.value
+        val server = state.selectedSpeedServer
+        val downloadUrl = if (server == SpeedTestServer.CUSTOM) state.customSpeedDownloadUrl else server.downloadUrl
+        val uploadUrl = server.uploadUrl
+
+        if (downloadUrl.isBlank()) return
+
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isTestingSpeed = true, downloadSpeed = null, uploadSpeed = null) }
             
-            // 1. Download Test
-            val downloadUrl = "https://dl.google.com/android/repository/platform-tools-latest-windows.zip"
+            // Custom URLs use single connection to avoid server-side blocking
+            // Presets use 4 parallel connections to saturate high-speed links
+            val parallelConnections = if (server == SpeedTestServer.CUSTOM) 1 else 4
+            val testDurationMs = 5000L
+            val bufferSize = 1024 * 128 // 128KB buffer for high throughput
+
+            // 1. Download Test (5s)
+            val totalDlBytesRead = AtomicLong(0)
             val dlStartTime = System.currentTimeMillis()
-            var dlBytesRead = 0L
             
-            try {
-                val url = URL(downloadUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.connectTimeout = 5000
-                connection.readTimeout = 5000
-                
-                val inputStream: InputStream = connection.inputStream
-                val buffer = ByteArray(1024 * 8)
-                var bytesRead: Int
-                
-                while (System.currentTimeMillis() - dlStartTime < 5000) {
-                    bytesRead = inputStream.read(buffer)
-                    if (bytesRead == -1) break
-                    dlBytesRead += bytesRead
-                    
-                    // Update UI periodically during download
-                    val currentDlDuration = (System.currentTimeMillis() - dlStartTime) / 1000.0
-                    if (currentDlDuration > 0.5) {
-                        val speed = (dlBytesRead * 8.0 / (1024.0 * 1024.0)) / currentDlDuration
-                        _uiState.update { it.copy(downloadSpeed = speed) }
-                    }
-                }
-                inputStream.close()
-                connection.disconnect()
-                
-                val dlDuration = (System.currentTimeMillis() - dlStartTime) / 1000.0
-                if (dlDuration > 0) {
-                    val dlSpeedMbps = (dlBytesRead * 8.0 / (1024.0 * 1024.0)) / dlDuration
-                    _uiState.update { it.copy(downloadSpeed = dlSpeedMbps) }
-                }
-            } catch (_: Exception) {}
-
-            // 2. Upload Test (POST random data)
-            // Using a more reliable way to test upload by sending small chunks to a sink
-            val uploadUrl = "https://httpbin.org/post"
-            val ulStartTime = System.currentTimeMillis()
-            var ulBytesWritten = 0L
-            val testData = ByteArray(1024 * 32) // 32KB chunks
-
-            try {
-                val url = URL(uploadUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.doOutput = true
-                connection.requestMethod = "POST"
-                connection.connectTimeout = 5000
-                connection.readTimeout = 5000
-                // Use a large enough fixed length to prevent buffering issues
-                connection.setFixedLengthStreamingMode(1024 * 1024 * 10) 
-
-                connection.outputStream.use { outputStream ->
-                    while (System.currentTimeMillis() - ulStartTime < 5000) {
-                        outputStream.write(testData)
-                        ulBytesWritten += testData.size
+            val dlJobs = List(parallelConnections) {
+                async {
+                    try {
+                        val url = URL(downloadUrl)
+                        val connection = url.openConnection() as HttpURLConnection
+                        connection.connectTimeout = 5000
+                        connection.readTimeout = 5000
+                        connection.instanceFollowRedirects = true
+                        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) GeekLab/1.0")
+                        connection.setRequestProperty("Accept", "*/*")
+                        connection.setRequestProperty("Connection", "keep-alive")
                         
-                        // Update UI periodically during upload
-                        val currentUlDuration = (System.currentTimeMillis() - ulStartTime) / 1000.0
-                        if (currentUlDuration > 0.5) {
-                            val speed = (ulBytesWritten * 8.0 / (1024.0 * 1024.0)) / currentUlDuration
-                            _uiState.update { it.copy(uploadSpeed = speed) }
-                        }
-                    }
-                }
-                
-                // Get response to complete request
-                try { connection.inputStream.use { it.readBytes() } } catch (_: Exception) {}
-                connection.disconnect()
+                        val responseCode = connection.responseCode
+                        if (responseCode !in 200..299) return@async
 
-                val ulDuration = (System.currentTimeMillis() - ulStartTime) / 1000.0
-                if (ulDuration > 0) {
-                    val ulSpeedMbps = (ulBytesWritten * 8.0 / (1024.0 * 1024.0)) / ulDuration
-                    _uiState.update { it.copy(uploadSpeed = ulSpeedMbps) }
+                        val inputStream: InputStream = connection.inputStream
+                        val buffer = ByteArray(bufferSize)
+                        var bytesRead: Int
+                        
+                        while (System.currentTimeMillis() - dlStartTime < testDurationMs) {
+                            bytesRead = inputStream.read(buffer)
+                            if (bytesRead == -1) break
+                            totalDlBytesRead.addAndGet(bytesRead.toLong())
+                            
+                            // Periodic UI update (aggregated)
+                            val elapsed = (System.currentTimeMillis() - dlStartTime) / 1000.0
+                            if (elapsed > 0.5) {
+                                val speed = (totalDlBytesRead.get() * 8.0 / (1024.0 * 1024.0)) / elapsed
+                                _uiState.update { it.copy(downloadSpeed = speed) }
+                            }
+                        }
+                        inputStream.close()
+                        connection.disconnect()
+                    } catch (_: Exception) {}
                 }
-            } catch (_: Exception) {
-                // If upload fails, try to at least show a simulated or fallback value 
-                // if we have enough link speed info, but better to just leave it null if it fails.
+            }
+            dlJobs.awaitAll()
+            
+            // Final calculation (capped at test duration)
+            val dlActualDuration = ((System.currentTimeMillis() - dlStartTime).toDouble() / 1000.0).coerceAtMost(testDurationMs / 1000.0)
+            if (dlActualDuration > 0) {
+                val dlSpeedMbps = (totalDlBytesRead.get() * 8.0 / (1024.0 * 1024.0)) / dlActualDuration
+                _uiState.update { it.copy(downloadSpeed = dlSpeedMbps) }
+            }
+
+            // 2. Upload Test (5s)
+            val totalUlBytesWritten = AtomicLong(0)
+            val ulStartTime = System.currentTimeMillis()
+            val testData = ByteArray(bufferSize)
+
+            val ulJobs = List(parallelConnections) {
+                async {
+                    try {
+                        val url = URL(uploadUrl)
+                        val connection = url.openConnection() as HttpURLConnection
+                        connection.doOutput = true
+                        connection.requestMethod = "POST"
+                        connection.connectTimeout = 5000
+                        connection.readTimeout = 5000
+                        connection.instanceFollowRedirects = true
+                        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) GeekLab/1.0")
+                        connection.setRequestProperty("Content-Type", "application/octet-stream")
+                        
+                        // 1GB logical limit to ensure we don't stop before 5s
+                        connection.setFixedLengthStreamingMode(1024 * 1024 * 1024 / parallelConnections)
+
+                        connection.outputStream.use { outputStream ->
+                            while (System.currentTimeMillis() - ulStartTime < testDurationMs) {
+                                outputStream.write(testData)
+                                totalUlBytesWritten.addAndGet(testData.size.toLong())
+                                
+                                // Periodic UI update (aggregated)
+                                val elapsed = (System.currentTimeMillis() - ulStartTime) / 1000.0
+                                if (elapsed > 0.5) {
+                                    val speed = (totalUlBytesWritten.get() * 8.0 / (1024.0 * 1024.0)) / elapsed
+                                    _uiState.update { it.copy(uploadSpeed = speed) }
+                                }
+                            }
+                        }
+                        try { connection.inputStream.use { it.readBytes() } } catch (_: Exception) {}
+                        connection.disconnect()
+                    } catch (_: Exception) {}
+                }
+            }
+            ulJobs.awaitAll()
+
+            val ulActualDuration = ((System.currentTimeMillis() - ulStartTime).toDouble() / 1000.0).coerceAtMost(testDurationMs / 1000.0)
+            if (ulActualDuration > 0) {
+                val ulSpeedMbps = (totalUlBytesWritten.get() * 8.0 / (1024.0 * 1024.0)) / ulActualDuration
+                _uiState.update { it.copy(uploadSpeed = ulSpeedMbps) }
             }
 
             _uiState.update { it.copy(isTestingSpeed = false) }

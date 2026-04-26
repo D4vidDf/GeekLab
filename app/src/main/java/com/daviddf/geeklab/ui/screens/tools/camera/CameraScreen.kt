@@ -56,6 +56,7 @@ fun CameraScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LargeTopAppBar(
                 title = { 

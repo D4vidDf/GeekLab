@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,26 +22,72 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AdminPanelSettings
+import androidx.compose.material.icons.rounded.AdsClick
+import androidx.compose.material.icons.rounded.Apps
+import androidx.compose.material.icons.rounded.Badge
+import androidx.compose.material.icons.rounded.Business
+import androidx.compose.material.icons.rounded.Cached
+import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.CloseFullscreen
+import androidx.compose.material.icons.rounded.Code
+import androidx.compose.material.icons.rounded.DataObject
+import androidx.compose.material.icons.rounded.EventAvailable
+import androidx.compose.material.icons.rounded.EventBusy
+import androidx.compose.material.icons.rounded.Expand
+import androidx.compose.material.icons.rounded.Extension
+import androidx.compose.material.icons.rounded.FileDownload
+import androidx.compose.material.icons.rounded.FileUpload
+import androidx.compose.material.icons.rounded.Fingerprint
+import androidx.compose.material.icons.rounded.FitScreen
+import androidx.compose.material.icons.rounded.Flag
+import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.Gesture
+import androidx.compose.material.icons.rounded.Group
+import androidx.compose.material.icons.rounded.Hardware
+import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Key
+import androidx.compose.material.icons.rounded.Layers
+import androidx.compose.material.icons.rounded.LowPriority
+import androidx.compose.material.icons.rounded.Memory
+import androidx.compose.material.icons.rounded.Numbers
 import androidx.compose.material.icons.rounded.OpenInFull
+import androidx.compose.material.icons.rounded.Output
+import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.ScreenRotation
+import androidx.compose.material.icons.rounded.SdStorage
+import androidx.compose.material.icons.rounded.Security
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.Source
+import androidx.compose.material.icons.rounded.Storage
+import androidx.compose.material.icons.rounded.Summarize
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.SplitButtonDefaults
@@ -48,7 +95,7 @@ import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,16 +110,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.R
+import com.daviddf.geeklab.ui.components.DetailItem
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import com.daviddf.geeklab.ui.viewmodels.AppDetailState
 import com.daviddf.geeklab.ui.viewmodels.AppDetailViewModel
@@ -82,6 +133,19 @@ data class PermissionDetail(
     val colloquialName: String,
     val description: String,
     val docUrl: String
+)
+
+data class ActivityDetail(
+    val name: String,
+    val label: String,
+    val icon: android.graphics.Bitmap?,
+    val exported: Boolean,
+    val enabled: Boolean,
+    val processName: String,
+    val launchMode: String,
+    val orientation: String,
+    val theme: String,
+    val packageName: String
 )
 
 @Composable
@@ -133,15 +197,22 @@ fun AppDetailContent(
     isDetailPane: Boolean = false
 ) {
     val context = LocalContext.current
+    val viewModel: AppDetailViewModel = viewModel()
     var selectedPermission by remember { mutableStateOf<PermissionDetail?>(null) }
+    var selectedActivity by remember { mutableStateOf<ActivityDetail?>(null) }
+    
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
+    var bottomSheetType by remember { mutableStateOf("permission") } // "permission" or "activity"
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
+        modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.app_info)) },
+            LargeTopAppBar(
+                title = { Text(stringResource(R.string.app_info), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     if (!isDetailPane) {
                         FilledTonalIconButton(onClick = onBackClick, shapes = IconButtonDefaults.shapes()) {
@@ -154,16 +225,21 @@ fun AppDetailContent(
                         IconButton(onClick = onToggleExpand) {
                             Icon(
                                 imageVector = if (isExpanded) Icons.Rounded.CloseFullscreen else Icons.Rounded.OpenInFull,
-                                contentDescription = if (isExpanded) "Exit Fullscreen" else "Expand to Fullscreen"
+                                contentDescription = if (isExpanded) stringResource(R.string.exit_fullscreen) else stringResource(R.string.expand_fullscreen)
                             )
                         }
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background,
+                )
             )
         }
     ) { padding ->
         if (uiState.isLoading) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         } else if (uiState.packageInfo != null) {
@@ -190,48 +266,65 @@ fun AppDetailContent(
                     .padding(padding)
             ) {
                 item {
-                    Column(
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        shape = MaterialTheme.shapes.extraLarge,
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                        )
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            if (icon != null) {
-                                Image(
-                                    bitmap = icon,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(64.dp)
+                        Column(
+                            modifier = Modifier.padding(24.dp),
+                            verticalArrangement = Arrangement.spacedBy(24.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Surface(
+                                    modifier = Modifier.size(80.dp),
+                                    shape = MaterialTheme.shapes.large,
+                                    color = MaterialTheme.colorScheme.surface,
+                                    tonalElevation = 2.dp
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        if (icon != null) {
+                                            Image(
+                                                bitmap = icon,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(64.dp)
+                                            )
+                                        } else {
+                                            Icon(Icons.Rounded.Apps, null, modifier = Modifier.size(40.dp), tint = MaterialTheme.colorScheme.primary)
+                                        }
+                                    }
+                                }
+                                Spacer(modifier = Modifier.width(20.dp))
+                                Column {
+                                    Text(label, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.ExtraBold)
+                                    Text(packageInfo.packageName, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                            }
+
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                DetailItem(Icons.Rounded.Numbers, stringResource(R.string.version), uiState.version)
+                                DetailItem(Icons.Rounded.SdStorage, stringResource(R.string.size), uiState.size)
+                                DetailItem(Icons.Rounded.History, stringResource(R.string.installed), uiState.installTime)
+                                DetailItem(Icons.Rounded.Source, stringResource(R.string.origin), uiState.origin)
+                            }
+
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                SplitButton(
+                                    onPrimaryClick = onLaunchApp,
+                                    onSecondaryClick = onShareApk,
+                                    primaryText = stringResource(R.string.open),
+                                    primaryIcon = Icons.Rounded.PlayArrow,
+                                    secondaryIcon = Icons.Rounded.Share,
+                                    secondaryContentDescription = stringResource(R.string.share_apk)
                                 )
                             }
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column {
-                                Text(label, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                                Text(packageInfo.packageName, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                        }
-
-                        Column {
-                            InfoRow(stringResource(R.string.version), uiState.version)
-                            InfoRow(stringResource(R.string.size), uiState.size)
-                            InfoRow(stringResource(R.string.installed), uiState.installTime)
-                            InfoRow(stringResource(R.string.origin), uiState.origin)
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            SplitButton(
-                                onPrimaryClick = onLaunchApp,
-                                onSecondaryClick = onShareApk,
-                                primaryText = stringResource(R.string.open),
-                                primaryIcon = Icons.Rounded.PlayArrow,
-                                secondaryIcon = Icons.Rounded.Share,
-                                secondaryContentDescription = stringResource(R.string.share_apk)
-                            )
                         }
                     }
                 }
@@ -239,20 +332,26 @@ fun AppDetailContent(
                 stickyHeader {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.surface,
-                        shadowElevation = 2.dp
+                        color = MaterialTheme.colorScheme.background,
+                        shadowElevation = 0.dp
                     ) {
                         SecondaryScrollableTabRow(
                             selectedTabIndex = selectedTab,
                             edgePadding = 16.dp,
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            divider = {}
+                            containerColor = MaterialTheme.colorScheme.background,
+                            divider = { HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)) }
                         ) {
                             tabs.forEachIndexed { index, title ->
                                 Tab(
                                     selected = selectedTab == index,
                                     onClick = { selectedTab = index },
-                                    text = { Text(title) }
+                                    text = { 
+                                        Text(
+                                            text = title,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Normal
+                                        ) 
+                                    }
                                 )
                             }
                         }
@@ -261,58 +360,63 @@ fun AppDetailContent(
 
                 when (selectedTab) {
                     0 -> {
-                        val routes = listOfNotNull(
-                            R.string.source_dir to uiState.sourceDir,
-                            R.string.data_dir to uiState.dataDir,
-                            uiState.deviceProtectedDataDir?.let { R.string.device_protected_data_dir to it },
-                            uiState.nativeLibraryDir?.let { R.string.jni_library_dir to it }
-                        )
-                        val usage = listOf(
-                            R.string.data_transmitted to uiState.txBytes,
-                            R.string.data_received to uiState.rxBytes
-                        )
-                        val storage = listOf(
-                            R.string.app_size to uiState.appSize,
-                            R.string.data_size to uiState.dataSize,
-                            R.string.cache_size to uiState.cacheSize,
-                            R.string.total_size to uiState.totalSize
-                        )
-                        val moreInfo = listOfNotNull(
-                            R.string.target_sdk to uiState.targetSdk.toString(),
-                            R.string.min_sdk to uiState.minSdk.toString(),
-                            R.string.flags to uiState.flags.joinToString(", "),
-                            R.string.installed to uiState.installTime,
-                            R.string.last_update_time to uiState.updateTime,
-                            R.string.user_id to uiState.uid.toString(),
-                            uiState.sharedUserId?.let { R.string.shared_user_id to it },
-                            uiState.primaryCpuAbi?.let { R.string.primary_abi to it },
-                            uiState.selinux?.let { R.string.selinux to it }
-                        )
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                val routes = listOfNotNull(
+                                    Icons.Rounded.Folder to (R.string.source_dir to uiState.sourceDir),
+                                    Icons.Rounded.Storage to (R.string.data_dir to uiState.dataDir),
+                                    uiState.deviceProtectedDataDir?.let { Icons.Rounded.Security to (R.string.device_protected_data_dir to it) },
+                                    uiState.nativeLibraryDir?.let { Icons.Rounded.Code to (R.string.jni_library_dir to it) }
+                                )
+                                val usage = listOf(
+                                    Icons.Rounded.FileUpload to (R.string.data_transmitted to uiState.txBytes),
+                                    Icons.Rounded.FileDownload to (R.string.data_received to uiState.rxBytes)
+                                )
+                                val storage = listOf(
+                                    Icons.Rounded.Apps to (R.string.app_size to uiState.appSize),
+                                    Icons.Rounded.DataObject to (R.string.data_size to uiState.dataSize),
+                                    Icons.Rounded.Cached to (R.string.cache_size to uiState.cacheSize),
+                                    Icons.Rounded.Summarize to (R.string.total_size to uiState.totalSize)
+                                )
+                                val moreInfo = listOfNotNull(
+                                    Icons.Rounded.AdsClick to (R.string.target_sdk to uiState.targetSdk.toString()),
+                                    Icons.Rounded.LowPriority to (R.string.min_sdk to uiState.minSdk.toString()),
+                                    Icons.Rounded.Flag to (R.string.flags to uiState.flags.joinToString(", ")),
+                                    Icons.Rounded.CalendarMonth to (R.string.last_update_time to uiState.updateTime),
+                                    Icons.Rounded.Badge to (R.string.user_id to uiState.uid.toString()),
+                                    uiState.sharedUserId?.let { Icons.Rounded.Group to (R.string.shared_user_id to it) },
+                                    uiState.primaryCpuAbi?.let { Icons.Rounded.Memory to (R.string.primary_abi to it) },
+                                    uiState.selinux?.let { Icons.Rounded.AdminPanelSettings to (R.string.selinux to it) }
+                                )
 
-                        item { Spacer(modifier = Modifier.height(8.dp)) }
+                                InfoSectionTitle(stringResource(R.string.routes_directories))
+                                routes.forEachIndexed { index, (icon, info) ->
+                                    GroupedDetailItem(icon, stringResource(info.first), info.second, index, routes.size)
+                                }
 
-                        // Routes \u0026 Directories
-                        item { InfoSectionTitle(stringResource(R.string.routes_directories)) }
-                        itemsIndexed(routes) { index, (labelRes, value) ->
-                            InfoItem(stringResource(labelRes), value, index, routes.size)
-                        }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                InfoSectionTitle(stringResource(R.string.data_usage_tab))
+                                usage.forEachIndexed { index, (icon, info) ->
+                                    GroupedDetailItem(icon, stringResource(info.first), info.second, index, usage.size)
+                                }
 
-                        // Data Usage
-                        item { InfoSectionTitle(stringResource(R.string.data_usage_tab)) }
-                        itemsIndexed(usage) { index, (labelRes, value) ->
-                            InfoItem(stringResource(labelRes), value, index, usage.size)
-                        }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                InfoSectionTitle(stringResource(R.string.storage_cache))
+                                storage.forEachIndexed { index, (icon, info) ->
+                                    GroupedDetailItem(icon, stringResource(info.first), info.second, index, storage.size)
+                                }
 
-                        // Storage
-                        item { InfoSectionTitle(stringResource(R.string.storage_cache)) }
-                        itemsIndexed(storage) { index, (labelRes, value) ->
-                            InfoItem(stringResource(labelRes), value, index, storage.size)
-                        }
-
-                        // More Info
-                        item { InfoSectionTitle(stringResource(R.string.more_info)) }
-                        itemsIndexed(moreInfo) { index, (labelRes, value) ->
-                            InfoItem(stringResource(labelRes), value, index, moreInfo.size)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                InfoSectionTitle(stringResource(R.string.more_info))
+                                moreInfo.forEachIndexed { index, (icon, info) ->
+                                    GroupedDetailItem(icon, stringResource(info.first), info.second, index, moreInfo.size)
+                                }
+                            }
                         }
 
                         item {
@@ -320,13 +424,16 @@ fun AppDetailContent(
                                 onClick = onViewManifest,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp),
-                                shape = RoundedCornerShape(16.dp)
+                                    .padding(16.dp)
+                                    .height(56.dp),
+                                shape = MaterialTheme.shapes.large,
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                             ) {
-                                Text(stringResource(R.string.view_manifest))
+                                Icon(Icons.Rounded.Code, null)
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(stringResource(R.string.view_manifest), fontWeight = FontWeight.Bold)
                             }
                         }
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
                     1 -> {
                         val permissions = uiState.packageInfo.requestedPermissions?.toList() ?: emptyList()
@@ -336,15 +443,12 @@ fun AppDetailContent(
                                 items = permissions,
                                 key = { _, permission -> permission }
                             ) { index, permission ->
-                                val shape = remember(index, permissions.size) { getShape(index, permissions.size) }
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 3.dp),
-                                    shape = shape,
-                                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                                GroupedSurfaceItem(
+                                    index = index,
+                                    size = permissions.size,
                                     onClick = {
                                         selectedPermission = getPermissionDetail(permission, context)
+                                        bottomSheetType = "permission"
                                         showBottomSheet = true
                                     }
                                 ) {
@@ -379,15 +483,17 @@ fun AppDetailContent(
                                 items = activities,
                                 key = { _, activity -> activity.name }
                             ) { index, activity ->
-                                val shape = remember(index, activities.size) { getShape(index, activities.size) }
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 3.dp),
-                                    shape = shape,
-                                    color = MaterialTheme.colorScheme.surfaceContainerLow
-                                ) {
-                                    ActivityRow(activity, uiState.packageInfo.packageName, onLaunchActivity)
+                                GroupedSurfaceItem(index = index, size = activities.size) {
+                                    ActivityRow(
+                                        activity = activity, 
+                                        packageName = uiState.packageInfo.packageName, 
+                                        onClick = {
+                                            selectedActivity = getActivityDetail(activity, context)
+                                            bottomSheetType = "activity"
+                                            showBottomSheet = true
+                                        },
+                                        onLaunch = { onLaunchActivity(activity.name) }
+                                    )
                                 }
                             }
                             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -400,14 +506,7 @@ fun AppDetailContent(
                         if (services.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(services) { index, service ->
-                                val shape = getShape(index, services.size)
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 3.dp),
-                                    shape = shape,
-                                    color = MaterialTheme.colorScheme.surfaceContainerLow
-                                ) {
+                                GroupedSurfaceItem(index = index, size = services.size) {
                                     Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                                         Text(
                                             service.name.removePrefix(packageInfo.packageName),
@@ -427,14 +526,7 @@ fun AppDetailContent(
                         if (!providers.isNullOrEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(providers) { index, provider ->
-                                val shape = getShape(index, providers.size)
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 3.dp),
-                                    shape = shape,
-                                    color = MaterialTheme.colorScheme.surfaceContainerLow
-                                ) {
+                                GroupedSurfaceItem(index = index, size = providers.size) {
                                     Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                                         Text(
                                             provider.name.removePrefix(packageInfo.packageName),
@@ -454,14 +546,7 @@ fun AppDetailContent(
                         if (sharedLibs.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(sharedLibs) { index, lib ->
-                                val shape = getShape(index, sharedLibs.size)
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 3.dp),
-                                    shape = shape,
-                                    color = MaterialTheme.colorScheme.surfaceContainerLow
-                                ) {
+                                GroupedSurfaceItem(index = index, size = sharedLibs.size) {
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -485,14 +570,7 @@ fun AppDetailContent(
                         if (receivers.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(receivers) { index, receiver ->
-                                val shape = getShape(index, receivers.size)
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 3.dp),
-                                    shape = shape,
-                                    color = MaterialTheme.colorScheme.surfaceContainerLow
-                                ) {
+                                GroupedSurfaceItem(index = index, size = receivers.size) {
                                     Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                                         Text(
                                             receiver.name.removePrefix(packageInfo.packageName),
@@ -518,8 +596,8 @@ fun AppDetailContent(
                                     Surface(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(horizontal = 16.dp, vertical = 2.dp),
-                                        shape = RoundedCornerShape(24.dp),
+                                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                                        shape = MaterialTheme.shapes.large,
                                         color = Color(0xFFE8F5E9) // Light green background
                                     ) {
                                         Row(
@@ -544,65 +622,76 @@ fun AppDetailContent(
                             }
 
                             signatures.forEach { sig ->
-                                item { InfoSectionTitle(stringResource(R.string.signatures)) }
-                                
-                                val certItems = listOfNotNull(
-                                    sig.subject?.let { R.string.subject to it },
-                                    sig.issuer?.let { R.string.issuer to it },
-                                    sig.issueDate?.let { R.string.issue_date to it },
-                                    sig.expiryDate?.let { R.string.expiry_date to it },
-                                    sig.type?.let { R.string.type to it },
-                                    sig.version?.let { R.string.version_label to it },
-                                    sig.serialNumber?.let { R.string.serial_number to it }
-                                )
-                                itemsIndexed(certItems) { index, (labelRes, value) ->
-                                    InfoItem(stringResource(labelRes), value, index, certItems.size)
-                                }
+                                item {
+                                    val certItems = listOfNotNull(
+                                        Icons.Rounded.Badge to (R.string.subject to sig.subject),
+                                        Icons.Rounded.Business to (R.string.issuer to sig.issuer),
+                                        Icons.Rounded.EventAvailable to (R.string.issue_date to sig.issueDate),
+                                        Icons.Rounded.EventBusy to (R.string.expiry_date to sig.expiryDate),
+                                        Icons.Rounded.Fingerprint to (R.string.type to sig.type),
+                                        Icons.Rounded.Layers to (R.string.version_label to sig.version),
+                                        Icons.Rounded.Numbers to (R.string.serial_number to sig.serialNumber)
+                                    )
+                                    val checksums = listOfNotNull(
+                                        "MD5" to sig.md5,
+                                        "SHA-1" to sig.sha1,
+                                        "SHA-256" to sig.sha256,
+                                        "SHA-384" to sig.sha384,
+                                        "SHA-512" to sig.sha512
+                                    )
+                                    val signatureData = listOfNotNull(
+                                        Icons.Rounded.Code to (R.string.algorithm to sig.algorithm),
+                                        Icons.Rounded.Key to (R.string.oid to sig.oid),
+                                        Icons.Rounded.Gesture to (R.string.signature_label to sig.signature)
+                                    )
+                                    val publicKeyData = listOfNotNull(
+                                        Icons.Rounded.Hardware to (R.string.algorithm to sig.publicKeyAlgorithm),
+                                        Icons.Rounded.Code to (R.string.format to sig.publicKeyFormat),
+                                        Icons.Rounded.Expand to (R.string.exponent to sig.exponent),
+                                        Icons.Rounded.FitScreen to (R.string.modulus to sig.modulus)
+                                    )
 
-                                val checksums = listOfNotNull(
-                                    sig.md5?.let { "MD5" to it },
-                                    sig.sha1?.let { "SHA-1" to it },
-                                    sig.sha256?.let { "SHA-256" to it },
-                                    sig.sha384?.let { "SHA-384" to it },
-                                    sig.sha512?.let { "SHA-512" to it }
-                                )
-                                if (checksums.isNotEmpty()) {
-                                    item { InfoSectionTitle(stringResource(R.string.checksums)) }
-                                    itemsIndexed(checksums) { index, (label, value) ->
-                                        InfoItem(label, value, index, checksums.size)
-                                    }
-                                }
+                                    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                        InfoSectionTitle(stringResource(R.string.signatures))
+                                        certItems.forEachIndexed { index, (icon, pair) ->
+                                            pair.second?.let { GroupedDetailItem(icon, stringResource(pair.first), it, index, certItems.size) }
+                                        }
 
-                                val signatureData = listOfNotNull(
-                                    sig.algorithm?.let { R.string.algorithm to it },
-                                    sig.oid?.let { R.string.oid to it },
-                                    sig.signature?.let { R.string.signature_label to it }
-                                )
-                                if (signatureData.isNotEmpty()) {
-                                    item { InfoSectionTitle(stringResource(R.string.signature_label)) }
-                                    itemsIndexed(signatureData) { index, (labelRes, value) ->
-                                        InfoItem(stringResource(labelRes), value, index, signatureData.size)
-                                    }
-                                }
+                                        val filteredChecksums = checksums.filter { it.second != null }
+                                        if (filteredChecksums.isNotEmpty()) {
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            InfoSectionTitle(stringResource(R.string.checksums))
+                                            filteredChecksums.forEachIndexed { index, (label, value) ->
+                                                GroupedDetailItem(Icons.Rounded.Security, label, value!!, index, filteredChecksums.size)
+                                            }
+                                        }
 
-                                val publicKeyData = listOfNotNull(
-                                    sig.publicKeyAlgorithm?.let { R.string.algorithm to it },
-                                    sig.publicKeyFormat?.let { R.string.format to it },
-                                    sig.exponent?.let { R.string.exponent to it },
-                                    sig.modulus?.let { R.string.modulus to it }
-                                )
-                                if (publicKeyData.isNotEmpty()) {
-                                    item { InfoSectionTitle(stringResource(R.string.public_key)) }
-                                    itemsIndexed(publicKeyData) { index, (labelRes, value) ->
-                                        InfoItem(stringResource(labelRes), value, index, publicKeyData.size)
-                                    }
-                                }
+                                        val filteredSigData = signatureData.filter { it.second.second != null }
+                                        if (filteredSigData.isNotEmpty()) {
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            InfoSectionTitle(stringResource(R.string.signature_label))
+                                            filteredSigData.forEachIndexed { index, (icon, pair) ->
+                                                GroupedDetailItem(icon, stringResource(pair.first), pair.second!!, index, filteredSigData.size)
+                                            }
+                                        }
 
-                                if (sig.extensions.isNotEmpty()) {
-                                    item { InfoSectionTitle(stringResource(R.string.non_critical_extensions)) }
-                                    val extensionsList = sig.extensions.toList()
-                                    itemsIndexed(extensionsList) { index, (oid, value) ->
-                                        InfoItem(oid, value, index, extensionsList.size)
+                                        val filteredPubKeyData = publicKeyData.filter { it.second.second != null }
+                                        if (filteredPubKeyData.isNotEmpty()) {
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            InfoSectionTitle(stringResource(R.string.public_key))
+                                            filteredPubKeyData.forEachIndexed { index, (icon, pair) ->
+                                                GroupedDetailItem(icon, stringResource(pair.first), pair.second!!, index, filteredPubKeyData.size)
+                                            }
+                                        }
+
+                                        if (sig.extensions.isNotEmpty()) {
+                                            val extensionsList = sig.extensions.toList()
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            InfoSectionTitle(stringResource(R.string.non_critical_extensions))
+                                            extensionsList.forEachIndexed { index, (oid, value) ->
+                                                GroupedDetailItem(Icons.Rounded.Extension, oid, value, index, extensionsList.size)
+                                            }
+                                        }
                                     }
                                 }
                                 
@@ -615,13 +704,16 @@ fun AppDetailContent(
                     8 -> {
                         if (uiState.overlayTarget != null) {
                             item {
-                                InfoSectionTitle(stringResource(R.string.overlays))
-                                InfoItem(
-                                    label = "Target Package",
-                                    value = uiState.overlayTarget,
-                                    index = 0,
-                                    size = 1
-                                )
+                                Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                    InfoSectionTitle(stringResource(R.string.overlays))
+                                    GroupedDetailItem(
+                                        icon = Icons.Rounded.Layers,
+                                        label = stringResource(R.string.target_package),
+                                        value = uiState.overlayTarget,
+                                        index = 0,
+                                        size = 1
+                                    )
+                                }
                             }
                         } else {
                             item { EmptyState(stringResource(R.string.no_overlays_found)) }
@@ -630,35 +722,188 @@ fun AppDetailContent(
                 }
             }
         } else {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                 Text(stringResource(R.string.app_not_found))
             }
         }
 
-        if (showBottomSheet && selectedPermission != null) {
+        if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
-                sheetState = sheetState
+                sheetState = sheetState,
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 4.dp
             ) {
-                PermissionBottomSheetContent(
-                    detail = selectedPermission!!,
-                    onOpenDoc = {
-                        val intent = Intent(Intent.ACTION_VIEW, selectedPermission!!.docUrl.toUri())
-                        context.startActivity(intent)
-                    }
+                if (bottomSheetType == "permission" && selectedPermission != null) {
+                    PermissionBottomSheetContent(
+                        detail = selectedPermission!!,
+                        onOpenDoc = {
+                            val intent = Intent(Intent.ACTION_VIEW, selectedPermission!!.docUrl.toUri())
+                            context.startActivity(intent)
+                        }
+                    )
+                } else if (bottomSheetType == "activity" && selectedActivity != null) {
+                    ActivityBottomSheetContent(
+                        detail = selectedActivity!!,
+                        onLaunch = { onLaunchActivity(selectedActivity!!.name) },
+                        onAddShortcut = { name, icon ->
+                            viewModel.createShortcut(
+                                packageName = selectedActivity!!.packageName,
+                                className = selectedActivity!!.name,
+                                label = name,
+                                icon = icon
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ActivityBottomSheetContent(
+    detail: ActivityDetail,
+    onLaunch: () -> Unit,
+    onAddShortcut: (String, android.graphics.Bitmap) -> Unit
+) {
+    var shortcutName by remember { mutableStateOf(detail.label) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(top = 8.dp, bottom = 48.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                Icons.Rounded.Layers,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(28.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                stringResource(R.string.activity_details),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            val bitmap = detail.icon?.asImageBitmap()
+            if (bitmap != null) {
+                Image(
+                    bitmap = bitmap,
+                    contentDescription = null,
+                    modifier = Modifier.size(64.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    detail.label,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    detail.name,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            InfoSectionTitle(stringResource(R.string.technical_info))
+            DetailItem(Icons.Rounded.Output, stringResource(R.string.exported), detail.exported.toString())
+            DetailItem(Icons.Rounded.CheckCircle, stringResource(R.string.enabled), detail.enabled.toString())
+            DetailItem(Icons.Rounded.Settings, stringResource(R.string.launch_mode), detail.launchMode)
+            DetailItem(Icons.Rounded.ScreenRotation, stringResource(R.string.orientation), detail.orientation)
+            DetailItem(Icons.Rounded.Palette, stringResource(R.string.theme), detail.theme)
+            DetailItem(Icons.Rounded.Memory, stringResource(R.string.process), detail.processName)
+        }
+
+        HorizontalDivider()
+
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Text(
+                stringResource(R.string.personalize_shortcut),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            OutlinedTextField(
+                value = shortcutName,
+                onValueChange = { shortcutName = it },
+                label = { Text(stringResource(R.string.shortcut_name)) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium
+            )
+            
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                SplitButton(
+                    onPrimaryClick = { 
+                        if (detail.icon != null) {
+                            onAddShortcut(shortcutName, detail.icon)
+                        }
+                    },
+                    onSecondaryClick = onLaunch,
+                    primaryText = stringResource(R.string.add_to_home),
+                    primaryIcon = Icons.Rounded.Add,
+                    secondaryIcon = Icons.Rounded.PlayArrow,
+                    secondaryContentDescription = stringResource(R.string.launch)
                 )
             }
         }
     }
 }
 
-private fun getShape(index: Int, size: Int): RoundedCornerShape {
-    return when {
-        size == 1 -> RoundedCornerShape(24.dp)
-        index == 0 -> RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
-        index == size - 1 -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
-        else -> RoundedCornerShape(4.dp)
+fun getActivityDetail(activity: ActivityInfo, context: Context): ActivityDetail {
+    val pm = context.packageManager
+    val label = activity.loadLabel(pm).toString()
+    val icon = activity.loadIcon(pm).toBitmap()
+    
+    val launchMode = when (activity.launchMode) {
+        ActivityInfo.LAUNCH_MULTIPLE -> context.getString(R.string.launch_mode_standard)
+        ActivityInfo.LAUNCH_SINGLE_TOP -> context.getString(R.string.launch_mode_single_top)
+        ActivityInfo.LAUNCH_SINGLE_TASK -> context.getString(R.string.launch_mode_single_task)
+        ActivityInfo.LAUNCH_SINGLE_INSTANCE -> context.getString(R.string.launch_mode_single_instance)
+        else -> context.getString(R.string.unknown)
     }
+
+    val orientation = when (activity.screenOrientation) {
+        ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> context.getString(R.string.orientation_unspecified)
+        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> context.getString(R.string.orientation_landscape)
+        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT -> context.getString(R.string.orientation_portrait)
+        ActivityInfo.SCREEN_ORIENTATION_USER -> context.getString(R.string.orientation_user)
+        ActivityInfo.SCREEN_ORIENTATION_BEHIND -> context.getString(R.string.orientation_behind)
+        ActivityInfo.SCREEN_ORIENTATION_SENSOR -> context.getString(R.string.orientation_sensor)
+        ActivityInfo.SCREEN_ORIENTATION_NOSENSOR -> context.getString(R.string.orientation_nosensor)
+        ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE -> context.getString(R.string.orientation_sensor_landscape)
+        ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT -> context.getString(R.string.orientation_sensor_portrait)
+        ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE -> context.getString(R.string.orientation_reverse_landscape)
+        ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT -> context.getString(R.string.orientation_reverse_portrait)
+        ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR -> context.getString(R.string.orientation_full_sensor)
+        else -> context.getString(R.string.activity_other)
+    }
+
+    return ActivityDetail(
+        name = activity.name,
+        label = label,
+        icon = icon,
+        exported = activity.exported,
+        enabled = activity.enabled,
+        processName = activity.processName,
+        launchMode = launchMode,
+        orientation = orientation,
+        theme = if (activity.theme != 0) "0x${activity.theme.toString(16)}" else context.getString(R.string.activity_default_theme),
+        packageName = activity.packageName
+    )
 }
 
 @Composable
@@ -813,6 +1058,59 @@ fun SplitButton(
 }
 
 @Composable
+fun GroupedDetailItem(
+    icon: ImageVector,
+    label: String,
+    value: String,
+    index: Int,
+    size: Int
+) {
+    val shape = getGroupedShape(index, size)
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 1.dp),
+        shape = shape,
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+    ) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            DetailItem(icon, label, value)
+        }
+    }
+}
+
+@Composable
+fun GroupedSurfaceItem(
+    index: Int,
+    size: Int,
+    onClick: (() -> Unit)? = null,
+    content: @Composable () -> Unit
+) {
+    val shape = getGroupedShape(index, size)
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 2.dp),
+        shape = shape,
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        onClick = onClick ?: {}
+    ) {
+        content()
+    }
+}
+
+private fun getGroupedShape(index: Int, size: Int): RoundedCornerShape {
+    val cornerLarge = 24.dp
+    val cornerSmall = 4.dp
+    return when {
+        size == 1 -> RoundedCornerShape(cornerLarge)
+        index == 0 -> RoundedCornerShape(topStart = cornerLarge, topEnd = cornerLarge, bottomStart = cornerSmall, bottomEnd = cornerSmall)
+        index == size - 1 -> RoundedCornerShape(topStart = cornerSmall, topEnd = cornerSmall, bottomStart = cornerLarge, bottomEnd = cornerLarge)
+        else -> RoundedCornerShape(cornerSmall)
+    }
+}
+
+@Composable
 fun InfoSectionTitle(title: String) {
     Text(
         text = title,
@@ -824,40 +1122,6 @@ fun InfoSectionTitle(title: String) {
 }
 
 @Composable
-fun InfoItem(
-    label: String,
-    value: String,
-    index: Int,
-    size: Int
-) {
-    val shape = getShape(index, size)
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp),
-        shape = shape,
-        color = MaterialTheme.colorScheme.surfaceContainerLow
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-    }
-}
-
-@Composable
 fun EmptyState(message: String) {
     Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
         Text(message, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -865,55 +1129,51 @@ fun EmptyState(message: String) {
 }
 
 @Composable
-fun InfoRow(label: String, value: String) {
+fun ActivityRow(
+    activity: ActivityInfo, 
+    packageName: String, 
+    onClick: () -> Unit,
+    onLaunch: () -> Unit
+) {
+    val context = LocalContext.current
+    val pm = context.packageManager
+    val label = remember(activity) { activity.loadLabel(pm).toString() }
+    val icon = remember(activity) { 
+        activity.loadIcon(pm).toBitmap().asImageBitmap() 
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .clickable(onClick = onClick)
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = label,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(end = 16.dp)
+        Image(
+            bitmap = icon,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
         )
-        Text(
-            text = value,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = androidx.compose.ui.text.style.TextAlign.End,
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-@Composable
-fun ActivityRow(activity: ActivityInfo, packageName: String, onLaunch: (String) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            activity.name.removePrefix(packageName),
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium
-        )
-        IconButton(
-            onClick = { onLaunch(activity.name) },
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.primary
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
             )
-        ) {
+            Text(
+                text = activity.name.removePrefix(packageName),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        IconButton(onClick = onLaunch) {
             Icon(
-                Icons.Rounded.PlayArrow,
+                Icons.Rounded.PlayArrow, 
                 contentDescription = stringResource(R.string.launch),
-                modifier = Modifier.size(28.dp)
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -928,20 +1188,24 @@ fun AppDetailPreview() {
         AppDetailContent(
             uiState = AppDetailState(
                 packageInfo = PackageInfo().apply {
-                    packageName = "com.example.mockapp"
+                    packageName = "com.daviddf.geeklab"
                     requestedPermissions = arrayOf("android.permission.INTERNET", "android.permission.CAMERA")
-                    activities = arrayOf(ActivityInfo().apply { name = "com.example.mockapp.MainActivity" })
+                    activities = arrayOf(ActivityInfo().apply { name = "com.daviddf.geeklab.MainActivity" })
                     applicationInfo = android.content.pm.ApplicationInfo().apply {
-                        packageName = "com.example.mockapp"
-                        nativeLibraryDir = "/data/app/com.example.mockapp/lib/arm64"
+                        packageName = "com.daviddf.geeklab"
+                        nativeLibraryDir = "/data/app/com.daviddf.geeklab/lib/arm64"
                     }
                 },
-                label = "Mock Application",
-                version = "1.0.0 (Preview)",
-                size = "42 MB",
-                installTime = "01/01/2024 12:00",
+                label = "GeekLab Technical",
+                version = "2.4.0 (Stable)",
+                size = "64.2 MB",
+                installTime = "15/05/2024 14:30",
                 origin = "Google Play Store",
-                services = listOf(android.content.pm.ServiceInfo().apply { name = "com.example.mockapp.BackgroundService" }),
+                services = listOf(android.content.pm.ServiceInfo().apply { name = "com.daviddf.geeklab.InspectorService" }),
+                sourceDir = "/data/app/~~base.apk",
+                dataDir = "/data/user/0/com.daviddf.geeklab",
+                targetSdk = 35,
+                minSdk = 26,
                 isLoading = false
             ),
             onBackClick = {},

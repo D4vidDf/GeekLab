@@ -1,25 +1,28 @@
 package com.daviddf.geeklab.ui.screens.apps
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.List
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.GridView
-import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -82,14 +85,26 @@ fun AppsScreenContent(
     showNavigationIcon: Boolean = true
 ) {
     val filteredApps = remember(searchQuery, installedApps) {
-        if (searchQuery.isEmpty()) installedApps
+        val filtered = if (searchQuery.isEmpty()) installedApps
         else installedApps.filter {
             it.name.contains(searchQuery, ignoreCase = true) ||
                     it.packageName.contains(searchQuery, ignoreCase = true)
         }
+        filtered.sortedBy { it.name.lowercase() }
     }
 
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val focusRequester = remember { FocusRequester() }
+    val listState = rememberLazyListState()
+    val gridState = rememberLazyGridState()
+    
+    LaunchedEffect(isSearching) {
+        if (isSearching) {
+            focusRequester.requestFocus()
+        }
+    }
+
     val columns = when {
         adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) -> GridCells.Adaptive(minSize = 130.dp)
         adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> GridCells.Adaptive(minSize = 110.dp)
@@ -97,16 +112,17 @@ fun AppsScreenContent(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                title = {
-                    if (isSearching) {
+            if (isSearching) {
+                TopAppBar(
+                    title = {
                         TextField(
                             value = searchQuery,
                             onValueChange = onSearchQueryChange,
                             placeholder = { Text(stringResource(R.string.search_apps)) },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = Color.Transparent,
@@ -115,32 +131,39 @@ fun AppsScreenContent(
                                 unfocusedIndicatorColor = Color.Transparent
                             )
                         )
-                    } else {
-                        Text(stringResource(R.string.apps_title), fontWeight = FontWeight.Bold)
-                    }
-                },
-                navigationIcon = {
-                    if (showNavigationIcon || isSearching) {
-                        IconButton(onClick = if (isSearching) {
-                            {
-                                onSearchToggle(false); onSearchQueryChange("")
-                            }
-                        } else onBackClick) {
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { onSearchToggle(false); onSearchQueryChange("") }) {
                             Icon(
                                 Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = stringResource(R.string.back)
                             )
                         }
-                    }
-                },
-                actions = {
-                    if (isSearching) {
+                    },
+                    actions = {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { onSearchQueryChange("") }) {
                                 Icon(Icons.Rounded.Close, contentDescription = null)
                             }
                         }
-                    } else {
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+            } else {
+                LargeTopAppBar(
+                    title = {
+                        Text(stringResource(R.string.apps_title), fontWeight = FontWeight.Bold)
+                    },
+                    navigationIcon = {
+                        if (showNavigationIcon) {
+                            FilledTonalIconButton(onClick = onBackClick, shapes = IconButtonDefaults.shapes()) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                            }
+                        }
+                    },
+                    actions = {
                         IconButton(onClick = { onSearchToggle(true) }) {
                             Icon(Icons.Rounded.Search, contentDescription = null)
                         }
@@ -150,9 +173,14 @@ fun AppsScreenContent(
                                 contentDescription = if (isGridView) stringResource(R.string.list_view) else stringResource(R.string.grid_view)
                             )
                         }
-                    }
-                }
-            )
+                    },
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        scrolledContainerColor = MaterialTheme.colorScheme.background,
+                    )
+                )
+            }
         }
     ) { paddingValues ->
         Box(
@@ -167,6 +195,7 @@ fun AppsScreenContent(
             } else if (isGridView) {
                 LazyVerticalGrid(
                     columns = columns,
+                    state = gridState,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -181,6 +210,7 @@ fun AppsScreenContent(
                 }
             } else {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -199,64 +229,156 @@ fun AppsScreenContent(
 
 @Composable
 fun AppGridItem(app: AppInfo, onClick: (String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick(app.packageName) }
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Card(
+        onClick = { onClick(app.packageName) },
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.extraLarge,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        )
     ) {
-        val icon = remember(app.packageName) { 
-            try { app.icon?.toBitmap()?.asImageBitmap() } catch (_: Exception) { null }
-        }
-        if (icon != null) {
-            Image(
-                bitmap = icon,
-                contentDescription = null,
-                modifier = Modifier.size(48.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val icon = remember(app.packageName) { 
+                try { app.icon?.toBitmap()?.asImageBitmap() } catch (_: Exception) { null }
+            }
+            Surface(
+                modifier = Modifier.size(64.dp),
+                shape = MaterialTheme.shapes.large,
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 2.dp
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    if (icon != null) {
+                        Image(
+                            bitmap = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Rounded.Apps,
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = app.name,
+                style = MaterialTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = app.name,
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }
 
 @Composable
 fun AppListItem(app: AppInfo, onClick: (String) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick(app.packageName) }
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Card(
+        onClick = { onClick(app.packageName) },
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        )
     ) {
-        val icon = remember(app.packageName) { 
-            try { app.icon?.toBitmap()?.asImageBitmap() } catch (_: Exception) { null }
-        }
-        if (icon != null) {
-            Image(
-                bitmap = icon,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val icon = remember(app.packageName) { 
+                try { app.icon?.toBitmap()?.asImageBitmap() } catch (_: Exception) { null }
+            }
+            Surface(
+                modifier = Modifier.size(48.dp),
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 1.dp
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    if (icon != null) {
+                        Image(
+                            bitmap = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Rounded.Apps,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = app.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = app.packageName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Icon(
+                imageVector = Icons.Rounded.ChevronRight,
                 contentDescription = null,
-                modifier = Modifier.size(48.dp)
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
             )
         }
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(
-                text = app.name,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppGridItemPreview() {
+    GeekLabTheme {
+        Box(modifier = Modifier.padding(16.dp).width(120.dp)) {
+            AppGridItem(
+                app = AppInfo(
+                    packageName = "com.daviddf.geeklab",
+                    name = "GeekLab",
+                    icon = null,
+                    applicationInfo = android.content.pm.ApplicationInfo()
+                ),
+                onClick = {}
             )
-            Text(
-                text = app.packageName,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppListItemPreview() {
+    GeekLabTheme {
+        Box(modifier = Modifier.padding(16.dp)) {
+            AppListItem(
+                app = AppInfo(
+                    packageName = "com.daviddf.geeklab",
+                    name = "GeekLab",
+                    icon = null,
+                    applicationInfo = android.content.pm.ApplicationInfo()
+                ),
+                onClick = {}
             )
         }
     }
@@ -267,10 +389,42 @@ fun AppListItem(app: AppInfo, onClick: (String) -> Unit) {
 @PreviewScreenSizes
 @Composable
 fun AppsScreenPreview() {
+    val mockApps = remember {
+        listOf(
+            "Android System",
+            "Calculator",
+            "Calendar",
+            "Camera",
+            "Chrome",
+            "Clock",
+            "Contacts",
+            "Drive",
+            "Files",
+            "Gallery",
+            "GeekLab",
+            "Gmail",
+            "Maps",
+            "Messages",
+            "Notes",
+            "Phone",
+            "Photos",
+            "Play Store",
+            "Settings",
+            "YouTube"
+        ).map { name ->
+            AppInfo(
+                packageName = "com.mock.${name.lowercase().replace(" ", ".")}",
+                name = name,
+                icon = null,
+                applicationInfo = android.content.pm.ApplicationInfo()
+            )
+        }
+    }
+
     GeekLabTheme {
         AppsScreenContent(
             isGridView = true,
-            installedApps = emptyList(),
+            installedApps = mockApps,
             searchQuery = "",
             onSearchQueryChange = {},
             isSearching = false,

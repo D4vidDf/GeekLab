@@ -51,18 +51,21 @@ fun ToolsScreen(
     onBatteryClick: () -> Unit = {},
     onInfoClick: () -> Unit = {},
     onAppsClick: () -> Unit = {},
+    onWidgetInspectorClick: () -> Unit = {},
     onNotificationHistoryClick: () -> Unit = {},
     onCallNotificationClick: () -> Unit = {},
     onBluetoothClick: () -> Unit = {},
     onBluetoothBleClick: () -> Unit = {},
+    onNfcScannerClick: () -> Unit = {},
     onWifiClick: () -> Unit = {},
     onWifiScannerClick: () -> Unit = {},
-    onCameraXClick: () -> Unit = {}
+    onCameraXClick: () -> Unit = {},
+    onUltraHdrClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     
-    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onWifiClick, onWifiScannerClick, onCameraXClick) {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
             override fun onLiveUpdateClick() = onLiveUpdateClick()
@@ -70,13 +73,16 @@ fun ToolsScreen(
             override fun onBatteryClick() = onBatteryClick()
             override fun onInfoClick() = onInfoClick()
             override fun onAppsClick() = onAppsClick()
+            override fun onWidgetInspectorClick() = onWidgetInspectorClick()
             override fun onNotificationHistoryClick() = onNotificationHistoryClick()
             override fun onCallNotificationClick() = onCallNotificationClick()
             override fun onBluetoothClick() = onBluetoothClick()
             override fun onBluetoothBleClick() = onBluetoothBleClick()
+            override fun onNfcScannerClick() = onNfcScannerClick()
             override fun onWifiClick() = onWifiClick()
             override fun onWifiScannerClick() = onWifiScannerClick()
             override fun onCameraXClick() = onCameraXClick()
+            override fun onUltraHdrClick() = onUltraHdrClick()
         }
     }
 

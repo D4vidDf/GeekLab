@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.R
+import com.daviddf.geeklab.ui.components.DetailItem
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 
 @Composable
@@ -75,6 +76,7 @@ fun WifiScannerContent(
 
     Scaffold(
         modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.wifi_scanner_title), fontWeight = FontWeight.Bold) },
@@ -84,7 +86,7 @@ fun WifiScannerContent(
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
+                colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                     scrolledContainerColor = MaterialTheme.colorScheme.background,
                 )
