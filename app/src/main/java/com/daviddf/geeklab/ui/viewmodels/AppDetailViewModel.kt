@@ -17,7 +17,10 @@ import android.os.Process
 import android.os.storage.StorageManager
 import android.text.format.Formatter
 import androidx.core.content.FileProvider
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -367,6 +370,32 @@ class AppDetailViewModel(application: Application) : AndroidViewModel(applicatio
             context.startActivity(intent)
         } catch (_: Exception) {
             // Handle error
+        }
+    }
+
+    fun createShortcut(
+        packageName: String,
+        className: String,
+        label: String,
+        icon: Bitmap
+    ) {
+        val shortcutId = "activity_$className"
+        val intent = Intent().apply {
+            component = ComponentName(packageName, className)
+            action = Intent.ACTION_MAIN
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+
+        val shortcut = ShortcutInfoCompat.Builder(context, shortcutId)
+            .setShortLabel(label)
+            .setLongLabel(label)
+            .setIcon(IconCompat.createWithBitmap(icon))
+            .setIntent(intent)
+            .build()
+
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+            ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)
         }
     }
 
