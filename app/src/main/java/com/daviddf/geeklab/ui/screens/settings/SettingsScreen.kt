@@ -1,7 +1,6 @@
 package com.daviddf.geeklab.ui.screens.settings
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,10 +55,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.BuildConfig
 import com.daviddf.geeklab.R
-import com.daviddf.geeklab.ui.screens.apps.GroupedDetailItem
 import com.daviddf.geeklab.ui.screens.apps.GroupedSurfaceItem
 import com.daviddf.geeklab.ui.screens.apps.InfoSectionTitle
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
@@ -67,26 +66,29 @@ import androidx.core.net.toUri
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onLicensesClick: () -> Unit,
+    viewModel: SettingsViewModel = viewModel(),
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState()
-    var showLanguageSheet by remember { mutableStateOf(false) }
+    var showLanguageSheet by remember { mutableStateOf(value = false) }
+    var showThemeSheet by remember { mutableStateOf(value = false) }
+
+    val themeMode by viewModel.themeMode.collectAsState()
+    val currentLanguage by viewModel.currentLanguage.collectAsState()
 
     val languages = listOf(
-        "en" to "English",
-        "es" to "Español"
+        "es" to "Español",
+        "en" to "English"
     )
 
-    val currentLocale = remember {
-        val locales = AppCompatDelegate.getApplicationLocales()
-        if (!locales.isEmpty) {
-            locales.get(0)?.language ?: "en"
-        } else {
-            context.resources.configuration.locales[0].language
-        }
-    }
+    val themes = listOf(
+        ThemeMode.SYSTEM to stringResource(R.string.theme_system),
+        ThemeMode.LIGHT to stringResource(R.string.theme_light),
+        ThemeMode.DARK to stringResource(R.string.theme_dark)
+    )
 
     Scaffold(
         modifier = Modifier
@@ -154,7 +156,7 @@ fun SettingsScreen(
                 
                 GroupedSurfaceItem(index = 0, size = 2, onClick = { showLanguageSheet = true }) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -164,16 +166,16 @@ fun SettingsScreen(
                             Text(stringResource(R.string.language_label), style = MaterialTheme.typography.bodyLarge)
                         }
                         Text(
-                            text = languages.find { it.first == currentLocale }?.second ?: context.resources.configuration.locales[0].displayLanguage,
+                            text = languages.find { it.first == currentLanguage }?.second ?: stringResource(R.string.unknown),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
 
-                GroupedSurfaceItem(index = 1, size = 2, onClick = { /* TODO: Theme Picker */ }) {
+                GroupedSurfaceItem(index = 1, size = 2, onClick = { showThemeSheet = true }) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -183,7 +185,7 @@ fun SettingsScreen(
                             Text(stringResource(R.string.theme_label), style = MaterialTheme.typography.bodyLarge)
                         }
                         Text(
-                            text = stringResource(R.string.theme_system),
+                            text = themes.find { it.first == themeMode }?.second ?: stringResource(R.string.theme_system),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -198,21 +200,43 @@ fun SettingsScreen(
             ) {
                 InfoSectionTitle(stringResource(R.string.about_app))
                 
-                GroupedDetailItem(
-                    icon = Icons.Rounded.Info,
-                    label = stringResource(R.string.app_version_label),
-                    value = BuildConfig.VERSION_NAME,
-                    index = 0,
-                    size = 2
-                )
-                
-                GroupedDetailItem(
-                    icon = Icons.Rounded.Person,
-                    label = stringResource(R.string.developer_label),
-                    value = "D4vidDF",
-                    index = 1,
-                    size = 2
-                )
+                GroupedSurfaceItem(index = 0, size = 2) {
+                    Row(
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                            Icon(Icons.Rounded.Info, null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(Modifier.width(16.dp))
+                            Text(stringResource(R.string.app_version_label), style = MaterialTheme.typography.bodyLarge)
+                        }
+                        Text(
+                            text = BuildConfig.VERSION_NAME,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                GroupedSurfaceItem(index = 1, size = 2) {
+                    Row(
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                            Icon(Icons.Rounded.Person, null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(Modifier.width(16.dp))
+                            Text(stringResource(R.string.developer_label), style = MaterialTheme.typography.bodyLarge)
+                        }
+                        Text(
+                            text = "D4vidDF",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
 
             // Links and Credits Group
@@ -225,11 +249,12 @@ fun SettingsScreen(
                 GroupedSurfaceItem(index = 0, size = 3, onClick = {
                     val intent = Intent(
                         Intent.ACTION_VIEW,
-                        "https://github.com/d4viddf/GeekLab".toUri())
+                        "https://github.com/d4viddf/GeekLab".toUri()
+                    )
                     context.startActivity(intent)
                 }) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(Icons.Rounded.Code, null, tint = MaterialTheme.colorScheme.primary)
@@ -240,9 +265,9 @@ fun SettingsScreen(
                     }
                 }
 
-                GroupedSurfaceItem(index = 1, size = 3, onClick = { /* TODO: Show Licenses */ }) {
+                GroupedSurfaceItem(index = 1, size = 3, onClick = onLicensesClick) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(Icons.Rounded.Copyright, null, tint = MaterialTheme.colorScheme.primary)
@@ -252,7 +277,7 @@ fun SettingsScreen(
                 }
 
                 GroupedSurfaceItem(index = 2, size = 3) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Rounded.HistoryEdu, null, tint = MaterialTheme.colorScheme.primary)
                             Spacer(Modifier.width(16.dp))
@@ -280,11 +305,28 @@ fun SettingsScreen(
             ) {
                 LanguageBottomSheetContent(
                     languages = languages,
-                    currentLanguageCode = currentLocale,
+                    currentLanguageCode = currentLanguage,
                     onLanguageSelected = { code ->
-                        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(code)
-                        AppCompatDelegate.setApplicationLocales(appLocale)
+                        viewModel.setLanguage(languageCode = code)
                         showLanguageSheet = false
+                    }
+                )
+            }
+        }
+
+        if (showThemeSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showThemeSheet = false },
+                sheetState = sheetState,
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 4.dp
+            ) {
+                ThemeBottomSheetContent(
+                    themes = themes,
+                    currentThemeMode = themeMode,
+                    onThemeSelected = { mode ->
+                        viewModel.setThemeMode(mode = mode)
+                        showThemeSheet = false
                     }
                 )
             }
@@ -345,10 +387,63 @@ fun LanguageBottomSheetContent(
     }
 }
 
+@Composable
+fun ThemeBottomSheetContent(
+    themes: List<Pair<ThemeMode, String>>,
+    currentThemeMode: ThemeMode,
+    onThemeSelected: (ThemeMode) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(top = 8.dp, bottom = 48.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            stringResource(R.string.theme_label),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        themes.forEach { (mode, name) ->
+            Surface(
+                onClick = { onThemeSelected(mode) },
+                shape = MaterialTheme.shapes.large,
+                color = if (mode == currentThemeMode) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                border = if (mode == currentThemeMode) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = if (mode == currentThemeMode) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                    )
+                    if (mode == currentThemeMode) {
+                        Icon(
+                            Icons.Rounded.CheckCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
     GeekLabTheme {
-        SettingsScreen(onBackClick = {})
+        SettingsScreen(onBackClick = {}, onLicensesClick = {})
     }
 }

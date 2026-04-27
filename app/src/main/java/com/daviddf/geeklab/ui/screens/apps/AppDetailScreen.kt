@@ -1,5 +1,6 @@
 package com.daviddf.geeklab.ui.screens.apps
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -1083,12 +1084,13 @@ fun GroupedDetailItem(
 fun GroupedSurfaceItem(
     index: Int,
     size: Int,
+    modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val shape = getGroupedShape(index, size)
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding( vertical = 2.dp),
         shape = shape,
@@ -1179,6 +1181,7 @@ fun ActivityRow(
     }
 }
 
+@SuppressLint("SdCardPath")
 @Preview(showBackground = true, name = "Light Mode")
 @Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
 @PreviewScreenSizes
