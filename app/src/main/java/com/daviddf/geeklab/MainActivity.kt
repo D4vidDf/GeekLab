@@ -120,7 +120,19 @@ class MainActivity : AppCompatActivity() {
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
                                 onToolsClick = { scope.launch { navigator.navigate(GeekLabKey.Tools) } },
                                 onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } },
-                                onSettingsClick = { scope.launch { navigator.navigate(GeekLabKey.Settings) } }
+                                onSettingsClick = { scope.launch { navigator.navigate(GeekLabKey.Settings) } },
+                                onLiveUpdateClick = { scope.launch { navigator.navigate(GeekLabKey.LiveUpdate) } },
+                                onMetricStyleClick = { scope.launch { navigator.navigate(GeekLabKey.MetricStyle) } },
+                                onWidgetInspectorClick = { scope.launch { navigator.navigate(GeekLabKey.WidgetInspector) } },
+                                onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
+                                onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
+                                onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
+                                onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
+                                onNfcScannerClick = { scope.launch { navigator.navigate(GeekLabKey.NfcScanner) } },
+                                onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
+                                onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
+                                onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } },
+                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } }
                             )
                         }
 

@@ -2,44 +2,21 @@ package com.daviddf.geeklab.ui.screens.home
 
 import android.content.res.Configuration
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.BatteryFull
-import androidx.compose.material.icons.rounded.ErrorOutline
-import androidx.compose.material.icons.rounded.GridView
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.Notifications
-import androidx.compose.material.icons.rounded.SearchOff
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -57,15 +34,10 @@ import com.daviddf.geeklab.ui.components.FeaturedCard
 import com.daviddf.geeklab.ui.components.NewsItemCard
 import com.daviddf.geeklab.ui.components.NewsItemShimmer
 import com.daviddf.geeklab.ui.components.SectionHeader
-import com.daviddf.geeklab.ui.theme.CardAplicaciones
-import com.daviddf.geeklab.ui.theme.CardBateria
-import com.daviddf.geeklab.ui.theme.CardInformacion
-import com.daviddf.geeklab.ui.theme.CardNotificaciones
+import com.daviddf.geeklab.ui.screens.tools.ToolItem
+import com.daviddf.geeklab.ui.screens.tools.ToolsActions
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
-import com.daviddf.geeklab.ui.theme.TextAplicaciones
-import com.daviddf.geeklab.ui.theme.TextBateria
-import com.daviddf.geeklab.ui.theme.TextInformacion
-import com.daviddf.geeklab.ui.theme.TextNotificaciones
+import com.daviddf.geeklab.ui.viewmodels.HomeViewModel
 import com.daviddf.geeklab.ui.viewmodels.NewsViewModel
 
 @Composable
@@ -77,56 +49,77 @@ fun HomeScreen(
     onToolsClick: () -> Unit,
     onSeeMoreNewsClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    newsViewModel: NewsViewModel = viewModel()
+    onLiveUpdateClick: () -> Unit = {},
+    onMetricStyleClick: () -> Unit = {},
+    onWidgetInspectorClick: () -> Unit = {},
+    onNotificationHistoryClick: () -> Unit = {},
+    onCallNotificationClick: () -> Unit = {},
+    onBluetoothClick: () -> Unit = {},
+    onBluetoothBleClick: () -> Unit = {},
+    onNfcScannerClick: () -> Unit = {},
+    onWifiClick: () -> Unit = {},
+    onWifiScannerClick: () -> Unit = {},
+    onCameraXClick: () -> Unit = {},
+    onUltraHdrClick: () -> Unit = {},
+    newsViewModel: NewsViewModel = viewModel(),
+    homeViewModel: HomeViewModel = viewModel()
 ) {
     val news by newsViewModel.news.collectAsState()
     val isLoading by newsViewModel.isLoading.collectAsState()
     val error by newsViewModel.error.collectAsState()
+    val favoriteTools by homeViewModel.favoriteTools.collectAsState()
 
-    HomeScreen(
+    val actions = remember {
+        object : ToolsActions {
+            override fun onNotificationClick() = onNotificationClick()
+            override fun onLiveUpdateClick() = onLiveUpdateClick()
+            override fun onMetricStyleClick() = onMetricStyleClick()
+            override fun onBatteryClick() = onBatteryClick()
+            override fun onInfoClick() = onInfoClick()
+            override fun onAppsClick() = onAppsClick()
+            override fun onWidgetInspectorClick() = onWidgetInspectorClick()
+            override fun onNotificationHistoryClick() = onNotificationHistoryClick()
+            override fun onCallNotificationClick() = onCallNotificationClick()
+            override fun onBluetoothClick() = onBluetoothClick()
+            override fun onBluetoothBleClick() = onBluetoothBleClick()
+            override fun onNfcScannerClick() = onNfcScannerClick()
+            override fun onWifiClick() = onWifiClick()
+            override fun onWifiScannerClick() = onWifiScannerClick()
+            override fun onCameraXClick() = onCameraXClick()
+            override fun onUltraHdrClick() = onUltraHdrClick()
+        }
+    }
+
+    HomeScreenContent(
         news = news,
         isLoading = isLoading,
         error = error,
-        onNotificationClick = onNotificationClick,
-        onBatteryClick = onBatteryClick,
-        onInfoClick = onInfoClick,
-        onAppsClick = onAppsClick,
+        favoriteTools = favoriteTools,
         onToolsClick = onToolsClick,
         onSeeMoreNewsClick = onSeeMoreNewsClick,
         onSettingsClick = onSettingsClick,
-        onRefresh = { newsViewModel.refreshNews() }
+        actions = actions
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeScreen(
+private fun HomeScreenContent(
     news: List<Experiments>,
     isLoading: Boolean,
     error: String?,
-    onNotificationClick: () -> Unit,
-    onBatteryClick: () -> Unit,
-    onInfoClick: () -> Unit,
-    onAppsClick: () -> Unit,
+    favoriteTools: List<ToolItem>,
     onToolsClick: () -> Unit,
     onSeeMoreNewsClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onRefresh: () -> Unit
+    actions: ToolsActions
 ) {
     val context = LocalContext.current
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     val windowSizeClass = adaptiveInfo.windowSizeClass
     val isExpanded = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
     val isMedium = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) && !isExpanded
-    val isCompact = !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
-
-    val favorites = listOf(
-        FavoriteItem(stringResource(R.string.notificaciones), Icons.Rounded.Notifications, CardNotificaciones, TextNotificaciones, onNotificationClick),
-        FavoriteItem(stringResource(R.string.battery_title), Icons.Rounded.BatteryFull, CardBateria, TextBateria, onBatteryClick),
-        FavoriteItem(stringResource(R.string.info_title), Icons.Rounded.Info, CardInformacion, TextInformacion, onInfoClick),
-        FavoriteItem(stringResource(R.string.apps_title), Icons.Rounded.GridView, CardAplicaciones, TextAplicaciones, onAppsClick)
-    )
-
+    
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -134,19 +127,19 @@ private fun HomeScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.welcome),
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
                     )
                 },
                 actions = {
                     IconButton(
                         onClick = onSettingsClick,
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Settings,
                             contentDescription = stringResource(R.string.settings),
-                            modifier = Modifier.size(32.dp),
+                            modifier = Modifier.size(24.dp),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -160,84 +153,99 @@ private fun HomeScreen(
         containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
-        PullToRefreshBox(
-            isRefreshing = isLoading && news.isNotEmpty(),
-            onRefresh = onRefresh,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
             if (isExpanded) {
                 // Tablet Layout: Side-by-Side
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(32.dp)
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp)
                 ) {
-                    // Left Column: Favorites (Vertical 1x4 to fill height)
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(32.dp)
                     ) {
-                        SectionHeader(
-                            title = stringResource(R.string.favorites),
-                            onSeeAllClick = onToolsClick
-                        )
-                        Spacer(modifier = Modifier.height(24.dp))
-                        
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.fillMaxSize()
+                        // Left Column: Tools
+                        Column(
+                            modifier = Modifier.weight(1.5f)
                         ) {
-                            items(favorites) { item ->
-                                FavoriteCard(
-                                    title = item.title,
-                                    icon = item.icon,
-                                    containerColor = item.containerColor,
-                                    contentColor = item.contentColor,
-                                    onClick = item.onClick
-                                )
+                            SectionHeader(
+                                title = stringResource(R.string.tools_title),
+                                onSeeAllClick = onToolsClick
+                            )
+                            Spacer(modifier = Modifier.height(24.dp))
+                            
+                            if (favoriteTools.isEmpty()) {
+                                EmptyFavoritesState(onToolsClick = onToolsClick)
+                            } else {
+                                favoriteTools.chunked(2).forEach { rowItems ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                    ) {
+                                        rowItems.forEach { item ->
+                                            FavoriteCard(
+                                                modifier = Modifier.weight(1f),
+                                                title = stringResource(item.titleResId),
+                                                icon = item.icon,
+                                                containerColor = item.containerColor,
+                                                contentColor = item.contentColor,
+                                                onClick = { item.action(context, actions) }
+                                            )
+                                        }
+                                        if (rowItems.size == 1) Spacer(Modifier.weight(1f))
+                                    }
+                                }
                             }
                         }
-                    }
 
-                    // Right Column: Featured News (Grid 2x2)
-                    Column(
-                        modifier = Modifier
-                            .weight(2f)
-                            .fillMaxHeight()
-                    ) {
-                        SectionHeader(
-                            title = stringResource(R.string.featured),
-                            onSeeAllClick = onSeeMoreNewsClick
-                        )
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.fillMaxSize()
+                        // Right Column: Featured News
+                        Column(
+                            modifier = Modifier.weight(2f)
                         ) {
+                            SectionHeader(
+                                title = stringResource(R.string.featured),
+                                onSeeAllClick = onSeeMoreNewsClick
+                            )
+                            Spacer(modifier = Modifier.height(24.dp))
+
                             if (isLoading && news.isEmpty()) {
-                                items(4) { NewsItemShimmer() }
-                            } else {
-                                items(news.take(4)) { item ->
-                                    FeaturedCard(
-                                    title = item.titulo ?: "",
-                                    tag = item.tag,
-                                    imageUrl = item.imagen,
-                                    onClick = {
-                                        item.url?.let { url ->
-                                            val intent = CustomTabsIntent.Builder().build()
-                                            intent.launchUrl(context, url.toUri())
-                                        }
+                                repeat(2) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                    ) {
+                                        NewsItemShimmer(Modifier.weight(1f))
+                                        NewsItemShimmer(Modifier.weight(1f))
                                     }
-                                )
+                                }
+                            } else {
+                                news.take(4).chunked(2).forEach { rowItems ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                    ) {
+                                        rowItems.forEach { item ->
+                                            FeaturedCard(
+                                                modifier = Modifier.weight(1f),
+                                                title = item.titulo ?: "",
+                                                tag = item.tag,
+                                                imageUrl = item.imagen,
+                                                onClick = {
+                                                    item.url?.let { url ->
+                                                        val intent = CustomTabsIntent.Builder().build()
+                                                        intent.launchUrl(context, url.toUri())
+                                                    }
+                                                }
+                                            )
+                                        }
+                                        if (rowItems.size == 1) Spacer(Modifier.weight(1f))
+                                    }
                                 }
                             }
                         }
@@ -245,33 +253,37 @@ private fun HomeScreen(
                 }
             } else {
                 // Compact (Phone) or Medium (Fold)
-                // Use a single grid with dynamic spans to eliminate empty side space
                 val totalCols = if (isMedium) 4 else 2
                 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(totalCols),
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
-                    // Favorites Section
+                    // Tools Section
                     item(span = { GridItemSpan(totalCols) }) {
                         SectionHeader(
-                            title = stringResource(R.string.favorites),
+                            title = stringResource(R.string.tools_title),
                             onSeeAllClick = onToolsClick
                         )
                     }
 
-                    // Favorites: 1 row if Medium (4 cols), 2 rows if Compact (2 cols)
-                    items(favorites) { item ->
-                        FavoriteCard(
-                            title = item.title,
-                            icon = item.icon,
-                            containerColor = item.containerColor,
-                            contentColor = item.contentColor,
-                            onClick = item.onClick
-                        )
+                    if (favoriteTools.isEmpty()) {
+                        item(span = { GridItemSpan(totalCols) }) {
+                            EmptyFavoritesState(onToolsClick = onToolsClick)
+                        }
+                    } else {
+                        items(favoriteTools) { item ->
+                            FavoriteCard(
+                                title = stringResource(item.titleResId),
+                                icon = item.icon,
+                                containerColor = item.containerColor,
+                                contentColor = item.contentColor,
+                                onClick = { item.action(context, actions) }
+                            )
+                        }
                     }
 
                     // News Section
@@ -331,13 +343,41 @@ private fun HomeScreen(
     }
 }
 
-private data class FavoriteItem(
-    val title: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
-    val containerColor: androidx.compose.ui.graphics.Color,
-    val contentColor: androidx.compose.ui.graphics.Color,
-    val onClick: () -> Unit
-)
+@Composable
+private fun EmptyFavoritesState(onToolsClick: () -> Unit) {
+    Surface(
+        onClick = onToolsClick,
+        shape = MaterialTheme.shapes.extraLarge,
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.AddCircleOutline,
+                contentDescription = null,
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Personaliza tu acceso rápido",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            Text(
+                text = "Añade tus herramientas favoritas desde el menú de herramientas",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        }
+    }
+}
 
 @Composable
 private fun ErrorState(message: String, icon: androidx.compose.ui.graphics.vector.ImageVector) {
@@ -369,47 +409,35 @@ private fun ErrorState(message: String, icon: androidx.compose.ui.graphics.vecto
 @Composable
 fun HomeScreenPreview() {
     GeekLabTheme {
-        HomeScreen(
+        HomeScreenContent(
             news = listOf(
                 Experiments(titulo = "Noticia Destacada 1", tag = "TECNOLOGÍA"),
                 Experiments(titulo = "Noticia Destacada 2", tag = "DISEÑO")
             ),
             isLoading = false,
             error = null,
-            onNotificationClick = {},
-            onBatteryClick = {},
-            onInfoClick = {},
-            onAppsClick = {},
+            favoriteTools = emptyList(),
             onToolsClick = {},
             onSeeMoreNewsClick = {},
             onSettingsClick = {},
-            onRefresh = {}
-        )
-    }
-}
-
-@Preview(name = "Tablet Light", showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240")
-@Preview(name = "Tablet Dark", showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun HomeScreenExpandedPreview() {
-    GeekLabTheme {
-        HomeScreen(
-            news = listOf(
-                Experiments(titulo = "Noticia Destacada 1", tag = "TECNOLOGÍA"),
-                Experiments(titulo = "Noticia Destacada 2", tag = "DISEÑO"),
-                Experiments(titulo = "Noticia Destacada 3", tag = "ANDROID"),
-                Experiments(titulo = "Noticia Destacada 4", tag = "DEV")
-            ),
-            isLoading = false,
-            error = null,
-            onNotificationClick = {},
-            onBatteryClick = {},
-            onInfoClick = {},
-            onAppsClick = {},
-            onToolsClick = {},
-            onSeeMoreNewsClick = {},
-            onSettingsClick = {},
-            onRefresh = {}
+            actions = object : ToolsActions {
+                override fun onNotificationClick() {}
+                override fun onLiveUpdateClick() {}
+                override fun onMetricStyleClick() {}
+                override fun onBatteryClick() {}
+                override fun onInfoClick() {}
+                override fun onAppsClick() {}
+                override fun onWidgetInspectorClick() {}
+                override fun onNotificationHistoryClick() {}
+                override fun onCallNotificationClick() {}
+                override fun onBluetoothClick() {}
+                override fun onBluetoothBleClick() {}
+                override fun onNfcScannerClick() {}
+                override fun onWifiClick() {}
+                override fun onWifiScannerClick() {}
+                override fun onCameraXClick() {}
+                override fun onUltraHdrClick() {}
+            }
         )
     }
 }

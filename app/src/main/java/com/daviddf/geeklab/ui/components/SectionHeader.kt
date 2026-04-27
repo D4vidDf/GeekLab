@@ -33,7 +33,8 @@ fun SectionHeader(
         Text(
             text = stringResource(R.string.see_all),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier.clickable { onSeeAllClick() }
         )
     }

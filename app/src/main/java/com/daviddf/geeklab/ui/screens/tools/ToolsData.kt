@@ -12,6 +12,7 @@ import com.daviddf.geeklab.R
 import com.daviddf.geeklab.ui.theme.*
 
 data class ToolItem(
+    val id: String,
     val titleResId: Int,
     val icon: ImageVector,
     val containerColor: Color,
@@ -63,6 +64,7 @@ object ToolsData {
             titleResId = R.string.category_device,
             items = listOf(
                 ToolItem(
+                    id = "device_info",
                     titleResId = R.string.info_title,
                     icon = Icons.Rounded.Info,
                     containerColor = CardInformacion,
@@ -70,6 +72,7 @@ object ToolsData {
                     action = { _, actions -> actions.onInfoClick() }
                 ),
                 ToolItem(
+                    id = "battery_info",
                     titleResId = R.string.battery_title,
                     icon = Icons.Rounded.BatteryFull,
                     containerColor = CardBateria,
@@ -77,6 +80,7 @@ object ToolsData {
                     action = { _, actions -> actions.onBatteryClick() }
                 ),
                 ToolItem(
+                    id = "wifi_analyzer",
                     titleResId = R.string.wifi_analyzer_title,
                     icon = Icons.Rounded.Wifi,
                     containerColor = Color(0xFFE8EAF6),
@@ -84,6 +88,7 @@ object ToolsData {
                     action = { _, actions -> actions.onWifiClick() }
                 ),
                 ToolItem(
+                    id = "wifi_scanner",
                     titleResId = R.string.wifi_scanner_title,
                     icon = Icons.Rounded.WifiFind,
                     containerColor = Color(0xFFF3E5F5),
@@ -91,6 +96,7 @@ object ToolsData {
                     action = { _, actions -> actions.onWifiScannerClick() }
                 ),
                 ToolItem(
+                    id = "camera",
                     titleResId = R.string.camera_title,
                     icon = Icons.Rounded.PhotoCamera,
                     containerColor = Color(0xFFF1F8E9),
@@ -98,6 +104,7 @@ object ToolsData {
                     action = { _, actions -> actions.onCameraXClick() }
                 ),
                 ToolItem(
+                    id = "ultrahdr",
                     titleResId = R.string.ultrahdr_title,
                     icon = Icons.Rounded.HdrOn,
                     containerColor = Color(0xFFFFF3E0),
@@ -106,6 +113,7 @@ object ToolsData {
                     action = { _, actions -> actions.onUltraHdrClick() }
                 ),
                 ToolItem(
+                    id = "data_usage",
                     titleResId = R.string.data_usage,
                     icon = Icons.Rounded.PermDeviceInformation,
                     containerColor = Color(0xFFE1F5FE),
@@ -119,6 +127,7 @@ object ToolsData {
             titleResId = R.string.category_apps,
             items = listOf(
                 ToolItem(
+                    id = "apps_viewer",
                     titleResId = R.string.apps_title,
                     icon = Icons.Rounded.GridView,
                     containerColor = CardAplicaciones,
@@ -126,6 +135,7 @@ object ToolsData {
                     action = { _, actions -> actions.onAppsClick() }
                 ),
                 ToolItem(
+                    id = "widget_inspector",
                     titleResId = R.string.widget_inspector_title,
                     icon = Icons.Rounded.Widgets,
                     containerColor = Color(0xFFFFF3E0),
@@ -133,6 +143,7 @@ object ToolsData {
                     action = { _, actions -> actions.onWidgetInspectorClick() }
                 ),
                 ToolItem(
+                    id = "multiaccount",
                     titleResId = R.string.multiaccount,
                     icon = Icons.Rounded.Group,
                     containerColor = Color(0xFFF3E5F5),
@@ -145,6 +156,7 @@ object ToolsData {
             titleResId = R.string.category_notifications,
             items = listOf(
                 ToolItem(
+                    id = "notification_history",
                     titleResId = R.string.notification_history,
                     icon = Icons.Rounded.History,
                     containerColor = Color(0xFFE1F5FE),
@@ -152,6 +164,7 @@ object ToolsData {
                     action = { _, actions -> actions.onNotificationHistoryClick() }
                 ),
                 ToolItem(
+                    id = "call_notification",
                     titleResId = R.string.call_notification_title,
                     icon = Icons.Rounded.Call,
                     containerColor = Color(0xFFF1F8E9),
@@ -159,6 +172,7 @@ object ToolsData {
                     action = { _, actions -> actions.onCallNotificationClick() }
                 ),
                 ToolItem(
+                    id = "standard_notification",
                     titleResId = R.string.notificaciones,
                     icon = Icons.Rounded.Notifications,
                     containerColor = CardNotificaciones,
@@ -166,6 +180,7 @@ object ToolsData {
                     action = { _, actions -> actions.onNotificationClick() }
                 ),
                 ToolItem(
+                    id = "live_update",
                     titleResId = R.string.live_update_title,
                     icon = Icons.Rounded.Sync,
                     containerColor = Color(0xFFE8EAF6),
@@ -174,6 +189,7 @@ object ToolsData {
                     action = { _, actions -> actions.onLiveUpdateClick() }
                 ),
                 ToolItem(
+                    id = "metric_style",
                     titleResId = R.string.metric_style_title,
                     icon = Icons.Rounded.BarChart,
                     containerColor = Color(0xFFF1F8E9),
@@ -187,6 +203,7 @@ object ToolsData {
             titleResId = R.string.category_developer,
             items = listOf(
                 ToolItem(
+                    id = "developer_options",
                     titleResId = R.string.developer_options,
                     icon = Icons.Rounded.Code,
                     containerColor = Color(0xFFE8F5E9),
@@ -194,6 +211,7 @@ object ToolsData {
                     action = { ctx, _ -> launchSettings(ctx, "com.android.settings", "com.android.settings.Settings\$DevelopmentSettingsActivity") }
                 ),
                 ToolItem(
+                    id = "bluetooth_scanner",
                     titleResId = R.string.bluetooth_title,
                     icon = Icons.Rounded.Bluetooth,
                     containerColor = Color(0xFFE3F2FD),
@@ -201,6 +219,7 @@ object ToolsData {
                     action = { _, actions -> actions.onBluetoothClick() }
                 ),
                 ToolItem(
+                    id = "ble_scanner",
                     titleResId = R.string.bluetooth_ble_title,
                     icon = Icons.AutoMirrored.Rounded.BluetoothSearching,
                     containerColor = Color(0xFFF3E5F5),
@@ -208,6 +227,7 @@ object ToolsData {
                     action = { _, actions -> actions.onBluetoothBleClick() }
                 ),
                 ToolItem(
+                    id = "nfc_scanner",
                     titleResId = R.string.nfc_scanner_title,
                     icon = Icons.Rounded.Nfc,
                     containerColor = Color(0xFFEFEBE9),
@@ -215,6 +235,7 @@ object ToolsData {
                     action = { _, actions -> actions.onNfcScannerClick() }
                 ),
                 ToolItem(
+                    id = "band_selector",
                     titleResId = R.string.band_selector,
                     icon = Icons.Rounded.CellTower,
                     containerColor = Color(0xFFFFF3E0),
@@ -223,6 +244,7 @@ object ToolsData {
                     action = { ctx, _ -> launchSettings(ctx, "com.android.settings", "com.android.settings.MiuiBandMode") }
                 ),
                 ToolItem(
+                    id = "hdr_enhance",
                     titleResId = R.string.hdr_enhance,
                     icon = Icons.Rounded.HdrOn,
                     containerColor = Color(0xFFFCE4EC),
@@ -231,6 +253,7 @@ object ToolsData {
                     action = { ctx, _ -> launchSettings(ctx, "com.android.settings", "com.android.settings.display.ScreenEnhanceEngineS2hActivity") }
                 ),
                 ToolItem(
+                    id = "improve_speed_connection",
                     titleResId = R.string.improve_speed_connection,
                     icon = Icons.Rounded.Speed,
                     containerColor = Color(0xFFE0F2F1),
@@ -239,6 +262,7 @@ object ToolsData {
                     action = { ctx, _ -> launchSettings(ctx, "com.android.settings", "com.android.settings.wifi.linkturbo.WifiLinkTurboSettings") }
                 ),
                 ToolItem(
+                    id = "performance_mode",
                     titleResId = R.string.performance_mode,
                     icon = Icons.Rounded.Memory,
                     containerColor = Color(0xFFEFEBE9),
@@ -247,6 +271,7 @@ object ToolsData {
                     action = { ctx, _ -> launchSettings(ctx, "com.qualcomm.qti.performancemode", "com.qualcomm.qti.performancemode.PerformanceModeActivity") }
                 ),
                 ToolItem(
+                    id = "qcolor",
                     titleResId = R.string.qcolor,
                     icon = Icons.Rounded.ColorLens,
                     containerColor = Color(0xFFF1F8E9),

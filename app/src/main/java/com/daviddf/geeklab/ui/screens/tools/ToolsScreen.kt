@@ -17,9 +17,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,7 +31,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,10 +43,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import com.daviddf.geeklab.R
 import com.daviddf.geeklab.ui.components.FavoriteCard
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
+import com.daviddf.geeklab.ui.viewmodels.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,10 +69,13 @@ fun ToolsScreen(
     onWifiClick: () -> Unit = {},
     onWifiScannerClick: () -> Unit = {},
     onCameraXClick: () -> Unit = {},
-    onUltraHdrClick: () -> Unit = {}
+    onUltraHdrClick: () -> Unit = {},
+    homeViewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val favoriteTools by homeViewModel.favoriteTools.collectAsState()
+    var isEditMode by remember { mutableStateOf(false) }
     
     val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick) {
         object : ToolsActions {
@@ -91,11 +103,10 @@ fun ToolsScreen(
         manufacturer.contains("xiaomi") || manufacturer.contains("redmi") || manufacturer.contains("poco")
     }
 
-    // Smaller minSize for smaller cards as requested
     val columns = when {
         adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) -> GridCells.Adaptive(minSize = 130.dp)
         adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> GridCells.Adaptive(minSize = 110.dp)
-        else -> GridCells.Fixed(3) // 3 columns on compact for smaller cards
+        else -> GridCells.Fixed(3)
     }
 
     Scaffold(
@@ -111,6 +122,15 @@ fun ToolsScreen(
                 navigationIcon = {
                     FilledTonalIconButton(onClick = onBackClick, shapes = IconButtonDefaults.shapes()) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { isEditMode = !isEditMode }) {
+                        Icon(
+                            imageVector = if (isEditMode) Icons.Rounded.Check else Icons.Rounded.Edit,
+                            contentDescription = "Editar Favoritos",
+                            tint = if (isEditMode) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -131,6 +151,17 @@ fun ToolsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            if (isEditMode) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Text(
+                        text = "Toca para añadir o quitar de favoritos",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+            }
+
             ToolsData.categories.forEach { category ->
                 val visibleItems = category.items.filter { item ->
                     val xiaomiMatch = isXiaomiDevice || !item.isXiaomiOnly
@@ -142,6 +173,9 @@ fun ToolsScreen(
                     categorySection(
                         titleResId = category.titleResId,
                         items = visibleItems,
+                        favoriteIds = favoriteTools.map { it.id }.toSet(),
+                        isEditMode = isEditMode,
+                        onToggleFavorite = { id -> homeViewModel.toggleFavorite(id) },
                         context = context,
                         actions = actions
                     )
@@ -158,6 +192,9 @@ fun ToolsScreen(
 private fun LazyGridScope.categorySection(
     titleResId: Int,
     items: List<ToolItem>,
+    favoriteIds: Set<String>,
+    isEditMode: Boolean,
+    onToggleFavorite: (String) -> Unit,
     context: Context,
     actions: ToolsActions
 ) {
@@ -176,7 +213,14 @@ private fun LazyGridScope.categorySection(
             icon = item.icon,
             containerColor = item.containerColor,
             contentColor = item.contentColor,
-            onClick = { item.action(context, actions) }
+            isFavorite = favoriteIds.contains(item.id),
+            onClick = {
+                if (isEditMode) {
+                    onToggleFavorite(item.id)
+                } else {
+                    item.action(context, actions)
+                }
+            }
         )
     }
 }
