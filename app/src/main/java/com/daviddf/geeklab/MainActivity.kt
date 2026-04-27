@@ -2,10 +2,10 @@ package com.daviddf.geeklab
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.compose.BackHandler
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -27,6 +27,7 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
@@ -55,19 +57,45 @@ import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
 import com.daviddf.geeklab.ui.screens.notification.metric.MetricStyleScreen
 import com.daviddf.geeklab.ui.screens.notification.standard.NotificationScreen
 import com.daviddf.geeklab.ui.screens.tools.ultrahdr.UltraHdrScreen
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.daviddf.geeklab.ui.screens.settings.LicensesScreen
+import com.daviddf.geeklab.ui.screens.settings.SettingsScreen
+import com.daviddf.geeklab.ui.screens.settings.SettingsViewModel
+import com.daviddf.geeklab.ui.screens.settings.ThemeMode
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     private val _intentFlow: MutableState<Intent?> = mutableStateOf(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Initialize theme from preferences
+        val prefs = getSharedPreferences("settings_prefs", MODE_PRIVATE)
+        val themeMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(themeMode)
+
         enableEdgeToEdge()
         _intentFlow.value = intent
         
         setContent {
-            GeekLabTheme {
+            val settingsViewModel: SettingsViewModel = viewModel()
+            val themeModeState by settingsViewModel.themeMode.collectAsState()
+
+            // Re-sync language state whenever activity starts or recreates
+            LaunchedEffect(Unit) {
+                settingsViewModel.refreshLanguageState()
+            }
+
+            val useDarkTheme = when (themeModeState) {
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+                else -> isSystemInDarkTheme()
+            }
+
+            GeekLabTheme(darkTheme = useDarkTheme) {
                 val state = rememberNavigationState(
                     startRoute = GeekLabKey.Home,
                     topLevelRoutes = setOf(GeekLabKey.Home)
@@ -91,7 +119,22 @@ class MainActivity : ComponentActivity() {
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
                                 onToolsClick = { scope.launch { navigator.navigate(GeekLabKey.Tools) } },
-                                onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } }
+                                onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } },
+                                onSettingsClick = { scope.launch { navigator.navigate(GeekLabKey.Settings) } }
+                            )
+                        }
+
+                        is GeekLabKey.Settings -> NavEntry(key) {
+                            SettingsScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                viewModel = settingsViewModel,
+                                onLicensesClick = { scope.launch { navigator.navigate(GeekLabKey.Licenses) } }
+                            )
+                        }
+
+                        is GeekLabKey.Licenses -> NavEntry(key) {
+                            LicensesScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 

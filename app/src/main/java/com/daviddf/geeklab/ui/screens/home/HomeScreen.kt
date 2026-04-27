@@ -2,7 +2,6 @@ package com.daviddf.geeklab.ui.screens.home
 
 import android.content.res.Configuration
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,7 +19,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BatteryFull
 import androidx.compose.material.icons.rounded.ErrorOutline
@@ -28,6 +26,7 @@ import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.SearchOff
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,10 +42,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,7 +57,6 @@ import com.daviddf.geeklab.ui.components.FeaturedCard
 import com.daviddf.geeklab.ui.components.NewsItemCard
 import com.daviddf.geeklab.ui.components.NewsItemShimmer
 import com.daviddf.geeklab.ui.components.SectionHeader
-import com.daviddf.geeklab.ui.viewmodels.NewsViewModel
 import com.daviddf.geeklab.ui.theme.CardAplicaciones
 import com.daviddf.geeklab.ui.theme.CardBateria
 import com.daviddf.geeklab.ui.theme.CardInformacion
@@ -71,6 +66,7 @@ import com.daviddf.geeklab.ui.theme.TextAplicaciones
 import com.daviddf.geeklab.ui.theme.TextBateria
 import com.daviddf.geeklab.ui.theme.TextInformacion
 import com.daviddf.geeklab.ui.theme.TextNotificaciones
+import com.daviddf.geeklab.ui.viewmodels.NewsViewModel
 
 @Composable
 fun HomeScreen(
@@ -80,6 +76,7 @@ fun HomeScreen(
     onAppsClick: () -> Unit,
     onToolsClick: () -> Unit,
     onSeeMoreNewsClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     newsViewModel: NewsViewModel = viewModel()
 ) {
     val news by newsViewModel.news.collectAsState()
@@ -96,6 +93,7 @@ fun HomeScreen(
         onAppsClick = onAppsClick,
         onToolsClick = onToolsClick,
         onSeeMoreNewsClick = onSeeMoreNewsClick,
+        onSettingsClick = onSettingsClick,
         onRefresh = { newsViewModel.refreshNews() }
     )
 }
@@ -112,6 +110,7 @@ private fun HomeScreen(
     onAppsClick: () -> Unit,
     onToolsClick: () -> Unit,
     onSeeMoreNewsClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onRefresh: () -> Unit
 ) {
     val context = LocalContext.current
@@ -141,16 +140,14 @@ private fun HomeScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { /* Profile Click */ },
+                        onClick = onSettingsClick,
                         modifier = Modifier.padding(end = 16.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.preset),
-                            contentDescription = stringResource(R.string.news),
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
+                        Icon(
+                            imageVector = Icons.Rounded.Settings,
+                            contentDescription = stringResource(R.string.settings),
+                            modifier = Modifier.size(32.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
@@ -385,6 +382,7 @@ fun HomeScreenPreview() {
             onAppsClick = {},
             onToolsClick = {},
             onSeeMoreNewsClick = {},
+            onSettingsClick = {},
             onRefresh = {}
         )
     }
@@ -410,6 +408,7 @@ fun HomeScreenExpandedPreview() {
             onAppsClick = {},
             onToolsClick = {},
             onSeeMoreNewsClick = {},
+            onSettingsClick = {},
             onRefresh = {}
         )
     }

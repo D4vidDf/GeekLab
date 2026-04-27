@@ -1,5 +1,6 @@
 package com.daviddf.geeklab.ui.screens.apps
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -1069,7 +1070,7 @@ fun GroupedDetailItem(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 1.dp),
+            .padding( vertical = 1.dp),
         shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
     ) {
@@ -1083,14 +1084,15 @@ fun GroupedDetailItem(
 fun GroupedSurfaceItem(
     index: Int,
     size: Int,
+    modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val shape = getGroupedShape(index, size)
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp),
+            .padding( vertical = 2.dp),
         shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
         onClick = onClick ?: {}
@@ -1117,7 +1119,7 @@ fun InfoSectionTitle(title: String) {
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 8.dp)
+        modifier = Modifier.padding( end = 24.dp, top = 16.dp, bottom = 8.dp)
     )
 }
 
@@ -1179,6 +1181,7 @@ fun ActivityRow(
     }
 }
 
+@SuppressLint("SdCardPath")
 @Preview(showBackground = true, name = "Light Mode")
 @Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
 @PreviewScreenSizes

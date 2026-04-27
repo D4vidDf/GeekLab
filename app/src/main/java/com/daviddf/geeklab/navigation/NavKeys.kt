@@ -30,4 +30,6 @@ sealed interface GeekLabKey : NavKey {
     @Serializable data object Camera : GeekLabKey
     @Serializable data object CameraX : GeekLabKey
     @Serializable data object UltraHdr : GeekLabKey
+    @Serializable data object Settings : GeekLabKey
+    @Serializable data object Licenses : GeekLabKey
 }
