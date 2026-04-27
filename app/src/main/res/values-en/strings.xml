@@ -646,6 +646,18 @@
     <string name="ultrahdr_shader_control">Shader Simulation Control</string>
     <string name="ultrahdr_shader_requirement">Shader simulation requires Gainmap and API 33+</string>
     <string name="error_load_image">Failed to load image</string>
+    <string name="about_app">About App</string>
+    <string name="app_version_label">App Version</string>
+    <string name="developer_label">Developer</string>
+    <string name="language_label">Language</string>
+    <string name="theme_label">Theme</string>
+    <string name="github_repository">GitHub Repository</string>
+    <string name="open_source_licenses">Open Source Licenses</string>
+    <string name="credits">Credits &amp; Attributions</string>
+    <string name="platform_samples_credit">Parts of this code are based on Android Platform Samples (Ultra HDR, CameraX).</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 </resources>

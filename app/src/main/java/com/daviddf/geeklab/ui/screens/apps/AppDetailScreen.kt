@@ -1069,7 +1069,7 @@ fun GroupedDetailItem(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 1.dp),
+            .padding( vertical = 1.dp),
         shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
     ) {
@@ -1090,7 +1090,7 @@ fun GroupedSurfaceItem(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp),
+            .padding( vertical = 2.dp),
         shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
         onClick = onClick ?: {}
@@ -1117,7 +1117,7 @@ fun InfoSectionTitle(title: String) {
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 8.dp)
+        modifier = Modifier.padding( end = 24.dp, top = 16.dp, bottom = 8.dp)
     )
 }
 

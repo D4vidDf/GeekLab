@@ -91,7 +91,14 @@ class MainActivity : ComponentActivity() {
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
                                 onToolsClick = { scope.launch { navigator.navigate(GeekLabKey.Tools) } },
-                                onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } }
+                                onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } },
+                                onSettingsClick = { scope.launch { navigator.navigate(GeekLabKey.Settings) } }
+                            )
+                        }
+
+                        is GeekLabKey.Settings -> NavEntry(key) {
+                            com.daviddf.geeklab.ui.screens.settings.SettingsScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 
