@@ -80,8 +80,8 @@ fun SettingsScreen(
     val currentLanguage by viewModel.currentLanguage.collectAsState()
 
     val languages = listOf(
-        "es" to "Español",
-        "en" to "English"
+        "en" to "English",
+        "es" to "Español"
     )
 
     val themes = listOf(

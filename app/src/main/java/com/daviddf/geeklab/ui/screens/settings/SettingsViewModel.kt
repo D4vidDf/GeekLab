@@ -29,10 +29,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private fun getCurrentLanguageCode(): String {
         val locales = AppCompatDelegate.getApplicationLocales()
         return if (!locales.isEmpty) {
-            locales.get(0)?.language ?: "es"
+            locales.get(0)?.language ?: "en"
         } else {
-            // Fallback to system default if app-specific locale is not set
-            getApplication<Application>().resources.configuration.locales[0].language
+            val systemLocale = getApplication<Application>().resources.configuration.locales[0].language
+            // If the system is Spanish, we use Spanish. Otherwise, we default to English.
+            if (systemLocale == "es") "es" else "en"
         }
     }
 
