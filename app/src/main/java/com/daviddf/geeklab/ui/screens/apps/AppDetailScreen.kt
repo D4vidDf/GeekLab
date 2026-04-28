@@ -1064,11 +1064,12 @@ fun GroupedDetailItem(
     label: String,
     value: String,
     index: Int,
-    size: Int
+    size: Int,
+    modifier: Modifier = Modifier
 ) {
     val shape = getGroupedShape(index, size)
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding( vertical = 1.dp),
         shape = shape,

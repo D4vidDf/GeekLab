@@ -677,4 +677,8 @@
     <string name="theme_dark">Oscuro</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="geek_lab_hero_title">Geek\nLab</string>
+    <string name="software_validation_suite">Suite de validación de software</string>
+    <string name="personalize_tools">Personalizar herramientas</string>
+    <string name="add_quick_access_here">Añade accesos rápidos aquí</string>
 </resources>

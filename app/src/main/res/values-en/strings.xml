@@ -660,4 +660,8 @@
     <string name="theme_dark">Dark</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="geek_lab_hero_title">Geek\nLab</string>
+    <string name="software_validation_suite">Software Validation Suite</string>
+    <string name="personalize_tools">Personalize Tools</string>
+    <string name="add_quick_access_here">Add quick access here</string>
 </resources>
