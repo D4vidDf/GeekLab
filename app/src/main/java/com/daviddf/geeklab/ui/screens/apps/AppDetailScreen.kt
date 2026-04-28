@@ -175,6 +175,9 @@ fun AppDetailScreen(
         onLaunchApp = { viewModel.launchApp(packageName) },
         onShareApk = { viewModel.shareApk(packageName, uiState.label, uiState.version) },
         onLaunchActivity = { activityName -> viewModel.launchActivity(packageName, activityName) },
+        onAddShortcut = { activityName, label, icon ->
+            viewModel.createShortcut(packageName, activityName, label, icon)
+        },
         onViewManifest = { onViewManifest(packageName) },
         isExpanded = isExpanded,
         onToggleExpand = onToggleExpand,
@@ -191,6 +194,7 @@ fun AppDetailContent(
     onLaunchApp: () -> Unit,
     onShareApk: () -> Unit,
     onLaunchActivity: (String) -> Unit,
+    onAddShortcut: (String, String, android.graphics.Bitmap) -> Unit,
     onViewManifest: () -> Unit,
     isExpanded: Boolean = false,
     onToggleExpand: () -> Unit = {},
@@ -198,7 +202,6 @@ fun AppDetailContent(
     isDetailPane: Boolean = false
 ) {
     val context = LocalContext.current
-    val viewModel: AppDetailViewModel = viewModel()
     var selectedPermission by remember { mutableStateOf<PermissionDetail?>(null) }
     var selectedActivity by remember { mutableStateOf<ActivityDetail?>(null) }
     
@@ -365,6 +368,7 @@ fun AppDetailContent(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
                                     .padding(vertical = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
@@ -447,6 +451,7 @@ fun AppDetailContent(
                                 GroupedSurfaceItem(
                                     index = index,
                                     size = permissions.size,
+                                    modifier = Modifier.padding(horizontal = 16.dp),
                                     onClick = {
                                         selectedPermission = getPermissionDetail(permission, context)
                                         bottomSheetType = "permission"
@@ -484,7 +489,11 @@ fun AppDetailContent(
                                 items = activities,
                                 key = { _, activity -> activity.name }
                             ) { index, activity ->
-                                GroupedSurfaceItem(index = index, size = activities.size) {
+                                GroupedSurfaceItem(
+                                    index = index, 
+                                    size = activities.size,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                ) {
                                     ActivityRow(
                                         activity = activity, 
                                         packageName = uiState.packageInfo.packageName, 
@@ -507,7 +516,11 @@ fun AppDetailContent(
                         if (services.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(services) { index, service ->
-                                GroupedSurfaceItem(index = index, size = services.size) {
+                                GroupedSurfaceItem(
+                                    index = index, 
+                                    size = services.size,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                ) {
                                     Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                                         Text(
                                             service.name.removePrefix(packageInfo.packageName),
@@ -527,7 +540,11 @@ fun AppDetailContent(
                         if (!providers.isNullOrEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(providers) { index, provider ->
-                                GroupedSurfaceItem(index = index, size = providers.size) {
+                                GroupedSurfaceItem(
+                                    index = index, 
+                                    size = providers.size,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                ) {
                                     Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                                         Text(
                                             provider.name.removePrefix(packageInfo.packageName),
@@ -547,7 +564,11 @@ fun AppDetailContent(
                         if (sharedLibs.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(sharedLibs) { index, lib ->
-                                GroupedSurfaceItem(index = index, size = sharedLibs.size) {
+                                GroupedSurfaceItem(
+                                    index = index, 
+                                    size = sharedLibs.size,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                ) {
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -571,7 +592,11 @@ fun AppDetailContent(
                         if (receivers.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(12.dp)) }
                             itemsIndexed(receivers) { index, receiver ->
-                                GroupedSurfaceItem(index = index, size = receivers.size) {
+                                GroupedSurfaceItem(
+                                    index = index, 
+                                    size = receivers.size,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                ) {
                                     Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                                         Text(
                                             receiver.name.removePrefix(packageInfo.packageName),
@@ -705,7 +730,11 @@ fun AppDetailContent(
                     8 -> {
                         if (uiState.overlayTarget != null) {
                             item {
-                                Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(vertical = 8.dp)
+                                ) {
                                     InfoSectionTitle(stringResource(R.string.overlays))
                                     GroupedDetailItem(
                                         icon = Icons.Rounded.Layers,
@@ -748,12 +777,7 @@ fun AppDetailContent(
                         detail = selectedActivity!!,
                         onLaunch = { onLaunchActivity(selectedActivity!!.name) },
                         onAddShortcut = { name, icon ->
-                            viewModel.createShortcut(
-                                packageName = selectedActivity!!.packageName,
-                                className = selectedActivity!!.name,
-                                label = name,
-                                icon = icon
-                            )
+                            onAddShortcut(selectedActivity!!.name, name, icon)
                         }
                     )
                 }
@@ -1064,13 +1088,14 @@ fun GroupedDetailItem(
     label: String,
     value: String,
     index: Int,
-    size: Int
+    size: Int,
+    modifier: Modifier = Modifier
 ) {
     val shape = getGroupedShape(index, size)
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding( vertical = 1.dp),
+            .padding(vertical = 1.dp),
         shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
     ) {
@@ -1092,7 +1117,7 @@ fun GroupedSurfaceItem(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding( vertical = 2.dp),
+            .padding(vertical = 1.dp),
         shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
         onClick = onClick ?: {}
@@ -1215,6 +1240,7 @@ fun AppDetailPreview() {
             onLaunchApp = {},
             onShareApk = {},
             onLaunchActivity = {},
+            onAddShortcut = { _, _, _ -> },
             onViewManifest = {}
         )
     }

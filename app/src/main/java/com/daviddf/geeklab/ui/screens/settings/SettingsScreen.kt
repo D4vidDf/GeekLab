@@ -80,8 +80,8 @@ fun SettingsScreen(
     val currentLanguage by viewModel.currentLanguage.collectAsState()
 
     val languages = listOf(
-        "en" to "English",
-        "es" to "Español"
+        "es" to "Español",
+        "en" to "English"
     )
 
     val themes = listOf(
@@ -99,7 +99,10 @@ fun SettingsScreen(
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    FilledTonalIconButton(onClick = onBackClick, shapes = IconButtonDefaults.shapes()) {
+                    FilledTonalIconButton(
+                        onClick = onBackClick,
+                        shapes = IconButtonDefaults.shapes()
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },

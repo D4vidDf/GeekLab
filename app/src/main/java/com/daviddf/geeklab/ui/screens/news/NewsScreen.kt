@@ -262,7 +262,7 @@ fun NewsScreenContent(
                                 itemSpacing = 16.dp,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(if (isCompact) 220.dp else 320.dp)
+                                    .height(if (isCompact) 180.dp else 300.dp)
                                     .padding(vertical = 8.dp)
                             ) { index ->
                                 val item = carouselItems[index]

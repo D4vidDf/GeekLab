@@ -28,13 +28,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     private fun getCurrentLanguageCode(): String {
         val locales = AppCompatDelegate.getApplicationLocales()
-        return if (!locales.isEmpty) {
-            locales.get(0)?.language ?: "en"
-        } else {
-            val systemLocale = getApplication<Application>().resources.configuration.locales[0].language
-            // If the system is Spanish, we use Spanish. Otherwise, we default to English.
-            if (systemLocale == "es") "es" else "en"
+        if (!locales.isEmpty) {
+            val language = locales.get(0)?.language
+            if (!language.isNullOrEmpty()) return language
         }
+        
+        // Fallback to system default if app-specific locale is not set
+        val systemLocale = getApplication<Application>().resources.configuration.locales[0].language
+        return if (systemLocale == "es") "es" else "en"
     }
 
     fun setThemeMode(mode: ThemeMode) {
@@ -46,8 +47,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun setLanguage(languageCode: String) {
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
         AppCompatDelegate.setApplicationLocales(appLocale)
-        // We don't manually update _currentLanguage here because the activity will recreate
-        // and re-sync from getCurrentLanguageCode() via refreshLanguageState()
+        // Update state immediately to reflect in UI before recreation
+        _currentLanguage.value = languageCode
     }
 
     // Call this from activity to ensure flow is in sync with system
