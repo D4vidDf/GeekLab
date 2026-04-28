@@ -664,7 +664,7 @@
     <string name="ultrahdr_shader_requirement">La simulación por shader requiere Gainmap y API 33+</string>
     <string name="error_load_image">Error al cargar la imagen</string>
     <string name="about_app">Acerca de la aplicación</string>
-    <string name="app_version_label">Versión de la aplicación</string>
+    <string name="app_version_label">Versión</string>
     <string name="developer_label">Desarrollador</string>
     <string name="language_label">Idioma</string>
     <string name="theme_label">Tema</string>
