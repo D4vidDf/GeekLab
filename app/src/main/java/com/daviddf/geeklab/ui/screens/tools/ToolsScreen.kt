@@ -70,6 +70,7 @@ fun ToolsScreen(
     onWifiScannerClick: () -> Unit = {},
     onCameraXClick: () -> Unit = {},
     onUltraHdrClick: () -> Unit = {},
+    onWebAnalyzerClick: () -> Unit = {},
     homeViewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -77,7 +78,7 @@ fun ToolsScreen(
     val favoriteTools by homeViewModel.favoriteTools.collectAsState()
     var isEditMode by remember { mutableStateOf(false) }
     
-    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick) {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick, onWebAnalyzerClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
             override fun onLiveUpdateClick() = onLiveUpdateClick()
@@ -95,6 +96,7 @@ fun ToolsScreen(
             override fun onWifiScannerClick() = onWifiScannerClick()
             override fun onCameraXClick() = onCameraXClick()
             override fun onUltraHdrClick() = onUltraHdrClick()
+            override fun onWebAnalyzerClick() = onWebAnalyzerClick()
         }
     }
 

@@ -57,6 +57,7 @@ import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
 import com.daviddf.geeklab.ui.screens.notification.metric.MetricStyleScreen
 import com.daviddf.geeklab.ui.screens.notification.standard.NotificationScreen
 import com.daviddf.geeklab.ui.screens.tools.ultrahdr.UltraHdrScreen
+import com.daviddf.geeklab.ui.screens.tools.webanalyzer.WebAnalyzerScreen
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import com.daviddf.geeklab.ui.screens.settings.LicensesScreen
@@ -132,7 +133,8 @@ class MainActivity : AppCompatActivity() {
                                 onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
                                 onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
                                 onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } },
-                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } }
+                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } },
+                                onWebAnalyzerClick = { scope.launch { navigator.navigate(GeekLabKey.WebAnalyzer) } }
                             )
                         }
 
@@ -221,12 +223,19 @@ class MainActivity : AppCompatActivity() {
                                 onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
                                 onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
                                 onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.Camera) } },
-                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } }
+                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } },
+                                onWebAnalyzerClick = { scope.launch { navigator.navigate(GeekLabKey.WebAnalyzer) } }
                             )
                         }
 
                         is GeekLabKey.UltraHdr -> NavEntry(key) {
                             UltraHdrScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.WebAnalyzer -> NavEntry(key) {
+                            WebAnalyzerScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }

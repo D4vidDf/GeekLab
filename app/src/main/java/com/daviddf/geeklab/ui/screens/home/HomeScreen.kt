@@ -101,6 +101,7 @@ fun HomeScreen(
     onWifiScannerClick: () -> Unit = {},
     onCameraXClick: () -> Unit = {},
     onUltraHdrClick: () -> Unit = {},
+    onWebAnalyzerClick: () -> Unit = {},
     newsViewModel: NewsViewModel = viewModel(),
     homeViewModel: HomeViewModel = viewModel()
 ) {
@@ -109,7 +110,7 @@ fun HomeScreen(
     val error by newsViewModel.error.collectAsState()
     val favoriteTools by homeViewModel.favoriteTools.collectAsState()
 
-    val actions = remember {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick, onWebAnalyzerClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
             override fun onLiveUpdateClick() = onLiveUpdateClick()
@@ -127,6 +128,7 @@ fun HomeScreen(
             override fun onWifiScannerClick() = onWifiScannerClick()
             override fun onCameraXClick() = onCameraXClick()
             override fun onUltraHdrClick() = onUltraHdrClick()
+            override fun onWebAnalyzerClick() = onWebAnalyzerClick()
         }
     }
 
@@ -561,6 +563,7 @@ fun HomeScreenPreview() {
                 override fun onWifiScannerClick() {}
                 override fun onCameraXClick() {}
                 override fun onUltraHdrClick() {}
+                override fun onWebAnalyzerClick() {}
             }
         )
     }
