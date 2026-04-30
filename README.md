@@ -1,40 +1,44 @@
 # **GeekLab**
 
-![PlayStore Promo](https://github.com/D4vidDf/GeekLab/blob/master/promo_play.png)
+![Logo](app/src/main/ic_launcher-playstore.png)
 
-Uno de los grandes problemas de un dispositivo móvil es la inestabilidad del Sistema Operativo o la gran cantidad de funciones limitadas. GeekLab es una herramienta que ayudará a encontrar estos errores en distintos escenarios.
+GeekLab is now more useful than ever. It has evolved from a simple testing tool into a comprehensive suite for Android power users and developers. Whether you need to inspect system internals, simulate notification behavior, or analyze connectivity, GeekLab provides the tools you need in an open-source package.
 
-Al ser de código libre podrás modificar por completo la aplicación para ajustarla a tus necesidades.
+## **Origins**
 
-Actualmente solo hay dos funciones para encontrar fallos en el sistema. Próximamente se encontrarán herramientas de diagnóstico y estrés.
+GeekLab has its roots in the Xiaomi Spain forum, [Mi Community](https://c.mi.com/es/forum-2814-1.html). Originally designed to test device limits and help users understand their hardware, the project was restored after 5 years of inactivity to support the development of [Hyper Bridge](https://github.com/D4vidDf/HyperBridge).
 
-## **Inicios**
+## **Key Features**
 
-GeekLab tiene sus orígenes en el foro de Xiaomi España, [Mi Community](https://c.mi.com/es/forum-2814-1.html). 
+GeekLab offers a wide range of functionalities categorized for better accessibility:
 
-Como bien podéis apreciar, el nombre de la aplicación proviene del mismo nombre de la sección del foro.
+### 🔔 **Notification Tools**
+* **Notification Simulator**: Create and customize notifications to test system visualization and grouping.
+* **Notification History**: Keep track of incoming notifications with an integrated inspector.
+* **Call Simulation**: Test how the system handles incoming calls using the Telecom API.
+* **Live Updates & Metric Styles**: Support for the latest Android features like Live Updates (API 36+) and Metric Styles (API 37+).
 
-El objetivo inicial de esta aplicación era poner a prueba distintos dispositivos móviles para demostrar cuales eran sus verdaderos límites. Los distintos datos obtenidos han ayudado a los usuarios a decidirse por comprar el terminal que mayor se juste a sus necesidades.
+### 📱 **Device & System Information**
+* **Hardware Info**: Detailed overview of your device's specifications.
+* **Battery Diagnostics**: Monitor battery health, status, and technical details.
+* **App Viewer**: Explore installed applications and their properties.
 
-## **Funciones**
+### 🌐 **Connectivity & Scanners**
+* **Wi-Fi Analyzer & Scanner**: Inspect nearby networks and analyze signal strength.
+* **Bluetooth & BLE Scanner**: Discover and analyze classic and Low Energy Bluetooth devices.
+* **NFC Scanner**: Read and identify NFC tags.
+* **Web Analyzer**: Analyze website structures and performance directly from the app.
 
-Como ya comentaba anteriormente, en esta primera beta de la versión 2 de la aplicación encontramos dos funciones disponibles.
+### 📸 **Media & Display**
+* **CameraX Explorer**: Test camera capabilities and features.
+* **Ultra HDR Support**: Experience and test Ultra HDR imagery (API 34+).
 
-* **Notificaciones**: Podrás crear notificaciones personalizadas para probar como se vicualizaría en el sistema. A mayores, puedes pedir a la aplicación una cantidad ilimitada de notificaciones para saber como se agrupan o cual es el límite de la memoria del sistema.
-* **Activity Extress**: Uno de los grandes mayores problemas de Android es la gestión en segundo plano de las aplicaciones. Con esta función puedes crear un bucle que abre distintas actividades de la aplicación. De esta forma puedes sobrecargar la RAM y ver que sucede con el sistema.
+### 🛠️ **Developer & Advanced Tools**
+* **Quick Shortcuts**: Easy access to Developer Options and hidden system settings.
+* **Xiaomi Specific Tools**: Special shortcuts for Xiaomi/HyperOS devices, including Band Selector, HDR Enhancement, and Performance Mode.
 
-**Próximamente:**
+## **Open Source**
 
-- [ ] Widgets:
-    - [x] Notificaciones
-    - [x] Bucle
-    - [x] Google
-    - [ ] Hora
-- [ ] Seguimiento temperatura del sistema.
-- [ ] Historial notificaciones.
-- [ ] Información del sistema.
-- [ ] Personalización ampliada notificaciones:
-    - [ ] Colores
-    - [x] Imágenes
+Being open-source, you can fully modify and adapt GeekLab to your specific needs. Contributions are welcome!
 
-Para más información, accede al siguiente enlace: https://geeklab.d4viddf.com
+For more information, visit: [https://geeklab.d4viddf.com](https://geeklab.d4viddf.com)
