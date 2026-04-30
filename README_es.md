@@ -1,7 +1,5 @@
 # **GeekLab**
 
-![Logo](app/src/main/ic_launcher-playstore.png)
-
 GeekLab es ahora más útil que nunca. Ha evolucionado de ser una simple herramienta de pruebas a convertirse en una suite completa para usuarios avanzados y desarrolladores de Android. Ya sea que necesites inspeccionar las entrañas del sistema, simular comportamientos de notificaciones o analizar la conectividad, GeekLab proporciona las herramientas necesarias en un paquete de código abierto.
 
 ## **Orígenes**
