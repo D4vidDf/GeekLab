@@ -3,15 +3,41 @@ package com.daviddf.geeklab.ui.screens.tools.webanalyzer
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.util.Base64
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -21,11 +47,51 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.rounded.Analytics
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.CloudQueue
+import androidx.compose.material.icons.rounded.DataUsage
+import androidx.compose.material.icons.rounded.DesktopWindows
+import androidx.compose.material.icons.rounded.Error
+import androidx.compose.material.icons.rounded.Help
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Language
+import androidx.compose.material.icons.rounded.Loop
+import androidx.compose.material.icons.rounded.Phonelink
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Smartphone
+import androidx.compose.material.icons.rounded.VpnKey
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -43,13 +109,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.daviddf.geeklab.R
 import com.daviddf.geeklab.ui.components.DetailItem
-import com.daviddf.geeklab.ui.screens.tools.wifi.InfoChip
 import com.daviddf.geeklab.ui.screens.tools.wifi.ResultBox
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
-import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +129,7 @@ fun WebAnalyzerScreen(
         onUrlChange = viewModel::onUrlChange,
         onApiKeyChange = viewModel::onApiKeyChange,
         onMethodSelect = viewModel::onMethodSelect,
+        onStrategySelect = viewModel::onStrategySelect,
         onAnalyzeClick = viewModel::analyzeUrl
     )
 }
@@ -76,6 +142,7 @@ fun WebAnalyzerContent(
     onUrlChange: (String) -> Unit,
     onApiKeyChange: (String) -> Unit,
     onMethodSelect: (AnalysisMethod) -> Unit,
+    onStrategySelect: (AnalysisStrategy) -> Unit,
     onAnalyzeClick: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -100,7 +167,7 @@ fun WebAnalyzerContent(
                     IconButton(onClick = { showConfigSheet = true }) {
                         Icon(
                             imageVector = Icons.Rounded.Settings,
-                            contentDescription = "Configurar análisis",
+                            contentDescription = stringResource(R.string.web_analyzer_config_desc),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -174,6 +241,36 @@ fun WebAnalyzerContent(
                         shape = MaterialTheme.shapes.large
                     )
 
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            stringResource(R.string.web_analyzer_strategy_label_short),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        
+                        FilterChip(
+                            selected = uiState.selectedStrategy == AnalysisStrategy.MOBILE,
+                            onClick = { onStrategySelect(AnalysisStrategy.MOBILE) },
+                            label = { Text(stringResource(R.string.web_analyzer_strategy_mobile)) },
+                            leadingIcon = { Icon(Icons.Rounded.Smartphone, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                            shape = CircleShape
+                        )
+                        
+                        FilterChip(
+                            selected = uiState.selectedStrategy == AnalysisStrategy.DESKTOP,
+                            onClick = { onStrategySelect(AnalysisStrategy.DESKTOP) },
+                            label = { Text(stringResource(R.string.web_analyzer_strategy_desktop)) },
+                            leadingIcon = { Icon(Icons.Rounded.DesktopWindows, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                            shape = CircleShape
+                        )
+                    }
+
                     Button(
                         onClick = {
                             onAnalyzeClick()
@@ -223,7 +320,7 @@ fun WebAnalyzerContent(
                         // Screenshot Card
                         if (result.screenshotBase64 != null) {
                             Text(
-                                text = "Lighthouse Screenshot",
+                                text = stringResource(R.string.web_analyzer_screenshot_title),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 8.dp)
@@ -248,6 +345,7 @@ fun WebAnalyzerContent(
             uiState = uiState,
             onDismiss = { showConfigSheet = false },
             onMethodSelect = onMethodSelect,
+            onStrategySelect = onStrategySelect,
             onApiKeyChange = onApiKeyChange
         )
     }
@@ -326,7 +424,7 @@ fun WebSummaryCard(result: WebAnalysisResult) {
                         shape = MaterialTheme.shapes.small
                     ) {
                         Text(
-                            "LOCAL", 
+                            stringResource(R.string.web_analyzer_local_tag), 
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSecondary,
@@ -353,7 +451,7 @@ fun WebAuditCard(
     ) {
         Column(modifier = Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(
-                "Resultados Lighthouse", 
+                stringResource(R.string.web_analyzer_results_title), 
                 style = MaterialTheme.typography.titleSmall, 
                 color = MaterialTheme.colorScheme.primary, 
                 fontWeight = FontWeight.Bold
@@ -391,7 +489,7 @@ fun WebAuditCard(
             }
             
             Text(
-                text = "Toca un puntaje para ver detalles completos",
+                text = stringResource(R.string.web_analyzer_tap_details_hint),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 modifier = Modifier.fillMaxWidth(),
@@ -579,7 +677,7 @@ fun MockupPreview(isMobile: Boolean) {
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         )
         Text(
-            "Visualización no disponible",
+            stringResource(R.string.web_analyzer_preview_not_available),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         )
@@ -618,7 +716,7 @@ fun CategoryDetailSheet(
                 }
                 Column {
                     Text(category.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    Text("Detalle de auditorías", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.web_analyzer_audit_details_subtitle), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
             
@@ -643,6 +741,7 @@ fun WebConfigSheet(
     uiState: WebAnalyzerUiState,
     onDismiss: () -> Unit,
     onMethodSelect: (AnalysisMethod) -> Unit,
+    onStrategySelect: (AnalysisStrategy) -> Unit,
     onApiKeyChange: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -660,7 +759,7 @@ fun WebConfigSheet(
         ) {
             Text(
                 stringResource(R.string.web_analyzer_method_title),
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.ExtraBold
             )
 
@@ -670,7 +769,7 @@ fun WebConfigSheet(
                 title = stringResource(R.string.web_analyzer_method_local),
                 description = stringResource(R.string.web_analyzer_method_local_desc),
                 icon = Icons.Rounded.Phonelink,
-                onClick = { onMethodSelect(AnalysisMethod.LOCAL); onDismiss() }
+                onClick = { onMethodSelect(AnalysisMethod.LOCAL) }
             )
 
             AnalysisMethodOption(
@@ -691,6 +790,34 @@ fun WebConfigSheet(
                 onClick = { onMethodSelect(AnalysisMethod.API_KEY) }
             )
 
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp).alpha(0.5f))
+
+            Text(
+                stringResource(R.string.web_analyzer_strategy_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                StrategyOption(
+                    selected = uiState.selectedStrategy == AnalysisStrategy.MOBILE,
+                    title = stringResource(R.string.web_analyzer_strategy_mobile),
+                    icon = Icons.Rounded.Smartphone,
+                    modifier = Modifier.weight(1f),
+                    onClick = { onStrategySelect(AnalysisStrategy.MOBILE) }
+                )
+                StrategyOption(
+                    selected = uiState.selectedStrategy == AnalysisStrategy.DESKTOP,
+                    title = stringResource(R.string.web_analyzer_strategy_desktop),
+                    icon = Icons.Rounded.DesktopWindows,
+                    modifier = Modifier.weight(1f),
+                    onClick = { onStrategySelect(AnalysisStrategy.DESKTOP) }
+                )
+            }
+
             AnimatedVisibility(visible = uiState.selectedMethod == AnalysisMethod.API_KEY) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -707,12 +834,12 @@ fun WebConfigSheet(
                                     "https://developers.google.com/speed/docs/insights/v5/get-started".toUri())
                                 context.startActivity(intent)
                             }) {
-                                Icon(Icons.Rounded.Help, contentDescription = "Obtener API Key")
+                                Icon(Icons.Rounded.Help, contentDescription = stringResource(R.string.web_analyzer_get_api_key_desc))
                             }
                         }
                     )
                     Text(
-                        "Usa una API Key para evitar límites de cuota (25,000 req/día gratis).",
+                        stringResource(R.string.web_analyzer_api_key_quota_info),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -726,6 +853,41 @@ fun WebConfigSheet(
             ) {
                 Text(stringResource(R.string.aceptar))
             }
+        }
+    }
+}
+
+@Composable
+fun StrategyOption(
+    selected: Boolean,
+    title: String,
+    icon: ImageVector,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        shape = MaterialTheme.shapes.large,
+        color = if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.secondary) else null,
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -881,6 +1043,7 @@ fun WebAnalyzerScreenPreview() {
             onUrlChange = {},
             onApiKeyChange = {},
             onMethodSelect = {},
+            onStrategySelect = {},
             onAnalyzeClick = {}
         )
     }

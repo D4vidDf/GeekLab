@@ -14,10 +14,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import com.daviddf.geeklab.R
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.util.Scanner
+import androidx.core.content.edit
 
 enum class AnalysisMethod {
     LOCAL, ANONYMOUS, API_KEY
@@ -124,8 +126,8 @@ class WebAnalyzerViewModel(application: Application) : AndroidViewModel(applicat
             _uiState.update { 
                 it.copy(
                     apiKey = savedApiKey,
-                    selectedMethod = try { AnalysisMethod.valueOf(savedMethodName) } catch (e: Exception) { AnalysisMethod.LOCAL },
-                    selectedStrategy = try { AnalysisStrategy.valueOf(savedStrategyName) } catch (e: Exception) { AnalysisStrategy.MOBILE },
+                    selectedMethod = try { AnalysisMethod.valueOf(savedMethodName) } catch (_: Exception) { AnalysisMethod.LOCAL },
+                    selectedStrategy = try { AnalysisStrategy.valueOf(savedStrategyName) } catch (_: Exception) { AnalysisStrategy.MOBILE },
                     saveSettings = true
                 )
             }
@@ -139,45 +141,45 @@ class WebAnalyzerViewModel(application: Application) : AndroidViewModel(applicat
     fun onApiKeyChange(newKey: String) {
         _uiState.update { it.copy(apiKey = newKey) }
         if (_uiState.value.saveSettings) {
-            sharedPrefs.edit().putString("api_key", newKey).apply()
+            sharedPrefs.edit {putString("api_key", newKey)}
         }
     }
 
     fun onMethodSelect(method: AnalysisMethod) {
         _uiState.update { it.copy(selectedMethod = method) }
         if (_uiState.value.saveSettings) {
-            sharedPrefs.edit().putString("analysis_method", method.name).apply()
+            sharedPrefs.edit { putString("analysis_method", method.name) }
         }
     }
 
     fun onStrategySelect(strategy: AnalysisStrategy) {
         _uiState.update { it.copy(selectedStrategy = strategy) }
         if (_uiState.value.saveSettings) {
-            sharedPrefs.edit().putString("analysis_strategy", strategy.name).apply()
+            sharedPrefs.edit { putString("analysis_strategy", strategy.name) }
         }
     }
 
     fun onSaveSettingsChange(save: Boolean) {
         _uiState.update { it.copy(saveSettings = save) }
-        sharedPrefs.edit().putBoolean("save_settings", save).apply()
-        
-        val editor = sharedPrefs.edit()
-        if (save) {
-            editor.putString("api_key", _uiState.value.apiKey)
-            editor.putString("analysis_method", _uiState.value.selectedMethod.name)
-            editor.putString("analysis_strategy", _uiState.value.selectedStrategy.name)
-        } else {
-            editor.remove("api_key")
-            editor.remove("analysis_method")
-            editor.remove("analysis_strategy")
+        sharedPrefs.edit { putBoolean("save_settings", save) }
+
+        sharedPrefs.edit {
+            if (save) {
+                putString("api_key", _uiState.value.apiKey)
+                putString("analysis_method", _uiState.value.selectedMethod.name)
+                putString("analysis_strategy", _uiState.value.selectedStrategy.name)
+            } else {
+                remove("api_key")
+                remove("analysis_method")
+                remove("analysis_strategy")
+            }
         }
-        editor.apply()
     }
 
     fun analyzeUrl() {
         val inputUrl = _uiState.value.urlInput
         if (inputUrl.isBlank()) {
-            _uiState.update { it.copy(error = "URL cannot be empty") }
+            _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.web_analyzer_error_empty_url)) }
             return
         }
 
@@ -186,12 +188,13 @@ class WebAnalyzerViewModel(application: Application) : AndroidViewModel(applicat
         val formattedUrl = if (!inputUrl.startsWith("http")) "https://$inputUrl" else inputUrl
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null, result = null, isQuotaError = false, statusMessage = "Iniciando análisis...") }
+            val app = getApplication<Application>()
+            _uiState.update { it.copy(isLoading = true, error = null, result = null, isQuotaError = false, statusMessage = app.getString(R.string.web_analyzer_status_starting)) }
             
             try {
                 val result = if (_uiState.value.selectedMethod == AnalysisMethod.LOCAL) {
-                    _uiState.update { it.copy(statusMessage = "Ejecutando auditoría local...") }
-                    localAnalyzer.analyze(formattedUrl)
+                    _uiState.update { it.copy(statusMessage = app.getString(R.string.web_analyzer_status_local)) }
+                    localAnalyzer.analyze(formattedUrl, _uiState.value.selectedStrategy)
                 } else {
                     performLighthouseAnalysis(formattedUrl)
                 }
@@ -199,9 +202,9 @@ class WebAnalyzerViewModel(application: Application) : AndroidViewModel(applicat
             } catch (e: Exception) {
                 val isQuota = e.message?.contains("429") == true || e.message?.contains("quota") == true
                 val errorMessage = if (isQuota) {
-                    "Lighthouse quota reached. Open Settings to add an API Key or use 'Local Analysis'."
+                    app.getString(R.string.web_analyzer_error_quota)
                 } else {
-                    e.message ?: "Analysis failed"
+                    e.message ?: app.getString(R.string.web_analyzer_error_failed)
                 }
                 _uiState.update { it.copy(isLoading = false, error = errorMessage, isQuotaError = isQuota) }
             }
@@ -212,6 +215,8 @@ class WebAnalyzerViewModel(application: Application) : AndroidViewModel(applicat
         val encodedUrl = URLEncoder.encode(targetUrl, "UTF-8")
         val apiKey = _uiState.value.apiKey
         val strategy = _uiState.value.selectedStrategy.name.lowercase()
+        val app = getApplication<Application>()
+        val locale = java.util.Locale.getDefault().language
         
         // Official PSI API v5 endpoint
         val apiUrl = buildString {
@@ -219,10 +224,11 @@ class WebAnalyzerViewModel(application: Application) : AndroidViewModel(applicat
             append("?url=$encodedUrl")
             append("&category=performance&category=accessibility&category=best-practices&category=seo")
             append("&strategy=$strategy")
+            append("&locale=$locale")
             if (apiKey.isNotBlank()) append("&key=$apiKey")
         }
         
-        _uiState.update { it.copy(statusMessage = "Conectando con Google PSI Engine...") }
+        _uiState.update { it.copy(statusMessage = app.getString(R.string.web_analyzer_status_psi_connecting)) }
         
         val connection = URL(apiUrl).openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
@@ -232,10 +238,10 @@ class WebAnalyzerViewModel(application: Application) : AndroidViewModel(applicat
         val responseCode = connection.responseCode
         if (responseCode != 200) {
             val errorText = connection.errorStream?.bufferedReader()?.readText() ?: ""
-            throw Exception(errorText.ifBlank { "Error $responseCode" })
+            throw Exception(errorText.ifBlank { app.getString(R.string.web_analyzer_error_http, responseCode) })
         }
 
-        _uiState.update { it.copy(statusMessage = "Extrayendo métricas de Lighthouse...") }
+        _uiState.update { it.copy(statusMessage = app.getString(R.string.web_analyzer_status_extracting)) }
         
         val response = Scanner(connection.inputStream).useDelimiter("\\A").next()
         val json = JSONObject(response)

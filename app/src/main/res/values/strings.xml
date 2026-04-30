@@ -715,4 +715,27 @@
     <string name="web_analyzer_api_key_hint">Introduce tu clave de PageSpeed Insights</string>
     <string name="web_analyzer_save_settings">Guardar configuración</string>
     <string name="web_analyzer_save_settings_desc">Mantiene tu API Key y modo de análisis encriptados en el dispositivo.</string>
+
+    <string name="web_analyzer_config_desc">Configurar análisis</string>
+    <string name="web_analyzer_local_tag">LOCAL</string>
+    <string name="web_analyzer_results_title">Resultados Lighthouse</string>
+    <string name="web_analyzer_tap_details_hint">Toca un puntaje para ver detalles completos</string>
+    <string name="web_analyzer_screenshot_title">Captura de Lighthouse</string>
+    <string name="web_analyzer_preview_not_available">Visualización no disponible</string>
+    <string name="web_analyzer_audit_details_subtitle">Detalle de auditorías</string>
+    <string name="web_analyzer_strategy_title">Estrategia de Análisis</string>
+    <string name="web_analyzer_api_key_quota_info">Usa una API Key para evitar límites de cuota (25,000 req/día gratis).</string>
+    <string name="web_analyzer_get_api_key_desc">Obtener API Key</string>
+    <string name="web_analyzer_audit_passed">Pasado</string>
+    <string name="web_analyzer_audit_failures">fallos</string>
+    <string name="web_analyzer_error_empty_url">La URL no puede estar vacía</string>
+    <string name="web_analyzer_status_starting">Iniciando análisis…</string>
+    <string name="web_analyzer_status_local">Ejecutando auditoría local…</string>
+    <string name="web_analyzer_error_quota">Límite de cuota de Lighthouse alcanzado. Abre Ajustes para añadir una API Key o usa el Análisis Local.</string>
+    <string name="web_analyzer_error_failed">Error en el análisis</string>
+    <string name="web_analyzer_status_psi_connecting">Conectando con Google PSI Engine…</string>
+    <string name="web_analyzer_status_extracting">Extrayendo métricas de Lighthouse…</string>
+    <string name="web_analyzer_error_http">Error HTTP: %1$d</string>
+    <string name="web_analyzer_error_timeout">El análisis local ha superado el tiempo límite (5 min).</string>
+    <string name="web_analyzer_strategy_label_short">Estrategia:</string>
 </resources>

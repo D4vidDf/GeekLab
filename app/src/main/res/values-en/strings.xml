@@ -698,4 +698,27 @@
     <string name="web_analyzer_api_key_hint">Enter your PageSpeed Insights key</string>
     <string name="web_analyzer_save_settings">Save configuration</string>
     <string name="web_analyzer_save_settings_desc">Keep your API Key and analysis mode encrypted on the device.</string>
+
+    <string name="web_analyzer_config_desc">Configure analysis</string>
+    <string name="web_analyzer_local_tag">LOCAL</string>
+    <string name="web_analyzer_results_title">Lighthouse Results</string>
+    <string name="web_analyzer_tap_details_hint">Tap a score to see full details</string>
+    <string name="web_analyzer_screenshot_title">Lighthouse Screenshot</string>
+    <string name="web_analyzer_preview_not_available">Preview not available</string>
+    <string name="web_analyzer_audit_details_subtitle">Audit details</string>
+    <string name="web_analyzer_strategy_title">Analysis Strategy</string>
+    <string name="web_analyzer_api_key_quota_info">Use an API Key to avoid quota limits (25,000 req/day free).</string>
+    <string name="web_analyzer_get_api_key_desc">Get API Key</string>
+    <string name="web_analyzer_audit_passed">Passed</string>
+    <string name="web_analyzer_audit_failures">failures</string>
+    <string name="web_analyzer_error_empty_url">URL cannot be empty</string>
+    <string name="web_analyzer_status_starting">Starting analysis…</string>
+    <string name="web_analyzer_status_local">Running local audit…</string>
+    <string name="web_analyzer_error_quota">Lighthouse quota reached. Open Settings to add an API Key or use Local Analysis.</string>
+    <string name="web_analyzer_error_failed">Analysis failed</string>
+    <string name="web_analyzer_status_psi_connecting">Connecting to Google PSI Engine…</string>
+    <string name="web_analyzer_status_extracting">Extracting Lighthouse metrics…</string>
+    <string name="web_analyzer_error_http">HTTP Error: %1$d</string>
+    <string name="web_analyzer_error_timeout">Local analysis has timed out (5 min).</string>
+    <string name="web_analyzer_strategy_label_short">Strategy:</string>
 </resources>
