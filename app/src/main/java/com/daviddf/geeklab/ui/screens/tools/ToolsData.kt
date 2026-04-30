@@ -44,6 +44,7 @@ interface ToolsActions {
     fun onWifiScannerClick()
     fun onCameraXClick()
     fun onUltraHdrClick()
+    fun onWebAnalyzerClick()
 }
 
 object ToolsData {
@@ -278,6 +279,14 @@ object ToolsData {
                     contentColor = Color(0xFF33691E),
                     isXiaomiOnly = true,
                     action = { ctx, _ -> launchSettings(ctx, "com.qualcomm.qti.qcolor", "com.qualcomm.qti.qcolor.QColorActivity") }
+                ),
+                ToolItem(
+                    id = "web_analyzer",
+                    titleResId = R.string.web_analyzer_title,
+                    icon = Icons.Rounded.Web,
+                    containerColor = Color(0xFFE8EAF6),
+                    contentColor = Color(0xFF3F51B5),
+                    action = { _, actions -> actions.onWebAnalyzerClick() }
                 )
             )
         )

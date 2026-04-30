@@ -27,6 +27,7 @@ camerax = "1.6.0"
 listenablefuture = "1.0"
 guava = "33.6.0-android"
 androidx-concurrent-futures = "1.3.0"
+security-crypto = "1.1.0-alpha06"
 
 [libraries]
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -73,6 +74,7 @@ androidx-camera-extensions = { group = "androidx.camera", name = "camera-extensi
 google-listenablefuture = { group = "com.google.guava", name = "listenablefuture", version.ref = "listenablefuture" }
 google-guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 androidx-concurrent-futures-ktx = { group = "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "androidx-concurrent-futures" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security-crypto" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
