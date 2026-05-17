@@ -1,6 +1,5 @@
 package com.daviddf.geeklab.ui.screens.notification.call
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -27,7 +26,6 @@ object CallNotificationManager {
         }
     }
 
-    @SuppressLint("FullScreenIntentPolicy")
     fun showIncomingCall(context: Context, callerName: String) {
         createNotificationChannel(context)
         
@@ -79,7 +77,7 @@ object CallNotificationManager {
                     answerIntent
                 )
             )
-            .setFullScreenIntent(fullScreenPendingIntent, true)
+            .setContentIntent(fullScreenPendingIntent)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
@@ -89,7 +87,6 @@ object CallNotificationManager {
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
-    @SuppressLint("FullScreenIntentPolicy")
     fun showOngoingCall(context: Context, callerName: String) {
         createNotificationChannel(context)
         
@@ -129,7 +126,7 @@ object CallNotificationManager {
                     hangUpIntent
                 )
             )
-            .setFullScreenIntent(fullScreenPendingIntent, true)
+            .setContentIntent(fullScreenPendingIntent)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_CALL)
