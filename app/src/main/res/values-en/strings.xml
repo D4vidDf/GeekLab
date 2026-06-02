@@ -420,6 +420,20 @@
     <string name="caller_name_label">Caller Name</string>
     <string name="test_call">Test Call</string>
     <string name="call_notification_summary">Simulates call notification behavior using CallStyle and the Telecom API.</string>
+
+    <string name="messaging_style_title">Messaging Style</string>
+    <string name="messaging_style_desc">Test conversation and chat notifications.</string>
+    <string name="messaging_style_summary">Simulate messaging app notifications using MessagingStyle.</string>
+    <string name="user_name_label">Your name (Sender)</string>
+    <string name="chat_partner_label">Contact Name</string>
+    <string name="message_list_title">Conversation messages</string>
+    <string name="add_message">Add message</string>
+    <string name="message_text_placeholder">Write a message…</string>
+    <string name="send_as_partner">As contact</string>
+    <string name="send_as_user">As me</string>
+    <string name="clear_messages">Clear messages</string>
+    <string name="messaging_notification_test">Test Chat Notification</string>
+
     <string name="ongoing_call">ONGOING CALL</string>
     <string name="incoming_call">INCOMING CALL</string>
     <string name="answer">Answer</string>

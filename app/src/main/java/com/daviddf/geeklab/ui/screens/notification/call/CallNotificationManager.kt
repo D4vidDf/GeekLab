@@ -81,7 +81,6 @@ object CallNotificationManager {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
-            .setOnlyAlertOnce(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) TelecomCallRepository.getInstance(context).isActivityVisible else false)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, builder.build())
@@ -133,7 +132,6 @@ object CallNotificationManager {
             .setUsesChronometer(true)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
-            .setOnlyAlertOnce(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) TelecomCallRepository.getInstance(context).isActivityVisible else false)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, builder.build())

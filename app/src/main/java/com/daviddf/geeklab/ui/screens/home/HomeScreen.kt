@@ -94,6 +94,7 @@ fun HomeScreen(
     onWidgetInspectorClick: () -> Unit = {},
     onNotificationHistoryClick: () -> Unit = {},
     onCallNotificationClick: () -> Unit = {},
+    onMessagingNotificationClick: () -> Unit = {},
     onBluetoothClick: () -> Unit = {},
     onBluetoothBleClick: () -> Unit = {},
     onNfcScannerClick: () -> Unit = {},
@@ -110,7 +111,7 @@ fun HomeScreen(
     val error by newsViewModel.error.collectAsState()
     val favoriteTools by homeViewModel.favoriteTools.collectAsState()
 
-    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick, onWebAnalyzerClick) {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onMessagingNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick, onWebAnalyzerClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
             override fun onLiveUpdateClick() = onLiveUpdateClick()
@@ -121,6 +122,7 @@ fun HomeScreen(
             override fun onWidgetInspectorClick() = onWidgetInspectorClick()
             override fun onNotificationHistoryClick() = onNotificationHistoryClick()
             override fun onCallNotificationClick() = onCallNotificationClick()
+            override fun onMessagingNotificationClick() = onMessagingNotificationClick()
             override fun onBluetoothClick() = onBluetoothClick()
             override fun onBluetoothBleClick() = onBluetoothBleClick()
             override fun onNfcScannerClick() = onNfcScannerClick()
@@ -556,6 +558,7 @@ fun HomeScreenPreview() {
                 override fun onWidgetInspectorClick() {}
                 override fun onNotificationHistoryClick() {}
                 override fun onCallNotificationClick() {}
+                override fun onMessagingNotificationClick() {}
                 override fun onBluetoothClick() {}
                 override fun onBluetoothBleClick() {}
                 override fun onNfcScannerClick() {}

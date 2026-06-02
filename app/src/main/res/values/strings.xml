@@ -437,6 +437,20 @@
     <string name="caller_name_label">Nombre del Remitente</string>
     <string name="test_call">Probar Llamada</string>
     <string name="call_notification_summary">Simula el comportamiento de las notificaciones de llamadas usando CallStyle y la API de Telecom.</string>
+
+    <string name="messaging_style_title">Estilo de Mensajería</string>
+    <string name="messaging_style_desc">Prueba notificaciones de conversaciones y chat.</string>
+    <string name="messaging_style_summary">Simula notificaciones de aplicaciones de mensajería con MessagingStyle.</string>
+    <string name="user_name_label">Tu nombre (Remitente)</string>
+    <string name="chat_partner_label">Nombre del contacto</string>
+    <string name="message_list_title">Mensajes de la conversación</string>
+    <string name="add_message">Añadir mensaje</string>
+    <string name="message_text_placeholder">Escribe un mensaje…</string>
+    <string name="send_as_partner">Como contacto</string>
+    <string name="send_as_user">Como yo</string>
+    <string name="clear_messages">Limpiar mensajes</string>
+    <string name="messaging_notification_test">Probar Notificación de Chat</string>
+
     <string name="ongoing_call">LLAMADA EN CURSO</string>
     <string name="incoming_call">LLAMADA ENTRANTE</string>
     <string name="answer">Responder</string>

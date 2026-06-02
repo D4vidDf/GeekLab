@@ -63,6 +63,7 @@ fun ToolsScreen(
     onWidgetInspectorClick: () -> Unit = {},
     onNotificationHistoryClick: () -> Unit = {},
     onCallNotificationClick: () -> Unit = {},
+    onMessagingNotificationClick: () -> Unit = {},
     onBluetoothClick: () -> Unit = {},
     onBluetoothBleClick: () -> Unit = {},
     onNfcScannerClick: () -> Unit = {},
@@ -78,7 +79,7 @@ fun ToolsScreen(
     val favoriteTools by homeViewModel.favoriteTools.collectAsState()
     var isEditMode by remember { mutableStateOf(false) }
     
-    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick, onWebAnalyzerClick) {
+    val actions = remember(onNotificationClick, onLiveUpdateClick, onMetricStyleClick, onBatteryClick, onInfoClick, onAppsClick, onWidgetInspectorClick, onNotificationHistoryClick, onCallNotificationClick, onMessagingNotificationClick, onBluetoothClick, onBluetoothBleClick, onNfcScannerClick, onWifiClick, onWifiScannerClick, onCameraXClick, onUltraHdrClick, onWebAnalyzerClick) {
         object : ToolsActions {
             override fun onNotificationClick() = onNotificationClick()
             override fun onLiveUpdateClick() = onLiveUpdateClick()
@@ -89,6 +90,7 @@ fun ToolsScreen(
             override fun onWidgetInspectorClick() = onWidgetInspectorClick()
             override fun onNotificationHistoryClick() = onNotificationHistoryClick()
             override fun onCallNotificationClick() = onCallNotificationClick()
+            override fun onMessagingNotificationClick() = onMessagingNotificationClick()
             override fun onBluetoothClick() = onBluetoothClick()
             override fun onBluetoothBleClick() = onBluetoothBleClick()
             override fun onNfcScannerClick() = onNfcScannerClick()

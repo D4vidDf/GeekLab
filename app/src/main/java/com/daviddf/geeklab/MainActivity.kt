@@ -60,10 +60,23 @@ import com.daviddf.geeklab.ui.screens.tools.ultrahdr.UltraHdrScreen
 import com.daviddf.geeklab.ui.screens.tools.webanalyzer.WebAnalyzerScreen
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
+import com.daviddf.geeklab.ui.screens.notification.call.CallNotificationScreen
+import com.daviddf.geeklab.ui.screens.notification.history.NotificationDetailScreen
+import com.daviddf.geeklab.ui.screens.notification.history.NotificationHistoryScreen
+import com.daviddf.geeklab.ui.screens.notification.messaging.MessagingNotificationScreen
 import com.daviddf.geeklab.ui.screens.settings.LicensesScreen
 import com.daviddf.geeklab.ui.screens.settings.SettingsScreen
 import com.daviddf.geeklab.ui.screens.settings.SettingsViewModel
 import com.daviddf.geeklab.ui.screens.settings.ThemeMode
+import com.daviddf.geeklab.ui.screens.tools.bluetooth.BleScreen
+import com.daviddf.geeklab.ui.screens.tools.bluetooth.BluetoothScreen
+import com.daviddf.geeklab.ui.screens.tools.camera.CameraScreen
+import com.daviddf.geeklab.ui.screens.tools.camera.CameraXScreen
+import com.daviddf.geeklab.ui.screens.tools.nfc.NfcScannerScreen
+import com.daviddf.geeklab.ui.screens.tools.widgets.WidgetDetailScreen
+import com.daviddf.geeklab.ui.screens.tools.widgets.WidgetInspectorScreen
+import com.daviddf.geeklab.ui.screens.tools.wifi.WifiScannerScreen
+import com.daviddf.geeklab.ui.screens.tools.wifi.WifiScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
 
@@ -126,6 +139,7 @@ class MainActivity : AppCompatActivity() {
                                 onMetricStyleClick = { scope.launch { navigator.navigate(GeekLabKey.MetricStyle) } },
                                 onWidgetInspectorClick = { scope.launch { navigator.navigate(GeekLabKey.WidgetInspector) } },
                                 onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
+                                onMessagingNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.MessagingNotification) } },
                                 onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
                                 onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
                                 onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
@@ -176,14 +190,14 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         is GeekLabKey.WidgetInspector -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.widgets.WidgetInspectorScreen(
+                            WidgetInspectorScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } },
                                 onWidgetClick = { pkg: String, cls: String -> scope.launch { navigator.navigate(GeekLabKey.WidgetDetail(pkg, cls)) } }
                             )
                         }
 
                         is GeekLabKey.WidgetDetail -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.widgets.WidgetDetailScreen(
+                            WidgetDetailScreen(
                                 packageName = key.packageName,
                                 className = key.className,
                                 onBackClick = { scope.launch { navigator.goBack() } }
@@ -217,6 +231,7 @@ class MainActivity : AppCompatActivity() {
                                 onWidgetInspectorClick = { scope.launch { navigator.navigate(GeekLabKey.WidgetInspector) } },
                                 onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
                                 onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
+                                onMessagingNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.MessagingNotification) } },
                                 onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
                                 onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
                                 onNfcScannerClick = { scope.launch { navigator.navigate(GeekLabKey.NfcScanner) } },
@@ -241,50 +256,50 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         is GeekLabKey.Bluetooth -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.bluetooth.BluetoothScreen(
+                            BluetoothScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 
                         is GeekLabKey.BluetoothBle -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.bluetooth.BleScreen(
+                            BleScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 
                         is GeekLabKey.NfcScanner -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.nfc.NfcScannerScreen(
+                            NfcScannerScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 
                         is GeekLabKey.Wifi -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.wifi.WifiScreen(
+                            WifiScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 
                         is GeekLabKey.WifiScanner -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.wifi.WifiScannerScreen(
+                            WifiScannerScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 
                         is GeekLabKey.Camera -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.camera.CameraScreen(
+                            CameraScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } },
                                 onTryCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.CameraX) } }
                             )
                         }
 
                         is GeekLabKey.CameraX -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.tools.camera.CameraXScreen(
+                            CameraXScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
 
                         is GeekLabKey.CallNotification -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.notification.call.CallNotificationScreen(
+                            CallNotificationScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
                         }
@@ -298,17 +313,20 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         is GeekLabKey.NotificationHistory -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.notification.history.NotificationHistoryScreen(
+                            NotificationHistoryScreen(
                                 onBackClick = { scope.launch { navigator.goBack() } },
                                 onNotificationClick = { id -> scope.launch { navigator.navigate(GeekLabKey.NotificationDetail(id)) } }
                             )
                         }
 
                         is GeekLabKey.NotificationDetail -> NavEntry(key) {
-                            com.daviddf.geeklab.ui.screens.notification.history.NotificationDetailScreen(
+                            NotificationDetailScreen(
                                 notificationId = key.notificationId,
                                 onBackClick = { scope.launch { navigator.goBack() } }
                             )
+                        }
+                        is GeekLabKey.MessagingNotification -> NavEntry(key) {
+                            MessagingNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
                         }
 
                         else -> NavEntry(key) {

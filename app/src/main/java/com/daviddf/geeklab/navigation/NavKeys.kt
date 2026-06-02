@@ -22,6 +22,7 @@ sealed interface GeekLabKey : NavKey {
     @Serializable data object NotificationHistory : GeekLabKey
     @Serializable data class NotificationDetail(val notificationId: Long) : GeekLabKey
     @Serializable data object CallNotification : GeekLabKey
+    @Serializable data object MessagingNotification : GeekLabKey
     @Serializable data object Bluetooth : GeekLabKey
     @Serializable data object BluetoothBle : GeekLabKey
     @Serializable data object NfcScanner : GeekLabKey

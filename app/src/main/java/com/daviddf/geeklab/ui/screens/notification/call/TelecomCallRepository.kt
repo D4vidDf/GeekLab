@@ -3,6 +3,7 @@ package com.daviddf.geeklab.ui.screens.notification.call
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.telecom.CallAttributesCompat
 import androidx.core.telecom.CallControlResult
@@ -17,9 +18,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class TelecomCallRepository(private val callsManager: CallsManager) {
+class TelecomCallRepository(private val callsManager: CallsManager?) {
 
     companion object {
+        private const val TAG = "TelecomCallRepo"
+        
         @Volatile
         private var instance: TelecomCallRepository? = null
 
@@ -30,12 +33,17 @@ class TelecomCallRepository(private val callsManager: CallsManager) {
         }
 
         private fun create(context: Context): TelecomCallRepository {
-            val callsManager = CallsManager(context).apply {
-                registerAppWithTelecom(
-                    capabilities = CallsManager.CAPABILITY_BASELINE
-                )
+            return try {
+                val callsManager = CallsManager(context).apply {
+                    registerAppWithTelecom(
+                        capabilities = CallsManager.CAPABILITY_BASELINE
+                    )
+                }
+                TelecomCallRepository(callsManager)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to initialize CallsManager", e)
+                TelecomCallRepository(null)
             }
-            return TelecomCallRepository(callsManager)
         }
     }
 
@@ -50,6 +58,7 @@ class TelecomCallRepository(private val callsManager: CallsManager) {
         address: Uri,
         isIncoming: Boolean
     ) {
+        val manager = callsManager ?: return
         if (_currentCall.value is TelecomCall.Registered) return
 
         val attributes = CallAttributesCompat(
@@ -63,7 +72,7 @@ class TelecomCallRepository(private val callsManager: CallsManager) {
         val actionSource = Channel<TelecomCallAction>()
 
         try {
-            callsManager.addCall(
+            manager.addCall(
                 attributes,
                 onAnswer = { _ ->
                     updateCurrentCall { copy(isActive = true, isOnHold = false) }
@@ -109,6 +118,8 @@ class TelecomCallRepository(private val callsManager: CallsManager) {
                     }
                 }
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to add call", e)
         } finally {
             _currentCall.value = TelecomCall.None
         }

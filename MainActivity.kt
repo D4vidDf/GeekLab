@@ -52,6 +52,25 @@ import com.daviddf.geeklab.ui.screens.home.HomeScreen
 import com.daviddf.geeklab.ui.screens.info.InfoScreen
 import com.daviddf.geeklab.ui.screens.notification.CustomNotificationScreen
 import com.daviddf.geeklab.ui.screens.notification.NotificationScreen
+import com.daviddf.geeklab.ui.screens.notification.call.CallNotificationScreen
+import com.daviddf.geeklab.ui.screens.notification.history.NotificationDetailScreen
+import com.daviddf.geeklab.ui.screens.notification.history.NotificationHistoryScreen
+import com.daviddf.geeklab.ui.screens.notification.live.LiveUpdateScreen
+import com.daviddf.geeklab.ui.screens.notification.messaging.MessagingNotificationScreen
+import com.daviddf.geeklab.ui.screens.notification.metric.MetricStyleScreen
+import com.daviddf.geeklab.ui.screens.settings.LicensesScreen
+import com.daviddf.geeklab.ui.screens.settings.SettingsScreen
+import com.daviddf.geeklab.ui.screens.tools.ToolsScreen
+import com.daviddf.geeklab.ui.screens.tools.bluetooth.BleScreen
+import com.daviddf.geeklab.ui.screens.tools.bluetooth.BluetoothScreen
+import com.daviddf.geeklab.ui.screens.tools.camera.CameraScreen
+import com.daviddf.geeklab.ui.screens.tools.nfc.NfcScannerScreen
+import com.daviddf.geeklab.ui.screens.tools.ultrahdr.UltraHdrScreen
+import com.daviddf.geeklab.ui.screens.tools.webanalyzer.WebAnalyzerScreen
+import com.daviddf.geeklab.ui.screens.tools.widgets.WidgetDetailScreen
+import com.daviddf.geeklab.ui.screens.tools.widgets.WidgetInspectorScreen
+import com.daviddf.geeklab.ui.screens.tools.wifi.WifiScannerScreen
+import com.daviddf.geeklab.ui.screens.tools.wifi.WifiScreen
 import com.daviddf.geeklab.ui.theme.GeekLabTheme
 import kotlinx.coroutines.launch
 
@@ -88,7 +107,22 @@ class MainActivity : ComponentActivity() {
                                 onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
                                 onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
                                 onToolsClick = { scope.launch { navigator.navigate(GeekLabKey.Tools) } },
-                                onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } }
+                                onSeeMoreNewsClick = { scope.launch { navigator.navigate(GeekLabKey.News) } },
+                                onSettingsClick = { scope.launch { navigator.navigate(GeekLabKey.Settings) } },
+                                onLiveUpdateClick = { scope.launch { navigator.navigate(GeekLabKey.LiveUpdate) } },
+                                onMetricStyleClick = { scope.launch { navigator.navigate(GeekLabKey.MetricStyle) } },
+                                onWidgetInspectorClick = { scope.launch { navigator.navigate(GeekLabKey.WidgetInspector) } },
+                                onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
+                                onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
+                                onMessagingNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.MessagingNotification) } },
+                                onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
+                                onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
+                                onNfcScannerClick = { scope.launch { navigator.navigate(GeekLabKey.NfcScanner) } },
+                                onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
+                                onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
+                                onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.CameraX) } },
+                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } },
+                                onWebAnalyzerClick = { scope.launch { navigator.navigate(GeekLabKey.WebAnalyzer) } }
                             )
                         }
 
@@ -131,11 +165,121 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is GeekLabKey.Tools -> NavEntry(key) {
-                            ToolsScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                            ToolsScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.Notifications) } },
+                                onLiveUpdateClick = { scope.launch { navigator.navigate(GeekLabKey.LiveUpdate) } },
+                                onMetricStyleClick = { scope.launch { navigator.navigate(GeekLabKey.MetricStyle) } },
+                                onBatteryClick = { scope.launch { navigator.navigate(GeekLabKey.Battery) } },
+                                onInfoClick = { scope.launch { navigator.navigate(GeekLabKey.Info) } },
+                                onAppsClick = { scope.launch { navigator.navigate(GeekLabKey.Apps) } },
+                                onWidgetInspectorClick = { scope.launch { navigator.navigate(GeekLabKey.WidgetInspector) } },
+                                onNotificationHistoryClick = { scope.launch { navigator.navigate(GeekLabKey.NotificationHistory) } },
+                                onCallNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.CallNotification) } },
+                                onMessagingNotificationClick = { scope.launch { navigator.navigate(GeekLabKey.MessagingNotification) } },
+                                onBluetoothClick = { scope.launch { navigator.navigate(GeekLabKey.Bluetooth) } },
+                                onBluetoothBleClick = { scope.launch { navigator.navigate(GeekLabKey.BluetoothBle) } },
+                                onNfcScannerClick = { scope.launch { navigator.navigate(GeekLabKey.NfcScanner) } },
+                                onWifiClick = { scope.launch { navigator.navigate(GeekLabKey.Wifi) } },
+                                onWifiScannerClick = { scope.launch { navigator.navigate(GeekLabKey.WifiScanner) } },
+                                onCameraXClick = { scope.launch { navigator.navigate(GeekLabKey.CameraX) } },
+                                onUltraHdrClick = { scope.launch { navigator.navigate(GeekLabKey.UltraHdr) } },
+                                onWebAnalyzerClick = { scope.launch { navigator.navigate(GeekLabKey.WebAnalyzer) } }
+                            )
                         }
 
                         is GeekLabKey.CustomNotification -> NavEntry(key) {
                             CustomNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.LiveUpdate -> NavEntry(key) {
+                            LiveUpdateScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.MetricStyle -> NavEntry(key) {
+                            MetricStyleScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.NotificationHistory -> NavEntry(key) {
+                            NotificationHistoryScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onNotificationClick = { id -> scope.launch { navigator.navigate(GeekLabKey.NotificationDetail(id)) } }
+                            )
+                        }
+
+                        is GeekLabKey.NotificationDetail -> NavEntry(key) {
+                            NotificationDetailScreen(
+                                notificationId = key.notificationId,
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.CallNotification -> NavEntry(key) {
+                            CallNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.Bluetooth -> NavEntry(key) {
+                            BluetoothScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.BluetoothBle -> NavEntry(key) {
+                            BleScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.NfcScanner -> NavEntry(key) {
+                            NfcScannerScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.Wifi -> NavEntry(key) {
+                            WifiScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.WifiScanner -> NavEntry(key) {
+                            WifiScannerScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.CameraX -> NavEntry(key) {
+                            CameraScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.UltraHdr -> NavEntry(key) {
+                            UltraHdrScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.WebAnalyzer -> NavEntry(key) {
+                            WebAnalyzerScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.WidgetInspector -> NavEntry(key) {
+                            WidgetInspectorScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onWidgetClick = { pkg, cls -> scope.launch { navigator.navigate(GeekLabKey.WidgetDetail(pkg, cls)) } }
+                            )
+                        }
+
+                        is GeekLabKey.WidgetDetail -> NavEntry(key) {
+                            WidgetDetailScreen(
+                                packageName = key.packageName,
+                                className = key.className,
+                                onBackClick = { scope.launch { navigator.goBack() } }
+                            )
+                        }
+
+                        is GeekLabKey.Settings -> NavEntry(key) {
+                            SettingsScreen(
+                                onBackClick = { scope.launch { navigator.goBack() } },
+                                onLicensesClick = { scope.launch { navigator.navigate(GeekLabKey.Licenses) } }
+                            )
+                        }
+
+                        is GeekLabKey.Licenses -> NavEntry(key) {
+                            LicensesScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+
+                        is GeekLabKey.MessagingNotification -> NavEntry(key) {
+                            MessagingNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
+                        }
+                            MessagingNotificationScreen(onBackClick = { scope.launch { navigator.goBack() } })
                         }
 
                         else -> NavEntry(key) {

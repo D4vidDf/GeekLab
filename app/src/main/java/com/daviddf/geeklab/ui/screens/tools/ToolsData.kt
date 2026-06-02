@@ -5,6 +5,7 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.BluetoothSearching
+import androidx.compose.material.icons.automirrored.rounded.Chat
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -37,6 +38,7 @@ interface ToolsActions {
     fun onWidgetInspectorClick()
     fun onNotificationHistoryClick()
     fun onCallNotificationClick()
+    fun onMessagingNotificationClick()
     fun onBluetoothClick()
     fun onBluetoothBleClick()
     fun onNfcScannerClick()
@@ -171,6 +173,14 @@ object ToolsData {
                     containerColor = Color(0xFFF1F8E9),
                     contentColor = Color(0xFF33691E),
                     action = { _, actions -> actions.onCallNotificationClick() }
+                ),
+                ToolItem(
+                    id = "messaging_notification",
+                    titleResId = R.string.messaging_style_title,
+                    icon = Icons.AutoMirrored.Rounded.Chat,
+                    containerColor = Color(0xFFE8EAF6),
+                    contentColor = Color(0xFF1A237E),
+                    action = { _, actions -> actions.onMessagingNotificationClick() }
                 ),
                 ToolItem(
                     id = "standard_notification",
